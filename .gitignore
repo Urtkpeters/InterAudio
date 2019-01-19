@@ -18,6 +18,17 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+*.iml
+.gradle
+/local.properties
+/.idea
+.DS_Store
+/build
+/captures
+/notes
+/package
+.externalNativeBuild
+
 # =========================
 # Operating System Files
 # =========================

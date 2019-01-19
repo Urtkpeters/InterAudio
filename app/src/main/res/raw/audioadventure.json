@@ -1,0 +1,1378 @@
+{
+	"packageName": "simple",
+	"packageType": "AA",
+	"author": "Odonen",
+	"audioFileExt": "m4a",
+	"start": "kitchen",
+	"sections":
+	{
+		"kitchen": 
+		{
+			"filename": "kitchen",
+			"conditions": [],
+			"directions":
+			{
+				"north": "",
+				"east": "",
+				"south": "",
+				"west": "livingRoom",
+				"up": "attic",
+				"down": ""
+			},
+			"entities":
+			[
+				{ "type": "item", "name": "sack" }, 
+				{ "type": "item", "name": "bottle" }
+			],
+			"setVariables": []
+		},
+		"attic": 
+		{
+			"filename": "attic",
+			"conditions": [ { "condition": "event.target.health.value <= 0", "operator": "", "failFilename": "HealthFail" } ],
+			"directions":
+			{
+				"north": "",
+				"east": "",
+				"south": "",
+				"west": "",
+				"up": "",
+				"down": "kitchen"
+			},
+			"entities":
+			[
+				{ "type": "object", "name": "rug" }, 
+				{ "type": "item", "name": "lantern" },
+				{ "type": "item", "name": "sword" }
+			],
+			"setVariables": []
+		},
+		"livingRoom": 
+		{
+			"filename": "livingRoom",
+			"conditions": [],
+			"directions":
+			{
+				"north": "",
+				"east": "kitchen",
+				"south": "",
+				"west": "",
+				"up": "",
+				"down": ""
+			},
+			"entities":
+			[
+				{ "type": "item", "name": "knife" }, 
+				{ "type": "item", "name": "rope" }, 
+				{ "type": "item", "name": "brick" }
+			],
+			"setVariables": []
+		},
+		"cellarEntrance": 
+		{
+			"filename": "cellarEntrance",
+			"conditions":
+			[
+				{ "condition": "variables.global.trapdoor.value == true", "operator": "or", "failFilename": "goFail" },
+				{ "condition": "variables.player.lightSource.value == true", "operator": "or", "failFilename": "tooDark" }
+			],
+			"directions":
+			{
+				"north": "",
+				"east": "trollRoom",
+				"south": "",
+				"west": "",
+				"up": "",
+				"down": ""
+			},
+			"entities":
+			[
+				{ "type": "item", "name": "knife" }, 
+				{ "type": "item", "name": "rope" }, 
+				{ "type": "item", "name": "brick" }
+			],
+			"setVariables": []
+		},
+		"trollRoom": 
+		{
+			"filename": "trollRoom",
+			"conditions": [],
+			"directions":
+			{
+				"north": "",
+				"east": "",
+				"south": "",
+				"west": "cellarEntrance",
+				"up": "",
+				"down": ""
+			},
+			"entities":
+			[
+				{ "type": "character", "name": "troll" },
+				{ "type": "object", "name": "closedDoorLocked" }
+			],
+			"setVariables": []
+		},
+		"finalRoom":
+		{
+			"filename": "finalRoom",
+			"conditions":
+			[
+				{ "condition": "variables.global.doorOpen.value == true", "operator": "or", "failFilename": "doorIsLocked" }
+			],
+			"directions":
+			{
+				"north": "",
+				"east": "",
+				"south": "",
+				"west": "cellarEntrance",
+				"up": "",
+				"down": ""
+			},
+			"entities":
+			[
+				{ "type": "character", "name": "troll" },
+				{ "type": "object", "name": "closedDoorLocked" }
+			],
+			"setVariables": []
+		}
+	},
+	"variables":
+	{
+		"global":
+		{
+			"rope":
+			{
+				"type": "Boolean",
+				"value": false,
+				"max": null
+			},
+			"trapdoor":
+			{
+				"type": "Boolean",
+				"value": false,
+				"max": null
+			},
+			"doorOpen":
+			{
+				"type": "Boolean",
+				"value": false,
+				"max": null
+			}
+		},
+		"player":
+		{
+			"health":
+			{
+				"type": "Integer",
+				"value": 3,
+				"max": 3,
+				"maxFailFilename": "",
+				"filenames":
+				{
+					"1": "healthOne",
+					"2": "healthTwo",
+					"3": "healthThree"
+				}
+			},
+			"hunger":
+			{
+				"type": "Integer",
+				"value": 5,
+				"max": 5,
+				"maxFailFilename": "",
+				"filenames":
+				{
+					"1": "hungerOne",
+					"2": "hungerTwo",
+					"3": "hungerThree",
+					"4": "hungerFour",
+					"5": "hungerFive"
+				}
+			},
+			"thirst":
+			{
+				"type": "Integer",
+				"value": 5,
+				"max": 5,
+				"maxFailFilename": "",
+				"filenames":
+				{
+					"1": "thirstOne",
+					"2": "thirstTwo",
+					"3": "thirstThree",
+					"4": "thirstFour",
+					"5": "thirstFive"
+				}
+			},
+			"weight":
+			{
+				"type": "Integer",
+				"value": 0,
+				"max": 100,
+				"maxFailFilename": "weightFail",
+				"filenames":
+				{
+					"0-20": "weightOne",
+					"21-40": "weightTwo",
+					"41-60": "weightThree",
+					"61-80": "weightFour",
+					"81-100": "weightFive"
+				}
+			},
+			"lightSource":
+			{
+				"type": "Boolean",
+				"value": false,
+				"max": null,
+				"maxFailFilename": "",
+				"filenames":
+				{
+					"false": "lightSourceFalse",
+					"true": "lightSourceTrue"
+				}
+			}
+		},
+		"entity":
+		{
+			"health":
+			{
+				"type": "Integer",
+				"value": 0,
+				"max": -2
+			},
+			"uses":
+			{
+				"type": "Integer",
+				"value": 0,
+				"max": -2
+			},
+			"weight":
+			{
+				"type": "Integer",
+				"value": 0,
+				"max": -1
+			},
+			"power":
+			{
+				"type": "Integer",
+				"value": 0,
+				"max": -1
+			},
+			"time":
+			{
+				"type": "Integer",
+				"value": 0,
+				"max": -1
+			}
+		}
+	},
+	"actions":
+	{
+		"time":
+		{
+			"playerDeathCheck": 
+			{
+				"successFilename": "death",
+				"failFilename": "",
+				"alwaysAllowed": true,
+				"time": 1,
+				"targets": [],
+				"secondaryKeys": [],
+				"secondaryTargets": [],
+				"conditions":
+				[
+					{ "condition": "variables.player.health.value <= 0", "operator": "or", "failFilename": "" },
+					{ "condition": "variables.player.hunger.value <= 0", "operator": "or", "failFilename": "" },
+					{ "condition": "variables.player.thirst.value <= 0", "operator": "or", "failFilename": "" }
+				],
+				"setVars": [],
+				"triggers": ["death"]
+			},
+			"regen": 
+			{
+				"successFilename": "",
+				"failFilename": "",
+				"alwaysAllowed": true,
+				"time": 15,
+				"targets": [],
+				"secondaryKeys": [],
+				"secondaryTargets": [],
+				"conditions": [],
+				"setVars": [ "variables.player.health.value += 1" ],
+				"triggers": []
+			},
+			"hunger":
+			{
+				"successFilename": "",
+				"failFilename": "",
+				"alwaysAllowed": true,
+				"time": 20,
+				"targets": [],
+				"secondaryKeys": [],
+				"secondaryTargets": [],
+				"conditions": [],
+				"setVars": [ "variables.player.hunger.value -= 1" ],
+				"triggers": []
+			},
+			"thirst":
+			{
+				"successFilename": "",
+				"failFilename": "",
+				"alwaysAllowed": true,
+				"time": 15,
+				"targets": [],
+				"secondaryKeys": [],
+				"secondaryTargets": [],
+				"conditions": [],
+				"setVars": [ "variables.player.thirst.value -= 1" ],
+				"triggers": []
+			},
+			"battery":
+			{
+				"successFilename": "",
+				"failFilename": "",
+				"alwaysAllowed": true,
+				"time": 5,
+				"targets": [],
+				"secondaryKeys": [],
+				"secondaryTargets": [],
+				"conditions": [ { "condition": "variables.player.lightSource.value == true", "operator": "", "failFilename": "" } ],
+				"setVars": [ "variables.inventory.lantern.uses -= 1" ],
+				"triggers": []
+			},
+			"characterAct":
+			{
+				"successFilename": "",
+				"failFilename": "",
+				"alwaysAllowed": true,
+				"time": 1,
+				"targets": [],
+				"secondaryKeys": [],
+				"secondaryTargets": [],
+				"conditions": [ { "condition": "section.entities.containsType | character", "operator": "", "failFilename": "" } ],
+				"setVars": [],
+				"triggers": []
+			}
+		},
+		"player":
+		{
+			"save":
+			{
+				"successFilename": "",
+				"failFilename": "",
+				"alwaysAllowed": true,
+				"time": 0,
+				"targets": [],
+				"secondaryKeys": [],
+				"secondaryTargets": [],
+				"conditions": [],
+				"setVars": [],
+				"triggers": []
+			},
+			"load":
+			{
+				"successFilename": "",
+				"failFilename": "",
+				"alwaysAllowed": true,
+				"time": 0,
+				"targets": [],
+				"secondaryKeys": [],
+				"secondaryTargets": [],
+				"conditions": [],
+				"setVars": [],
+				"triggers": []
+			},
+			"quit":
+			{
+				"successFilename": "",
+				"failFilename": "",
+				"alwaysAllowed": true,
+				"time": 0,
+				"targets": [],
+				"secondaryKeys": [],
+				"secondaryTargets": [],
+				"conditions": [],
+				"setVars": [],
+				"triggers": []
+			},
+			"repeat":
+			{
+				"successFilename": "",
+				"failFilename": "",
+				"alwaysAllowed": true,
+				"time": 0,
+				"targets": [],
+				"secondaryKeys": [],
+				"secondaryTargets": [],
+				"conditions": [],
+				"setVars": [],
+				"triggers": []
+			},
+			"status":
+			{
+				"successFilename": "",
+				"failFilename": "",
+				"alwaysAllowed": true,
+				"time": 0,
+				"targets": [],
+				"secondaryKeys": [],
+				"secondaryTargets": [],
+				"conditions": [],
+				"setVars": [],
+				"triggers": []
+			},
+			"inventory":
+			{
+				"successFilename": "",
+				"failFilename": "",
+				"alwaysAllowed": true,
+				"time": 0,
+				"targets": [],
+				"secondaryKeys": [],
+				"secondaryTargets": [],
+				"conditions": [],
+				"setVars": [],
+				"triggers": []
+			},
+			"go":
+			{
+				"successFilename": "",
+				"failFilename": "",
+				"alwaysAllowed": true,
+				"time": 1,
+				"targets": [ "direction" ],
+				"secondaryKeys": [],
+				"secondaryTargets": [],
+				"conditions": [ { "condition": "section.directions.contains | target", "operator": "", "failFilename": "moveFail" } ],
+				"setVars": [],
+				"triggers": ["changeSection"]
+			},
+			"take":
+			{
+				"successFilename": "takeSuccess",
+				"failFilename": "",
+				"alwaysAllowed": true,
+				"time": 1,
+				"targets": [ "item" ],
+				"secondaryKeys": [],
+				"secondaryTargets": [],
+				"conditions": [],
+				"setVars":
+				[
+					"variables.inventory.add target",
+					"variables.player.weight.value += target.weight",
+					"section.remove target"
+				],
+				"triggers": []
+			},
+			"drop":
+			{
+				"successFilename": "dropSuccess",
+				"failFilename": "",
+				"alwaysAllowed": true,
+				"time": 1,
+				"targets": [ "item" ],
+				"secondaryKeys": [],
+				"secondaryTargets": [],
+				"conditions": [],
+				"setVars":
+				[
+					"variables.player.weight.value -= target.weight",
+					"variables.inventory.remove target",
+					"section.add target"
+				],
+				"triggers": []
+			},
+			"put":
+			{
+				"successFilename": "",
+				"failFilename": "putFail",
+				"alwaysAllowed": true,
+				"time": 1,
+				"targets": [ "item" ],
+				"secondaryKeys": [ "in", "on" ],
+				"secondaryTargets": [ "object" ],
+				"conditions": [],
+				"setVars": 
+				[
+					"variables.player.weight.value -= target.weight",
+					"variables.inventory.remove target",
+					"section.add target"
+				],
+				"triggers": []
+			},
+			"activate":
+			{
+				"successFilename": "",
+				"failFilename": "activateFail",
+				"alwaysAllowed": false,
+				"time": 1,
+				"targets": [ "item", "object" ],
+				"secondaryKeys": [],
+				"secondaryTargets": [],
+				"conditions": [ { "condition": "target.uses > 0", "operator": "", "failFilename": "noMoreUses" } ],
+				"setVars": [],
+				"triggers": []
+			},
+			"deactivate":
+			{
+				"successFilename": "",
+				"failFilename": "deactivateFail",
+				"alwaysAllowed": false,
+				"time": 1,
+				"targets": [ "item" ],
+				"secondaryKeys": [],
+				"secondaryTargets": [ "object" ],
+				"conditions": [],
+				"setVars": [],
+				"triggers": []
+			},
+			"open":
+			{
+				"successFilename": "",
+				"failFilename": "openFail",
+				"alwaysAllowed": false,
+				"time": 1,
+				"targets": [ "object" ],
+				"secondaryKeys": [],
+				"secondaryTargets": [],
+				"conditions": [],
+				"setVars": [],
+				"triggers": []
+			},
+			"close":
+			{
+				"successFilename": "",
+				"failFilename": "closeFail",
+				"alwaysAllowed": false,
+				"time": 1,
+				"targets": [ "object" ],
+				"secondaryKeys": [],
+				"secondaryTargets": [],
+				"conditions": [],
+				"setVars": [],
+				"triggers": []
+			},
+			"move":
+			{
+				"successFilename": "",
+				"failFilename": "moveFail",
+				"alwaysAllowed": false,
+				"time": 1,
+				"targets": [ "object" ],
+				"secondaryKeys": [],
+				"secondaryTargets": [],
+				"conditions": [],
+				"setVars": [],
+				"triggers": []
+			},
+			"examine":
+			{
+				"successFilename": "",
+				"failFilename": "",
+				"alwaysAllowed": true,
+				"time": 0,
+				"targets": [ "item", "object", "character" ],
+				"secondaryKeys": [],
+				"secondaryTargets": [],
+				"conditions": [],
+				"setVars": [],
+				"triggers": []
+			},
+			"attack":
+			{
+				"successFilename": "",
+				"failFilename": "attackFail",
+				"alwaysAllowed": false,
+				"time": 1,
+				"targets": [ "character" ],
+				"secondaryKeys": [ "with" ],
+				"secondaryTargets": [ "item" ],
+				"conditions": [],
+				"setVars": [ "target.health -= secondaryTarget.power" ],
+				"triggers": [ "kill" ]
+			},
+			"eat":
+			{
+				"successFilename": "",
+				"failFilename": "eatFail",
+				"alwaysAllowed": false,
+				"time": 1,
+				"targets": [ "item" ],
+				"secondaryKeys": [],
+				"secondaryTargets": [],
+				"conditions": [ { "condition": "target.uses > 0", "operator": "", "failFilename": "noMoreUses" } ],
+				"setVars":
+				[
+					"variables.player.hunger.value += target.power",
+					"target.uses -= 1"
+				],
+				"triggers": []
+			},
+			"drink":
+			{
+				"successFilename": "",
+				"failFilename": "drinkFail",
+				"alwaysAllowed": false,
+				"time": 1,
+				"targets": [ "item" ],
+				"secondaryKeys": [],
+				"secondaryTargets": [],
+				"conditions": [ { "condition": "target.uses > 0", "operator": "", "failFilename": "noMoreUses" } ],
+				"setVars":
+				[
+					"variables.player.thirst.value += target.power",
+					"target.uses -= 1"
+				],
+				"triggers": []
+			},
+			"kill":
+			{
+				"successFilename": "",
+				"failFilename": "",
+				"alwaysAllowed": false,
+				"time": 0,
+				"targets": [ "character" ],
+				"secondaryKeys": [],
+				"secondaryTargets": [],
+				"conditions": [ { "condition": "target.health <= 0", "operator": "", "failFilename": "" } ],
+				"setVars": [],
+				"triggers": []
+			}
+		},
+		"entity":
+		{
+			"sackExamine":
+			{
+				"successFilename": "sackExamine",
+				"failFilename": "",
+				"alwaysAllowed": true,
+				"time": 0,
+				"targets": [],
+				"secondaryKeys": [],
+				"secondaryTargets": [],
+				"conditions": [],
+				"setVars": [],
+				"triggers": []
+			},
+			"sackEat":
+			{
+				"successFilename": "sackEat",
+				"failFilename": "",
+				"alwaysAllowed": true,
+				"time": 0,
+				"targets": [],
+				"secondaryKeys": [],
+				"secondaryTargets": [],
+				"conditions": [],
+				"setVars": [],
+				"triggers": []
+			},
+			"bottleExamine":
+			{
+				"successFilename": "bottleExamine",
+				"failFilename": "",
+				"alwaysAllowed": true,
+				"time": 0,
+				"targets": [],
+				"secondaryKeys": [],
+				"secondaryTargets": [],
+				"conditions": [],
+				"setVars": [],
+				"triggers": []
+			},
+			"bottleDrink":
+			{
+				"successFilename": "bottleDrink",
+				"failFilename": "",
+				"alwaysAllowed": true,
+				"time": 0,
+				"targets": [],
+				"secondaryKeys": [],
+				"secondaryTargets": [],
+				"conditions": [],
+				"setVars": [],
+				"triggers": []
+			},
+			"knifeExamine":
+			{
+				"successFilename": "knifeExamine",
+				"failFilename": "",
+				"alwaysAllowed": true,
+				"time": 0,
+				"targets": [],
+				"secondaryKeys": [],
+				"secondaryTargets": [],
+				"conditions": [],
+				"setVars": [],
+				"triggers": []
+			},
+			"knifeAttack":
+			{
+				"successFilename": "knifeAttack",
+				"failFilename": "",
+				"alwaysAllowed": true,
+				"time": 0,
+				"targets": [],
+				"secondaryKeys": [],
+				"secondaryTargets": [],
+				"conditions": [],
+				"setVars": [],
+				"triggers": []
+			},
+			"ropeExamine":
+			{
+				"successFilename": "ropeExamine",
+				"failFilename": "",
+				"alwaysAllowed": true,
+				"time": 0,
+				"targets": [],
+				"secondaryKeys": [],
+				"secondaryTargets": [],
+				"conditions": [],
+				"setVars": [],
+				"triggers": []
+			},
+			"brickExamine":
+			{
+				"successFilename": "brickExamine",
+				"failFilename": "",
+				"alwaysAllowed": true,
+				"time": 0,
+				"targets": [],
+				"secondaryKeys": [],
+				"secondaryTargets": [],
+				"conditions": [],
+				"setVars": [],
+				"triggers": []
+			},
+			"lanternExamine":
+			{
+				"successFilename": "lanternExamine",
+				"failFilename": "",
+				"alwaysAllowed": true,
+				"time": 0,
+				"targets": [],
+				"secondaryKeys": [],
+				"secondaryTargets": [],
+				"conditions": [],
+				"setVars": [],
+				"triggers": []
+			},
+			"lanternActivate":
+			{
+				"successFilename": "lanternActivate",
+				"failFilename": "",
+				"alwaysAllowed": true,
+				"time": 0,
+				"targets": [],
+				"secondaryKeys": [],
+				"secondaryTargets": [],
+				"conditions": [],
+				"setVars": [],
+				"triggers": []
+			},
+			"lanternDeactivate":
+			{
+				"successFilename": "lanternDeactivate",
+				"failFilename": "",
+				"alwaysAllowed": true,
+				"time": 0,
+				"targets": [],
+				"secondaryKeys": [],
+				"secondaryTargets": [],
+				"conditions": [],
+				"setVars": [],
+				"triggers": []
+			},
+			"swordExamine":
+			{
+				"successFilename": "swordExamine",
+				"failFilename": "",
+				"alwaysAllowed": true,
+				"time": 0,
+				"targets": [],
+				"secondaryKeys": [],
+				"secondaryTargets": [],
+				"conditions": [],
+				"setVars": [],
+				"triggers": []
+			},
+			"swordAttack":
+			{
+				"successFilename": "swordAttack",
+				"failFilename": "",
+				"alwaysAllowed": true,
+				"time": 0,
+				"targets": [],
+				"secondaryKeys": [],
+				"secondaryTargets": [],
+				"conditions": [],
+				"setVars": [],
+				"triggers": []
+			},
+			"keyExamine":
+			{
+				"successFilename": "keyExamine",
+				"failFilename": "",
+				"alwaysAllowed": true,
+				"time": 0,
+				"targets": [],
+				"secondaryKeys": [],
+				"secondaryTargets": [],
+				"conditions": [],
+				"setVars": [],
+				"triggers": []
+			},
+			"keyPut":
+			{
+				"successFilename": "keyPut",
+				"failFilename": "",
+				"alwaysAllowed": true,
+				"time": 0,
+				"targets": [ "character" ],
+				"secondaryKeys": [],
+				"secondaryTargets": [],
+				"conditions": [ { "condition": "secondaryTarget == entities.objects.closedDoorLocked", "operator": "", "failFilename": "" } ],
+				"setVars":
+				[
+					"section.remove target",
+					"section.remove secondaryTarget",
+					"section.entities.add entities.objects.openDoor",
+					"section.directions.west.add sections.trollRoom"
+				],
+				"triggers": []
+			},
+			"rugExamine":
+			{
+				"successFilename": "rugExamine",
+				"failFilename": "",
+				"alwaysAllowed": true,
+				"time": 0,
+				"targets": [],
+				"secondaryKeys": [],
+				"secondaryTargets": [],
+				"conditions": [],
+				"setVars": [],
+				"triggers": []
+			},
+			"rugMove":
+			{
+				"successFilename": "rugMove",
+				"failFilename": "",
+				"alwaysAllowed": true,
+				"time": 0,
+				"targets": [],
+				"secondaryKeys": [],
+				"secondaryTargets": [],
+				"conditions": [],
+				"setVars":
+				[
+					"section.remove target",
+					"section.add entities.objects.trapdoorClosed"
+				],
+				"triggers": []
+			},
+			"trapdoorExamine":
+			{
+				"successFilename": "trapdoorExamine",
+				"failFilename": "",
+				"alwaysAllowed": true,
+				"time": 0,
+				"targets": [],
+				"secondaryKeys": [],
+				"secondaryTargets": [],
+				"conditions": [],
+				"setVars": [],
+				"triggers": []
+			},
+			"trapdoorSetOpen":
+			{
+				"successFilename": "trapdoorSetOpen",
+				"failFilename": "",
+				"alwaysAllowed": true,
+				"time": 0,
+				"targets": [],
+				"secondaryKeys": [],
+				"secondaryTargets": [],
+				"conditions": [],
+				"setVars":
+				[
+					"section.remove target",
+					"section.add entities.objects.trapdoorOpen",
+					"variables.global.trapdoor.value = true"
+				],
+				"triggers": []
+			},
+			"doorSetClose":
+			{
+				"successFilename": "doorSetClose",
+				"failFilename": "",
+				"alwaysAllowed": true,
+				"time": 0,
+				"targets": [],
+				"secondaryKeys": [],
+				"secondaryTargets": [],
+				"conditions": [],
+				"setVars":
+				[
+					"section.remove target",
+					"section.add entities.objects.trapdoorClosed",
+					"variables.global.trapdoor.value = false"
+				],
+				"triggers": []
+			},
+			"closedDoorExamine":
+			{
+				"successFilename": "closedDoorExamine",
+				"failFilename": "",
+				"alwaysAllowed": true,
+				"time": 0,
+				"targets": [],
+				"secondaryKeys": [],
+				"secondaryTargets": [],
+				"conditions": [],
+				"setVars": [],
+				"triggers": []
+			},
+			"closedDoorLocked":
+			{
+				"successFilename": "closedDoorLocked",
+				"failFilename": "",
+				"alwaysAllowed": true,
+				"time": 0,
+				"targets": [],
+				"secondaryKeys": [],
+				"secondaryTargets": [],
+				"conditions": [],
+				"setVars": [],
+				"triggers": []
+			},
+			"doorExamine":
+			{
+				"successFilename": "doorExamine",
+				"failFilename": "",
+				"alwaysAllowed": true,
+				"time": 0,
+				"targets": [],
+				"secondaryKeys": [],
+				"secondaryTargets": [],
+				"conditions": [],
+				"setVars": [],
+				"triggers": []
+			},
+			"closedDoorSetOpen":
+			{
+				"successFilename": "closedDoorSetOpen",
+				"failFilename": "",
+				"alwaysAllowed": true,
+				"time": 0,
+				"targets": [],
+				"secondaryKeys": [],
+				"secondaryTargets": [],
+				"conditions": [],
+				"setVars":
+				[
+					"section.remove target",
+					"section.add entities.objects.openDoor",
+					"variables.global.doorOpen.value = true"
+				],
+				"triggers": []
+			},
+			"trollCorpseExamine":
+			{
+				"successFilename": "trollCorpseExamine",
+				"failFilename": "",
+				"alwaysAllowed": true,
+				"time": 0,
+				"targets": [],
+				"secondaryKeys": [],
+				"secondaryTargets": [],
+				"conditions": [],
+				"setVars":
+				[
+					"section.remove target",
+					"section.add entities.objects.trollCorpseEmpty"
+				],
+				"triggers": []
+			},
+			"trollCorpseEmptyExamine":
+			{
+				"successFilename": "trollCorpseEmptyExamine",
+				"failFilename": "",
+				"alwaysAllowed": true,
+				"time": 0,
+				"targets": [],
+				"secondaryKeys": [],
+				"secondaryTargets": [],
+				"conditions": [],
+				"setVars": [],
+				"triggers": []
+			},
+			"trollExamine":
+			{
+				"successFilename": "trollExamine",
+				"failFilename": "",
+				"alwaysAllowed": true,
+				"time": 0,
+				"targets": [],
+				"secondaryKeys": [],
+				"secondaryTargets": [],
+				"conditions": [],
+				"setVars": [],
+				"triggers": []
+			},
+			"trollAttack":
+			{
+				"successFilename": "trollAttack",
+				"failFilename": "",
+				"alwaysAllowed": true,
+				"time": 0,
+				"targets": [],
+				"secondaryKeys": [],
+				"secondaryTargets": [],
+				"conditions": [],
+				"setVars": [],
+				"triggers": []
+			},
+			"trollSlain":
+			{
+				"successFilename": "trollSlain",
+				"failFilename": "",
+				"alwaysAllowed": true,
+				"time": 0,
+				"targets": [],
+				"secondaryKeys": [],
+				"secondaryTargets": [],
+				"conditions": [],
+				"setVars":
+				[
+					"section.remove target",
+					"section.add entities.objects.trollCorpse"
+				],
+				"triggers": []
+			}
+		},
+		"moveset":
+		{
+			"trollDoAttack":
+			{
+				"successFilename": "trollDoAttack",
+				"failFilename": "",
+				"alwaysAllowed": true,
+				"time": 1,
+				"targets": [ "player" ],
+				"secondaryKeys": [],
+				"secondaryTargets": [],
+				"conditions": [],
+				"setVars": [ "target.health.value -= character.power" ],
+				"triggers": []
+			},
+			"trollDoNothing":
+			{
+				"successFilename": "trollDoNothing",
+				"failFilename": "",
+				"alwaysAllowed": true,
+				"time": 1,
+				"targets": [],
+				"secondaryKeys": [],
+				"secondaryTargets": [],
+				"conditions": [],
+				"setVars": [],
+				"triggers": []
+			},
+			"trollDoMiss":
+			{
+				"successFilename": "trollDoMiss",
+				"failFilename": "",
+				"alwaysAllowed": true,
+				"time": 1,
+				"targets": [],
+				"secondaryKeys": [],
+				"secondaryTargets": [],
+				"conditions": [],
+				"setVars": [],
+				"triggers": []
+			}
+		}
+	},
+	"entities":
+	{
+		"item":
+		{
+			"sack":
+			{
+				"filename": "sack",
+				"entityVars":
+				{
+					"uses": { "max": 3 },
+					"health": { "max": 1 },
+					"weight": { "value": 5 },
+					"power": { "value": 1 }
+				},
+				"actions":
+				{
+					"examine": "sackExamine",
+					"eat": "sackEat"
+				},
+				"moveset": {}
+			},
+			"bottle":
+			{
+				"filename": "bottle",
+				"entityVars":
+				{
+					"uses": { "max": 3 },
+					"health": { "max": 1 },
+					"weight": { "value": 3 },
+					"power": { "value": 1 }
+				},
+				"actions":
+				{
+					"examine": "bottleExamine",
+					"drink": "bottleDrink"
+				},
+				"moveset": {}
+			},
+			"knife":
+			{
+				"filename": "knife",
+				"entityVars":
+				{
+					"uses": { "max": -1 },
+					"health": { "max": 1 },
+					"weight": { "value": 2 },
+					"power": { "value": 1 }
+				},
+				"actions":
+				{
+					"examine": "knifeExamine",
+					"attack": "knifeAttack"
+				},
+				"moveset": {}
+			},
+			"rope":
+			{
+				"filename": "rope",
+				"entityVars":
+				{
+					"uses": { "max": 1 },
+					"health": { "max": 1 },
+					"weight": { "value": 5 }
+				},
+				"actions": { "examine": "ropeExamine" },
+				"moveset": {}
+			},
+			"brick":
+			{
+				"filename": "brick",
+				"entityVars":
+				{
+					"uses": { "max": 3 },
+					"health": { "max": 1 },
+					"weight": { "value": 5 }
+				},
+				"actions": { "examine": "brickExamine" },
+				"moveset": {}
+			},
+			"lantern":
+			{
+				"filename": "lantern",
+				"entityVars":
+				{
+					"uses": { "max": 100 },
+					"health": { "max": 1 },
+					"weight": { "value": 5 }
+				},
+				"actions":
+				{
+					"examine": "lanternExamine",
+					"activate": "lanternActivate",
+					"deactivate": "lanternDeactivate"
+				},
+				"moveset": {}
+			},
+			"sword":
+			{
+				"filename": "sword",
+				"entityVars":
+				{
+					"uses": { "max": -1 },
+					"health": { "max": 1 },
+					"weight": { "value": 10 },
+					"power": { "value": 2 }
+				},
+				"actions":
+				{
+					"examine": "swordExamine",
+					"attack": "swordAttack"
+				},
+				"moveset": {}
+			},
+			"key":
+			{
+				"filename": "key",
+				"entityVars":
+				{
+					"uses": { "max": 1 },
+					"health": { "max": 1 },
+					"weight": { "value": 1 }
+				},
+				"actions":
+				{
+					"examine": "keyExamine",
+					"put": "keyPut"
+				},
+				"moveset": {}
+			}
+		},
+		"object":
+		{
+			"rug":
+			{
+				"filename": "rug",
+				"entityVars":
+				{
+					"health": { "max": 1 },
+					"weight": { "value": 50 }
+				},
+				"actions":
+				{
+					"examine": "rugExamine",
+					"move": "rugMove"
+				},
+				"moveset": {}
+			},
+			"trapdoorClosed":
+			{
+				"filename": "trapdoorClosed",
+				"entityVars":
+				{
+					"health": { "max": 1 },
+					"weight": { "value": 999 }
+				},
+				"actions":
+				{
+					"examine": "trapdoorExamine",
+					"open": "trapdoorSetOpen"
+				},
+				"moveset": {}
+			},
+			"trapdoorOpen":
+			{
+				"filename": "trapdoorOpen",
+				"entityVars":
+				{
+					"health": { "max": 1 },
+					"weight": { "value": 999 }
+				},
+				"actions":
+				{
+					"examine": "trapdoorExamine",
+					"close": "doorSetClose"
+				},
+				"moveset": {}
+			},
+			"closedDoorLocked":
+			{
+				"filename": "closedDoor",
+				"entityVars":
+				{
+					"health": { "max": 1 },
+					"weight": { "value": 999 }
+				},
+				"actions":
+				{
+					"examine": "closedDoorExamine",
+					"open": "closedDoorLocked" 
+				},
+				"moveset": {}
+			},
+			"closedDoor":
+			{
+				"filename": "closedDoor",
+				"entityVars":
+				{
+					"health": { "max": 1 },
+					"weight": { "value": 999 }
+				},
+				"actions":
+				{
+					"examine": "doorExamine",
+					"open": "closedDoorSetOpen"
+				},
+				"moveset": {}
+			},
+			"openDoor":
+			{
+				"filename": "openDoor",
+				"entityVars":
+				{
+					"health": { "max": 1 },
+					"weight": { "value": 999 }
+				},
+				"actions":
+				{
+					"examine": "doorExamine",
+					"close": "doorSetClose"
+				},
+				"moveset": {}
+			},
+			"trollCorpse":
+			{
+				"filename": "trollCorpse",
+				"entityVars":
+				{
+					"health": { "max": 1 },
+					"weight": { "value": 300 }
+				},
+				"actions":
+				{
+					"examine": "trollCorpseExamine"
+				},
+				"moveset": {}
+			},
+			"trollCorpseEmpty":
+			{
+				"filename": "trollCorpse",
+				"entityVars":
+				{
+					"health": { "max": 1 },
+					"weight": { "value": 300 }
+				},
+				"actions":
+				{
+					"examine": "trollCorpseEmptyExamine"
+				},
+				"moveset": {}
+			}
+		},
+		"character":
+		{
+			"troll":
+			{
+				"filename": "troll",
+				"entityVars":
+				{
+					"health": { "max": 3 },
+					"weight": { "value": 300 },
+					"power": { "value": 1 },
+					"time": { "value": 1 }
+				},
+				"actions":
+				{
+					"examine": "trollExamine",
+					"attack": "trollAttack",
+					"kill": "trollSlain"
+				},
+				"moveset":
+				{
+					"trollDoAttack": 40,
+					"trollDoNothing": 30,
+					"trollDoMiss": 30
+				}
+			}
+		}
+	}
+}

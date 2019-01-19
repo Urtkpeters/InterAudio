@@ -1,0 +1,8 @@
+<resources>
+    <string name="app_name">InterAudio</string>
+    <string name="simple">Simple</string>
+    <string name="downloadButton">Download</string>
+    <string name="playButton">Play</string>
+    <string name="deleteButton">Delete</string>
+    <string name="updateButton">Update</string>
+</resources>

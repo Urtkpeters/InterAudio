@@ -140,7 +140,7 @@ class Adventure
 
             if(varType.equals("player"))
             {
-                adventureVars.get(varType).put(variable.getString("name"), new PlayerVariable(variable));
+                Player.addPlayerVariable(new PlayerVariable(variable));
             }
             else
             {

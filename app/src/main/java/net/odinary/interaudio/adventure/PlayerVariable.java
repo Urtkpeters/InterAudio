@@ -27,16 +27,6 @@ public class PlayerVariable extends AdventureVariable
         }
     }
 
-    PlayerVariable(PlayerVariable cloner)
-    {
-        super(cloner);
-
-        this.maxFailFilename = cloner.maxFailFilename;
-        this.bFilemap = cloner.bFilemap;
-        this.iFilemap = cloner.iFilemap;
-        this.sFilemap = cloner.sFilemap;
-    }
-
     private void parseBooleanMap(JSONObject variable) throws JSONException
     {
         bFilemap = new HashMap<>();

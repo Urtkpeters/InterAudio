@@ -1,0 +1,242 @@
+{
+	"packageName": "simple",
+	"author": "Odonen",
+	"audioFileExt": "m4a",
+	"sections":
+	{
+		"beginning": 
+		[
+			{
+				"section": "beginning",
+				"conditions": [],
+				"filename": "split",
+				"keywords":
+				[
+					{ "keyword": "left", "section": "left" },
+					{ "keyword": "right", "section": "right" }
+				],
+				"setVariables": [],
+				"redirect": ""
+			}
+		],
+		"left":
+		[
+			{
+				"section": "left",
+				"filename": "left",
+				"conditions":
+				[
+					{ "variable": "dollar", "value": "false" }
+				],
+				"keywords":
+				[
+					{ "keyword": "dollar", "section": "dollar" },
+					{ "keyword": "vending", "section": "vending" },
+					{ "keyword": "back", "section": "beginning" }
+				],
+				"setVariables": [],
+				"redirect": ""
+			},
+			{
+				"section": "left",
+				"filename": "leftDollar",
+				"conditions":
+				[
+					{ "variable": "dollar", "value": true },
+					{ "variable": "candy", "value": false },
+					{ "variable": "treat", "value": false }
+				],
+				"keywords":
+				[
+					{ "keyword": "vending", "section": "vending" },
+					{ "keyword": "back", "section": "beginning" }
+				],
+				"setVariables": [],
+				"redirect": ""
+			}
+		],
+		"right": 
+		[
+			{
+				"section": "right",
+				"filename": "right",
+				"conditions": [],
+				"keywords":
+				[
+					{ "keyword": "approach", "section": "approach" },
+					{ "keyword": "back", "section": "beginning" }
+				],
+				"setVariables": [],
+				"redirect": ""
+			}
+		],
+		"dollar":
+		[
+			{
+				"section": "dollar",
+				"filename": "dollar",
+				"conditions": [],
+				"keywords":
+				[
+					{ "keyword": "vending", "section": "vending" },
+					{ "keyword": "back", "section": "beginning" }
+				],
+				"setVariables": [ { "variable": "dollar", "value": true } ],
+				"redirect": ""
+			}
+		],
+		"vending":
+		[
+			{
+				"section": "vending",
+				"filename": "vending",
+				"conditions":
+				[
+					{ "variable": "dollar", "value": false },
+					{ "variable": "candy", "value": false },
+					{ "variable": "treat", "value": false }
+				],
+				"keywords":
+				[
+					{ "keyword": "dollar", "section": "dollar" },
+					{ "keyword": "back", "section": "beginning" }
+				],
+				"setVariables": [],
+				"redirect": ""
+			},
+			{
+				"section": "vending",
+				"filename": "vendingDollar",
+				"conditions":
+				[
+					{ "variable": "dollar", "value": true },
+					{ "variable": "candy", "value": false },
+					{ "variable": "treat", "value": false }
+				],
+				"keywords":
+				[
+					{ "keyword": "treat", "section": "treat" },
+					{ "keyword": "candy", "section": "candy" }
+				],
+				"setVariables": [],
+				"redirect": ""
+			},
+			{
+				"section": "vending",
+				"filename": "vendingPurchase",
+				"conditions":
+				[
+					{ "variable": "dollar", "value": true },
+					{ "variable": "candy", "value": true },
+					{ "variable": "treat", "value": false }
+				],
+				"keywords": [],
+				"setVariables": [],
+				"redirect": "beginning"
+			},
+			{
+				"section": "vending",
+				"filename": "vendingPurchase",
+				"conditions":
+				[
+					{ "variable": "dollar", "value": true },
+					{ "variable": "candy", "value": false },
+					{ "variable": "treat", "value": true }
+				],
+				"keywords": [],
+				"setVariables": [],
+				"redirect": "beginning"
+			}
+		],
+		"candy":
+		[
+			{
+				"section": "candy",
+				"filename": "vendingCandy",
+				"conditions":[],
+				"keywords": [],
+				"setVariables": [ { "variable": "candy", "value": true } ],
+				"redirect": "beginning"
+			}
+		],
+		"treat":
+		[
+			{
+				"section": "treat",
+				"filename": "vendingTreat",
+				"conditions":[],
+				"keywords": [],
+				"setVariables": [ { "variable": "treat", "value": true } ],
+				"redirect": "beginning"
+			}
+		],
+		"approach":
+		[
+			{
+				"section": "approach",
+				"filename": "approach",
+				"conditions": [ { "variable": "treat", "value": false } ],
+				"keywords":
+				[
+					{ "keyword": "pet", "section": "pet" },
+					{ "keyword": "back", "section": "back" }
+				],
+				"setVariables": [],
+				"redirect": ""
+			},
+			{
+				"section": "approach",
+				"filename": "approachTreat",
+				"conditions": [ { "variable": "treat", "value": true } ],
+				"keywords":
+				[
+					{ "keyword": "pet", "section": "pet" },
+					{ "keyword": "back", "section": "back" },
+					{ "keyword": "treat", "section": "giveTreat" }
+				],
+				"setVariables": [],
+				"redirect": ""
+			}
+		],
+		"pet":
+		[
+			{
+				"section": "pet",
+				"filename": "pet",
+				"conditions": [],
+				"keywords": [],
+				"setVariables": [],
+				"redirect": ""
+			}
+		],
+		"giveTreat":
+		[
+			{
+				"section": "giveTreat",
+				"filename": "treat",
+				"conditions": [],
+				"keywords": [],
+				"setVariables": [],
+				"redirect": ""
+			}
+		]
+	},
+	"variables":
+	[
+		{
+			"name": "dollar",
+			"type": "Boolean",
+			"default": false
+		},
+		{
+			"name": "candy",
+			"type": "Boolean",
+			"default": false
+		},
+		{
+			"name": "treat",
+			"type": "Boolean",
+			"default": false
+		}
+	]
+}

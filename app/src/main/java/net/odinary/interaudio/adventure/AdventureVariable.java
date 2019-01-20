@@ -13,7 +13,7 @@ public class AdventureVariable extends AbstractEntity
 
     public AdventureVariable(JSONObject variable) throws JSONException
     {
-        super(variable);
+        super(variable, "adventureVariable");
 
         type = variable.getString("type");
 

@@ -14,9 +14,9 @@ public class Entity extends AbstractEntity
     private HashMap<String, Action> actions = new HashMap<>();
     private HashMap<String, Action> moveset = new HashMap<>();
 
-    public Entity(JSONObject entityJson, HashMap<String, HashMap<String, Action>> actionMap, HashMap<String, HashMap<String, AdventureVariable>> adventureVars) throws JSONException, PackageLoadException
+    public Entity(JSONObject entityJson, String entityType, HashMap<String, HashMap<String, Action>> actionMap, HashMap<String, HashMap<String, AdventureVariable>> adventureVars) throws JSONException, PackageLoadException
     {
-        super(entityJson);
+        super(entityJson, entityType);
 
         HashMap<String, AdventureVariable> globalEntityVars = adventureVars.get("entity");
 

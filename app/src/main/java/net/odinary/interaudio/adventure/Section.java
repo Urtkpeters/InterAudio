@@ -18,7 +18,7 @@ public class Section extends AbstractEntity
 
     public Section(JSONObject jsonSection, HashMap<String, HashMap<String, Entity>> entitiesMap) throws JSONException
     {
-        super(jsonSection);
+        super(jsonSection, "section");
 
         conditions = Conditions.parseConditions(jsonSection.getJSONArray("conditions"));
 

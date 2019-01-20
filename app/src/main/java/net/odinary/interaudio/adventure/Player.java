@@ -22,14 +22,14 @@ class Player
 
     public static void addToInventory(Entity item) { inventory.add(item); }
 
-    public static boolean checkInventory(String itemName)
+    public static Entity checkInventory(String resultPhrase)
     {
         for(Entity item: inventory)
         {
-            if(item.getName().equals(itemName)) return true;
+            if(resultPhrase.contains(item.getName())) return item;
         }
 
-        return false;
+        return null;
     }
 
     public static void useItemFromInventory(String itemName)

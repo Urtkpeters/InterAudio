@@ -13,7 +13,7 @@ public class Action extends AbstractEntity
     private String failFilename;
     private Boolean alwaysAllowed;
     private int time;
-    private List<String> targets = new ArrayList<>();
+    private List<String> targetTypes = new ArrayList<>();
     private List<String> secondaryKeys = new ArrayList<>();
     private List<String> secondaryTargets = new ArrayList<>();
     private List<HashMap<String, String>> conditions;
@@ -22,17 +22,17 @@ public class Action extends AbstractEntity
 
     public Action(JSONObject jsonAction) throws JSONException
     {
-        super(jsonAction);
+        super(jsonAction, "action");
 
         failFilename = jsonAction.getString("failFilename");
         alwaysAllowed = jsonAction.getBoolean("alwaysAllowed");
         time = jsonAction.getInt("time");
 
-        JSONArray targetsArray = jsonAction.getJSONArray("targets");
+        JSONArray targetTypesArray = jsonAction.getJSONArray("targets");
 
-        for(int i = 0; i < targetsArray.length(); i++)
+        for(int i = 0; i < targetTypesArray.length(); i++)
         {
-            targets.add(targetsArray.getString(i));
+            targetTypes.add(targetTypesArray.getString(i));
         }
 
         JSONArray secondaryKeysArray = jsonAction.getJSONArray("secondaryKeys");
@@ -68,7 +68,7 @@ public class Action extends AbstractEntity
 
     public String getName() { return name; }
 
-    public List<String> getTargets() { return targets; }
+    public List<String> getTargetTypes() { return targetTypes; }
 
     public List<String> getSecondaryKeys() { return secondaryKeys; }
 

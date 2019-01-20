@@ -123,11 +123,11 @@ public class AdventureHandler
                 if(action != null)
                 {
                     event.setAction(action);
-                    List<String> targets = action.getTargets();
+                    List<String> targetTypes = action.getTargetTypes();
 
-                    if(!targets.isEmpty())
+                    if(!targetTypes.isEmpty())
                     {
-                        event.setTarget(currentAdventure.checkTarget(resultPhrase, targets));
+                        event.setTarget(currentAdventure.checkTarget(resultPhrase, targetTypes));
 
                         if(event.getTarget() != null)
                         {

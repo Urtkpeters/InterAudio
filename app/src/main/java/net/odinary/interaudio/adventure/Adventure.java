@@ -175,7 +175,7 @@ class Adventure
         {
             JSONObject typeEntity = typeEntities.getJSONObject(i);
 
-            entities.get(entityType).put(typeEntity.getString("name"), new Entity(typeEntity, actions, adventureVars));
+            entities.get(entityType).put(typeEntity.getString("name"), new Entity(typeEntity, entityType, actions, adventureVars));
         }
     }
 
@@ -218,7 +218,7 @@ class Adventure
         return checkTarget(resultPhrase, targets, null);
     }
 
-    public Entity checkTarget(String resultPhrase, List<String> targets, String primaryTarget)
+    public Entity checkTarget(String resultPhrase, List<String> targetTypes, String primaryTarget)
     {
         List<Entity> entities = currentSection.getEntities();
 
@@ -228,9 +228,9 @@ class Adventure
 
             if(!entityName.equals(primaryTarget) && resultPhrase.contains(entityName))
             {
-                for(String target: targets)
+                for(String targetType: targetTypes)
                 {
-                    if(entityName.equals(target))
+                    if(entity.getType().equals(targetType))
                     {
                         return entity;
                     }
@@ -240,7 +240,7 @@ class Adventure
             }
         }
 
-        return null;
+        return Player.checkInventory(resultPhrase);
     }
 
     public Section getCurrentSection() { return currentSection; }

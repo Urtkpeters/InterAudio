@@ -6,12 +6,14 @@ import org.json.JSONObject;
 abstract class AbstractEntity
 {
     String name;
+    String type;
     String filename;
 
-    AbstractEntity(JSONObject entityJson) throws JSONException
+    AbstractEntity(JSONObject entityJson, String type) throws JSONException
     {
         this.name = entityJson.getString("name");
         this.filename = entityJson.getString("filename");
+        this.type = type;
     }
 
     AbstractEntity(AbstractEntity cloner)
@@ -23,4 +25,6 @@ abstract class AbstractEntity
     public String getName() { return name; }
 
     public String getFilename() { return filename; }
+
+    public String getType() { return type; }
 }

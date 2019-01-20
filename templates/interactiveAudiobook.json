@@ -1,5 +1,6 @@
 {
 	"packageName": "simple",
+	"packageType": "IA",
 	"author": "Odonen",
 	"audioFileExt": "m4a",
 	"sections":

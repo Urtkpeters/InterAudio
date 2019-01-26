@@ -7,6 +7,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 public class Conditions
 {
@@ -18,7 +19,7 @@ public class Conditions
         {
             JSONObject condition = conditionsArray.getJSONObject(i);
 
-            conditions.add(i, new HashMap<String, String>());
+            conditions.add(i, new HashMap<>());
 
             conditions.get(i).put("condition", condition.getString("condition"));
             conditions.get(i).put("operator", condition.getString("operator"));
@@ -28,28 +29,38 @@ public class Conditions
         return conditions;
     }
 
-    public static String checkConditionss(Event event, HashMap<String, HashMap<String, AdventureVariable>> variables)
+    public static String checkConditions(Event event)
     {
-        String returnFilename = "";
+        Action action = event.getAction();
+        List<HashMap<String, String>> conditions = action.getConditions();
 
-        returnFilename = checkConditions(event, variables, event.getAction().getConditions());
+        String returnFilename = checkConditions(event, conditions);
 
-        // The below target file name is incorrect, need to get it from the sub-action object
-        Entity target = event.getTarget();
-        List<HashMap<String, String>> targetConditions = target.getConditions();
-        String targetFilename = target.getFilename();
-
-        if(!targetFilename.isEmpty() || targetConditions.size() > 0)
+        if(returnFilename == null || returnFilename.isEmpty())
         {
-            returnFilename = checkConditions(event, variables, event.getAction().getConditions());
-        }
+            Entity target = event.getTarget();
+            String actionName = action.getName();
 
+            if(target.checkActionOverride(actionName))
+            {
+                Action overrideAction = target.getActionOverride(actionName);
+                List<HashMap<String, String>> overrideConditions = overrideAction.getConditions();
+
+                // I am really not sure if this list > hashmap comparison using .equals is going to work.
+                if(overrideConditions.size() > 0 && !conditions.equals(overrideConditions)) returnFilename = checkConditions(event, event.getAction().getConditions());
+
+                if(returnFilename == null || returnFilename.isEmpty()) returnFilename = overrideAction.getFilename();
+            }
+            else
+            {
+                returnFilename = action.getFilename();
+            }
+        }
 
         return returnFilename;
     }
 
-    public static String checkConditions(Event event, HashMap<String, HashMap<String, AdventureVariable>> variables, List<HashMap<String, String>> conditions)
-//    public static String checkConditions(Event event, HashMap<String, HashMap<String, AdventureVariable>> variables)
+    private static String checkConditions(Event event, List<HashMap<String, String>> conditions)
     {
         String failFilename = null;
 

@@ -93,6 +93,8 @@ public class Entity extends AbstractEntity
 
     public Action getActionOverride(String name) { return actions.get(name); }
 
+    public Boolean checkActionOverride(String name) { return actions.containsKey(name); }
+
     public void setVariableValue(String variable, boolean value)
     {
         if(entityVars.containsKey(variable)) entityVars.get(variable).setValue(value);

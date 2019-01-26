@@ -190,7 +190,7 @@ public class AdventureHandler
     private void performAction(Event event)
     {
         // Adventure vars will no longer be stored here
-//        String conditionResponse = Conditions.checkConditions(event, currentAdventure.getAdventureVars());
+        String conditionResponse = Conditions.checkConditions(event);
 
         clipList.add(conditionResponse);
 

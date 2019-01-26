@@ -20,6 +20,7 @@ abstract class AbstractEntity
     {
         this.name = cloner.name;
         this.filename = cloner.filename;
+        this.type = cloner.type;
     }
 
     public String getName() { return name; }

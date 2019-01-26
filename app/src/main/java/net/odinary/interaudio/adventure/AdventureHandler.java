@@ -118,19 +118,26 @@ public class AdventureHandler
             {
                 Boolean validAction = true;
 
-                Action action = currentAdventure.getPlayerAction(resultPhrase);
+                Action action = Player.getActionFromResult(resultPhrase);
 
                 if(action != null)
                 {
-                    event.setAction(action);
                     List<String> targetTypes = action.getTargetTypes();
 
                     if(!targetTypes.isEmpty())
                     {
-                        event.setTarget(currentAdventure.checkTarget(resultPhrase, targetTypes));
+                        Entity target = currentAdventure.checkTarget(resultPhrase, targetTypes);
 
-                        if(event.getTarget() != null)
+                        if(target != null)
                         {
+                            event.setTarget(target);
+
+                            Action actionOverride = target.getActionOverride(action.getName());
+
+                            if(actionOverride != null) action = actionOverride;
+
+                            event.setAction(action);
+
                             List<String> secondaryActions = action.getSecondaryKeys();
 
                             if(!secondaryActions.isEmpty())
@@ -182,7 +189,8 @@ public class AdventureHandler
 
     private void performAction(Event event)
     {
-        String conditionResponse = Conditions.checkConditions(event, currentAdventure.getAdventureVars());
+        // Adventure vars will no longer be stored here
+//        String conditionResponse = Conditions.checkConditions(event, currentAdventure.getAdventureVars());
 
         clipList.add(conditionResponse);
 

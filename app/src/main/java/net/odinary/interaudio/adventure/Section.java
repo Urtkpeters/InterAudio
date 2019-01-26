@@ -1,12 +1,13 @@
 package net.odinary.interaudio.adventure;
 
+import net.odinary.interaudio.adventure.repositories.EntityRepository;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 
 public class Section extends AbstractEntity
@@ -16,21 +17,17 @@ public class Section extends AbstractEntity
     private List<Entity> entities = new ArrayList<>();
     private List<String> setVars = new ArrayList<>();
 
-    public Section(JSONObject jsonSection, HashMap<String, HashMap<String, Entity>> entitiesMap) throws JSONException
+    public Section(JSONObject jsonSection) throws JSONException
     {
         super(jsonSection, "section");
 
         conditions = Conditions.parseConditions(jsonSection.getJSONArray("conditions"));
 
-        JSONObject jsonDirections = jsonSection.getJSONObject("directions");
-        Iterator<String> keys = jsonDirections.keys();
+        JSONArray jsonDirections = jsonSection.getJSONArray("directions");
 
-        while(keys.hasNext())
+        for(int i = 0; i < jsonDirections.length(); i++)
         {
-            String key = keys.next();
-            String value = jsonDirections.get(key).toString();
-
-            if(value != null && !value.isEmpty()) directions.put(key, value);
+            directions.put(jsonDirections.getJSONObject(i).getString("direction"), jsonDirections.getJSONObject(i).getString("name"));
         }
 
         JSONArray entityArray = jsonSection.getJSONArray("entities");
@@ -42,7 +39,7 @@ public class Section extends AbstractEntity
             String entityType = entity.getString("type");
             String entityName = entity.getString("name");
 
-            entities.add(entitiesMap.get(entityType).get(entityName));
+            entities.add(new Entity(EntityRepository.getEntity(entityType, entityName)));
         }
 
         JSONArray varArray = jsonSection.getJSONArray("setVariables");

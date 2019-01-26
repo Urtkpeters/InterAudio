@@ -1,6 +1,7 @@
 package net.odinary.interaudio.adventure;
 
 import net.odinary.interaudio.PackageLoadException;
+import net.odinary.interaudio.adventure.repositories.EntityRepository;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -15,7 +16,6 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -27,10 +27,7 @@ class Adventure
     private String author;
     private String audioFileExt;
     private HashMap<String, Section> sections = new HashMap<>();
-    private HashMap<String, HashMap<String, AdventureVariable>> adventureVars = new HashMap<>();
     private HashMap<String, HashMap<String, Action>> actions = new HashMap<>();
-    private List<String> playerActionList = new ArrayList<>();
-    private HashMap<String, HashMap<String, Entity>> entities = new HashMap<>();
     private Section currentSection;
 
     Adventure(String packageDir) throws Exception
@@ -105,7 +102,7 @@ class Adventure
             {
                 JSONObject section = jsonSections.getJSONObject(i);
 
-                sections.put(section.getString("name"), new Section(section, entities));
+                sections.put(section.getString("name"), new Section(section));
             }
 
             currentSection = sections.get(packageJson.getString("start"));
@@ -130,8 +127,6 @@ class Adventure
 
     private void parseVars(JSONObject jsonVars, String varType) throws JSONException
     {
-        adventureVars.put(varType, new HashMap<String, AdventureVariable>());
-
         JSONArray variables = jsonVars.getJSONArray(varType);
 
         for(int i = 0; i < variables.length(); i++)
@@ -144,7 +139,7 @@ class Adventure
             }
             else
             {
-                adventureVars.get(varType).put(variable.getString("name"), new AdventureVariable(variable));
+                EntityRepository.addEntityVariable(variable.getString("name"), new AdventureVariable(variable));
             }
         }
     }
@@ -160,22 +155,26 @@ class Adventure
             JSONObject typeAction = typeActions.getJSONObject(i);
             String name = typeAction.getString("name");
 
-            actions.get(actionType).put(name, new Action(typeAction));
-            if(actionType.equals("player")) playerActionList.add(name);
+            if(actionType.equals("player"))
+            {
+                Player.addAction(new Action(typeAction));
+            }
+            else
+            {
+                actions.get(actionType).put(name, new Action(typeAction));
+            }
         }
     }
 
     private void parseEntities(JSONObject jsonEntities, String entityType) throws JSONException, PackageLoadException
     {
-        entities.put(entityType, new HashMap<String, Entity>());
-
         JSONArray typeEntities = jsonEntities.getJSONArray(entityType);
 
         for(int i = 0; i < typeEntities.length(); i++)
         {
             JSONObject typeEntity = typeEntities.getJSONObject(i);
 
-            entities.get(entityType).put(typeEntity.getString("name"), new Entity(typeEntity, entityType, actions, adventureVars));
+            EntityRepository.addEntity(entityType, typeEntity.getString("name"), new Entity(typeEntity, entityType));
         }
     }
 
@@ -188,16 +187,6 @@ class Adventure
             Action action = playerActions.get(key);
 
             if(resultPhrase.contains(playerActions.get(key).getName())) return action;
-        }
-
-        return null;
-    }
-
-    public String checkActions(String resultPhrase)
-    {
-        for(String action: playerActionList)
-        {
-            if(resultPhrase.contains(action)) return action;
         }
 
         return null;
@@ -252,10 +241,6 @@ class Adventure
     public String getAuthor() { return author; }
 
     public String getAudioFileExt() { return audioFileExt; }
-
+1
     public String getCurrentSectionFilename() { return currentSection.getFilename(); }
-
-    public List<String> getPlayerActionList() { return playerActionList; }
-
-    public HashMap<String, HashMap<String, AdventureVariable>> getAdventureVars() { return adventureVars; }
 }

@@ -66,6 +66,27 @@ public class Action extends AbstractEntity
         }
     }
 
+    public Action(Action cloner, JSONObject actionOverrides) throws JSONException
+    {
+        super(cloner);
+
+        if(actionOverrides.has("filename")) filename = actionOverrides.getString("filename");
+
+        if(actionOverrides.has("failFilename")) failFilename = actionOverrides.getString("failFilename");
+
+        if(actionOverrides.has("conditions")) conditions.addAll(Conditions.parseConditions(actionOverrides.getJSONArray("conditions")));
+
+        if(actionOverrides.has("setVars"))
+        {
+            JSONArray newSetVars = actionOverrides.getJSONArray("setVars");
+
+            for(int i = 0; i < newSetVars.length(); i++)
+            {
+                setVars.add(newSetVars.getString(i));
+            }
+        }
+    }
+
     public String getName() { return name; }
 
     public List<String> getTargetTypes() { return targetTypes; }

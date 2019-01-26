@@ -5,20 +5,37 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-class Player
+public class Player
 {
     private static List<Entity> inventory = new ArrayList<>();
-    private static Map<String, PlayerVariable> playerVariables = new HashMap<>();
+    private static Map<String, PlayerVariable> variables = new HashMap<>();
+    private static Map<String, Action> actions = new HashMap<>();
 
-    public static void addPlayerVariable(PlayerVariable playerVariable) { playerVariables.put(playerVariable.getName(), playerVariable); }
+    public static void addPlayerVariable(PlayerVariable playerVariable) { variables.put(playerVariable.getName(), playerVariable); }
 
-    public static PlayerVariable getPlayerVariable(String variableName) { return playerVariables.get(variableName); }
+    public static PlayerVariable getVariable(String variableName) { return variables.get(variableName); }
 
-    public static boolean checkPlayerVariable(String variableName, boolean value, String relationalOperator) { return playerVariables.get(variableName).checkValue(value, relationalOperator); }
+    public static boolean checkVariable(String variableName, boolean value, String relationalOperator) { return variables.get(variableName).checkValue(value, relationalOperator); }
 
-    public static boolean checkPlayerVariable(String variableName, int value, String relationalOperator) { return playerVariables.get(variableName).checkValue(value, relationalOperator); }
+    public static boolean checkVariable(String variableName, int value, String relationalOperator) { return variables.get(variableName).checkValue(value, relationalOperator); }
 
-    public static boolean checkPlayerVariable(String variableName, String value, String relationalOperator) { return playerVariables.get(variableName).checkValue(value, relationalOperator); }
+    public static boolean checkVariable(String variableName, String value, String relationalOperator) { return variables.get(variableName).checkValue(value, relationalOperator); }
+
+    public static void addAction(Action action) { actions.put(action.getName(), action); }
+
+    public static Action getAction(String name) { return actions.get(name); }
+
+    public static Action getActionFromResult(String resultPhrase)
+    {
+        for(String key: actions.keySet())
+        {
+            Action action = actions.get(key);
+
+            if(resultPhrase.contains(actions.get(key).getName())) return action;
+        }
+
+        return null;
+    }
 
     public static void addToInventory(Entity item) { inventory.add(item); }
 

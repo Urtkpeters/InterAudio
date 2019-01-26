@@ -1,6 +1,7 @@
 package net.odinary.interaudio.adventure;
 
 import net.odinary.interaudio.PackageLoadException;
+import net.odinary.interaudio.adventure.repositories.EntityRepository;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -14,11 +15,9 @@ public class Entity extends AbstractEntity
     private HashMap<String, Action> actions = new HashMap<>();
     private HashMap<String, Action> moveset = new HashMap<>();
 
-    public Entity(JSONObject entityJson, String entityType, HashMap<String, HashMap<String, Action>> actionMap, HashMap<String, HashMap<String, AdventureVariable>> adventureVars) throws JSONException, PackageLoadException
+    public Entity(JSONObject entityJson, String entityType) throws JSONException, PackageLoadException
     {
         super(entityJson, entityType);
-
-        HashMap<String, AdventureVariable> globalEntityVars = adventureVars.get("entity");
 
         JSONObject jsonEntityVars = entityJson.getJSONObject("entityVars");
         Iterator<String> keys = jsonEntityVars.keys();
@@ -28,9 +27,9 @@ public class Entity extends AbstractEntity
             String key = keys.next();
             JSONObject jsonEntityVar = jsonEntityVars.getJSONObject(key);
 
-            if(globalEntityVars.containsKey(key))
+            if(EntityRepository.checkEntityVariableExists(key))
             {
-                entityVars.put(key, new AdventureVariable(globalEntityVars.get(key)));
+                entityVars.put(key, new AdventureVariable(EntityRepository.getEntityVariable(key)));
 
                 switch(entityVars.get(key).getType())
                 {
@@ -55,19 +54,17 @@ public class Entity extends AbstractEntity
             }
         }
 
-        // THIS WHOLE ACTION SECTION IS BEING DONE INCORRECTLY. THE ACTIONS ARE SUPPOSED TO JUST BE OVERRIDES FOR THE FILE NAMES
-
         JSONObject jsonActions = entityJson.getJSONObject("actions");
         keys = jsonActions.keys();
 
         while(keys.hasNext())
         {
             String key = keys.next();
-            String value = jsonActions.getString(key);
+            JSONObject jsonAction = jsonActions.getJSONObject(key);
 
-            Action action = actionMap.get("player").get(key);
+            Action action = Player.getAction(key);
 
-            if(action != null) actions.put(key, action);
+            if(action != null) actions.put(key, new Action(action, jsonAction));
             else throw new PackageLoadException("Could not load actions into entity. Entity: " + name + " Action: " + key);
         }
 
@@ -79,14 +76,22 @@ public class Entity extends AbstractEntity
             String key = keys.next();
             String value = jsonMoveset.getString(key);
 
-            // I NEED TO SET THE VALUE INTO EITHER A NEW CLASS FOR ENTITY ACTIONS OR SOME METHOD OF STORAGE OF THE DIFFERENT TYPES OF ACTIONS CHANCE PERCENTAGES
-
-            Action action = actionMap.get("moveset").get(key);
-
-            if(action != null) moveset.put(key, action);
+            // It is using a blank JSON object for now so that an error is not thrown but this needs to be templated with overrides from the JSON
+            if(EntityRepository.checkEntityMoveExists(key)) moveset.put(key, new Action(EntityRepository.getEntityMove(key), new JSONObject()));
             else throw new PackageLoadException("Could not load actions into entity. Entity: " + name + " Action: " + key);
         }
     }
+
+    public Entity(Entity cloner)
+    {
+        super(cloner);
+
+        this.entityVars = cloner.entityVars;
+        this.actions = cloner.actions;
+        this.moveset = cloner.moveset;
+    }
+
+    public Action getActionOverride(String name) { return actions.get(name); }
 
     public void setVariableValue(String variable, boolean value)
     {

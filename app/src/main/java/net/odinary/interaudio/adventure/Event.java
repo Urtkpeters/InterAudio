@@ -1,6 +1,6 @@
 package net.odinary.interaudio.adventure;
 
-class Event
+public class Event
 {
     private Action action;
     private String secondaryAction;
@@ -8,7 +8,7 @@ class Event
     private Entity secondaryTarget;
     private Section section;
 
-    Event(Section currentSection) { section = currentSection; }
+    public Event(Section currentSection) { section = currentSection; }
 
     public void setAction(Action action) { this.action = action; }
 

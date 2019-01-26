@@ -4,9 +4,12 @@ import net.odinary.interaudio.adventure.Action;
 import net.odinary.interaudio.adventure.AdventureVariable;
 import net.odinary.interaudio.adventure.Conditions;
 import net.odinary.interaudio.adventure.Entity;
+import net.odinary.interaudio.adventure.Event;
+import net.odinary.interaudio.adventure.Player;
 import net.odinary.interaudio.adventure.PlayerVariable;
 import net.odinary.interaudio.adventure.Section;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -88,13 +91,13 @@ public class SimpleTest
                 }
 
                 // Parse Sections
-                JSONObject jsonSections = packageJson.getJSONObject("sections");
-                keys = jsonSections.keys();
+                JSONArray jsonSections = packageJson.getJSONArray("sections");
 
-                while(keys.hasNext())
+                for(int i = 0; i < jsonSections.length(); i++)
                 {
-                    String key = keys.next();
-                    sections.put(key, new Section(key, jsonSections.getJSONObject(key), entities));
+                    JSONObject section = jsonSections.getJSONObject(i);
+
+                    sections.put(section.getString("name"), new Section(section, entities));
                 }
 
                 currentSection = sections.get(packageJson.getString("start"));
@@ -120,8 +123,15 @@ public class SimpleTest
 
         try
         {
-            List<HashMap<String, String>> conditions = Conditions.parseConditions(packageJson.getJSONObject("sections").getJSONObject("attic").getJSONArray("conditions"));
-            String failFilename = Conditions.checkConditions(conditions, adventureVars, currentSection, target, null);
+//            List<HashMap<String, String>> conditions = Conditions.parseConditions(packageJson.getJSONObject("sections").getJSONObject("attic").getJSONArray("conditions"));
+
+            Event event = new Event(currentSection);
+
+            event.setAction(actions.get("player").get("eat"));
+
+            event.setTarget(currentSection.getEntity("sack"));
+
+            String failFilename = Conditions.checkConditions(event, adventureVars);
 
             if(failFilename != null) System.out.println("Condition was not met. Fail Filename: " + failFilename);
             else System.out.println("Condition was met!");
@@ -134,22 +144,21 @@ public class SimpleTest
 
     private static void parseVars(JSONObject jsonVars, String varType) throws JSONException
     {
-        adventureVars.put(varType, new HashMap<String, AdventureVariable>());
+        if(!varType.equals("player")) adventureVars.put(varType, new HashMap<String, AdventureVariable>());
 
-        JSONObject typeEntities = jsonVars.getJSONObject(varType);
-        Iterator<String> keys = typeEntities.keys();
+        JSONArray variables = jsonVars.getJSONArray(varType);
 
-        while(keys.hasNext())
+        for(int i = 0; i < variables.length(); i++)
         {
-            String key = keys.next();
+            JSONObject variable = variables.getJSONObject(i);
 
             if(varType.equals("player"))
             {
-                adventureVars.get(varType).put(key, new PlayerVariable(key, typeEntities.getJSONObject(key)));
+                Player.addPlayerVariable(new PlayerVariable(variable));
             }
             else
             {
-                adventureVars.get(varType).put(key, new AdventureVariable(key, typeEntities.getJSONObject(key)));
+                adventureVars.get(varType).put(variable.getString("name"), new AdventureVariable(variable));
             }
         }
     }
@@ -158,15 +167,15 @@ public class SimpleTest
     {
         actions.put(actionType, new HashMap<String, Action>());
 
-        JSONObject typeActions = jsonActions.getJSONObject(actionType);
-        Iterator<String> keys = typeActions.keys();
+        JSONArray typeActions = jsonActions.getJSONArray(actionType);
 
-        while(keys.hasNext())
+        for(int i = 0; i < typeActions.length(); i++)
         {
-            String key = keys.next();
+            JSONObject typeAction = typeActions.getJSONObject(i);
+            String name = typeAction.getString("name");
 
-            actions.get(actionType).put(key, new Action(key, typeActions.getJSONObject(key)));
-            if(actionType.equals("player")) playerActionList.add(key);
+            actions.get(actionType).put(name, new Action(typeAction));
+            if(actionType.equals("player")) playerActionList.add(name);
         }
     }
 
@@ -174,14 +183,13 @@ public class SimpleTest
     {
         entities.put(entityType, new HashMap<String, Entity>());
 
-        JSONObject typeEntities = jsonEntities.getJSONObject(entityType);
-        Iterator<String> keys = typeEntities.keys();
+        JSONArray typeEntities = jsonEntities.getJSONArray(entityType);
 
-        while(keys.hasNext())
+        for(int i = 0; i < typeEntities.length(); i++)
         {
-            String key = keys.next();
+            JSONObject typeEntity = typeEntities.getJSONObject(i);
 
-            entities.get(entityType).put(key, new Entity(key, typeEntities.getJSONObject(key), actions, adventureVars));
+            entities.get(entityType).put(typeEntity.getString("name"), new Entity(typeEntity, entityType, actions, adventureVars));
         }
     }
 }

@@ -28,9 +28,29 @@ public class Conditions
         return conditions;
     }
 
-    public static String checkConditions(Event event, HashMap<String, HashMap<String, AdventureVariable>> variables)
+    public static String checkConditionss(Event event, HashMap<String, HashMap<String, AdventureVariable>> variables)
     {
-        List<HashMap<String, String>> conditions = event.getAction().getConditions();
+        String returnFilename = "";
+
+        returnFilename = checkConditions(event, variables, event.getAction().getConditions());
+
+        // The below target file name is incorrect, need to get it from the sub-action object
+        Entity target = event.getTarget();
+        List<HashMap<String, String>> targetConditions = target.getConditions();
+        String targetFilename = target.getFilename();
+
+        if(!targetFilename.isEmpty() || targetConditions.size() > 0)
+        {
+            returnFilename = checkConditions(event, variables, event.getAction().getConditions());
+        }
+
+
+        return returnFilename;
+    }
+
+    public static String checkConditions(Event event, HashMap<String, HashMap<String, AdventureVariable>> variables, List<HashMap<String, String>> conditions)
+//    public static String checkConditions(Event event, HashMap<String, HashMap<String, AdventureVariable>> variables)
+    {
         String failFilename = null;
 
         if(conditions.size() != 0)

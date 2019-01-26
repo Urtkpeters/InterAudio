@@ -17,7 +17,6 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
-import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
 
@@ -27,8 +26,6 @@ class Adventure
     private String packageType;
     private String author;
     private String audioFileExt;
-    private HashMap<String, Section> sections = new HashMap<>();
-    private Section currentSection;
 
     Adventure(String packageDir) throws Exception
     {
@@ -102,10 +99,10 @@ class Adventure
             {
                 JSONObject section = jsonSections.getJSONObject(i);
 
-                sections.put(section.getString("name"), new Section(section));
+                World.addSection(new Section(section));
             }
 
-            currentSection = sections.get(packageJson.getString("start"));
+            World.setCurrentSection(packageJson.getString("start"));
 
             // Associate Entities to Vars
 
@@ -193,7 +190,7 @@ class Adventure
 
     public Entity checkTarget(String resultPhrase, List<String> targetTypes, String primaryTarget)
     {
-        List<Entity> entities = currentSection.getEntities();
+        List<Entity> entities = World.getCurrentSection().getEntities();
 
         for(Entity entity: entities)
         {
@@ -216,8 +213,6 @@ class Adventure
         return Player.checkInventory(resultPhrase);
     }
 
-    public Section getCurrentSection() { return currentSection; }
-
     public String getPackageName() { return packageName; }
 
     public String getPackageType() { return packageType; }
@@ -225,6 +220,4 @@ class Adventure
     public String getAuthor() { return author; }
 
     public String getAudioFileExt() { return audioFileExt; }
-1
-    public String getCurrentSectionFilename() { return currentSection.getFilename(); }
 }

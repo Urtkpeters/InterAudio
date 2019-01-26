@@ -39,7 +39,7 @@ public class AdventureHandler
         {
             currentAdventure = new Adventure(mainActivity.getPackageHandler().getPackageDir() + jsonFilename);
 
-            clipList.add(currentAdventure.getCurrentSectionFilename());
+            clipList.add(World.getCurrentSection().getFilename());
 
             playClips();
         }
@@ -104,7 +104,7 @@ public class AdventureHandler
     {
         // Get the resulting VTT responses from Google
         ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-        Event event = new Event(currentAdventure.getCurrentSection());
+        Event event = new Event(World.getCurrentSection());
 
         try
         {

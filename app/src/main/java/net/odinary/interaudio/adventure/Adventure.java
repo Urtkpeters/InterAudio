@@ -1,6 +1,7 @@
 package net.odinary.interaudio.adventure;
 
 import net.odinary.interaudio.PackageLoadException;
+import net.odinary.interaudio.adventure.repositories.ActionRepository;
 import net.odinary.interaudio.adventure.repositories.EntityRepository;
 
 import org.json.JSONArray;
@@ -27,7 +28,6 @@ class Adventure
     private String author;
     private String audioFileExt;
     private HashMap<String, Section> sections = new HashMap<>();
-    private HashMap<String, HashMap<String, Action>> actions = new HashMap<>();
     private Section currentSection;
 
     Adventure(String packageDir) throws Exception
@@ -144,10 +144,8 @@ class Adventure
         }
     }
 
-    private void parseActions(JSONObject jsonActions, String actionType) throws JSONException
+    private void parseActions(JSONObject jsonActions, String actionType) throws JSONException, PackageLoadException
     {
-        actions.put(actionType, new HashMap<String, Action>());
-
         JSONArray typeActions = jsonActions.getJSONArray(actionType);
 
         for(int i = 0; i < typeActions.length(); i++)
@@ -161,7 +159,7 @@ class Adventure
             }
             else
             {
-                actions.get(actionType).put(name, new Action(typeAction));
+                ActionRepository.addAction(actionType, name, new Action(typeAction));
             }
         }
     }
@@ -176,20 +174,6 @@ class Adventure
 
             EntityRepository.addEntity(entityType, typeEntity.getString("name"), new Entity(typeEntity, entityType));
         }
-    }
-
-    public Action getPlayerAction(String resultPhrase)
-    {
-        HashMap<String, Action> playerActions = actions.get("player");
-
-        for(String key: playerActions.keySet())
-        {
-            Action action = playerActions.get(key);
-
-            if(resultPhrase.contains(playerActions.get(key).getName())) return action;
-        }
-
-        return null;
     }
 
     public String checkSecondaryActions(String resultPhrase, List<String> secondaryActions)

@@ -1,5 +1,6 @@
 package net.odinary.interaudio.adventure.repositories;
 
+import net.odinary.interaudio.PackageLoadException;
 import net.odinary.interaudio.adventure.Action;
 import net.odinary.interaudio.adventure.AdventureVariable;
 import net.odinary.interaudio.adventure.Entity;
@@ -15,13 +16,14 @@ public class EntityRepository
     private static Map<String, AdventureVariable> variables = new HashMap<>();
     private static Map<String, Action> moves = new HashMap<>();
 
-    public static void addEntity(String type, String name, Entity entity)
+    public static void addEntity(String type, String name, Entity entity) throws PackageLoadException
     {
         switch(type)
         {
             case "item": items.put(name, entity); break;
             case "object": objects.put(name, entity); break;
             case "character": characters.put(name, entity); break;
+            default: throw new PackageLoadException("Invalid entity type during entity repository creation.");
         }
     }
 

@@ -27,7 +27,7 @@ public class EntityRepository
         }
     }
 
-    public static void addEntityVariable(String name, AdventureVariable adventureVariable) { variables.put(name, adventureVariable); }
+    public static void addEntityVariable(AdventureVariable adventureVariable) { variables.put(adventureVariable.getName(), adventureVariable); }
 
     public static void addEntityMove(String name, Action action) { moves.put(name, action); }
 

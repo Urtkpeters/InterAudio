@@ -6,6 +6,7 @@ import net.odinary.interaudio.adventure.Entity;
 import net.odinary.interaudio.adventure.Event;
 import net.odinary.interaudio.adventure.Player;
 import net.odinary.interaudio.adventure.Section;
+import net.odinary.interaudio.adventure.World;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -114,9 +115,7 @@ public class ConditionHandler
         switch(path.getScope())
         {
             case ConditionSegment.global:
-
-                // I don't have a storage place for global variables yet.
-
+                if(World.checkVariableExists(varName)) return World.getVariable(varName);
                 break;
             case ConditionSegment.player:
                 if(Player.checkVariableExists(varName)) return Player.getVariable(varName);
@@ -124,13 +123,11 @@ public class ConditionHandler
                 break;
             case ConditionSegment.target:
                 Entity target = event.getTarget();
-
                 if(target.checkVariableExists(varName)) return target.getVariable(varName);
 
                 break;
             case ConditionSegment.secondaryTarget:
                 Entity secondaryTarget = event.getSecondaryTarget();
-
                 if(secondaryTarget.checkVariableExists(varName)) return secondaryTarget.getVariable(varName);
 
                 break;

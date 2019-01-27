@@ -69,8 +69,6 @@ public class AdventureVariable extends AbstractEntity
         sValue = variable.getString("value");
     }
 
-    public String getVariableName() { return name; }
-
     public String getType() { return type; }
 
     // ------------------------------------------------------

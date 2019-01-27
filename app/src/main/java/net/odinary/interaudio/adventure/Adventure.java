@@ -122,7 +122,7 @@ class Adventure
         }
     }
 
-    private void parseVars(JSONObject jsonVars, String varType) throws JSONException
+    private void parseVars(JSONObject jsonVars, String varType) throws JSONException, PackageLoadException
     {
         JSONArray variables = jsonVars.getJSONArray(varType);
 
@@ -130,13 +130,12 @@ class Adventure
         {
             JSONObject variable = variables.getJSONObject(i);
 
-            if(varType.equals("player"))
+            switch(varType)
             {
-                Player.addPlayerVariable(new PlayerVariable(variable));
-            }
-            else
-            {
-                EntityRepository.addEntityVariable(variable.getString("name"), new AdventureVariable(variable));
+                case "global": World.addVariable(new AdventureVariable(variable));
+                case "player": Player.addPlayerVariable(new PlayerVariable(variable));
+                case "entity": EntityRepository.addEntityVariable(new AdventureVariable(variable));
+                default: throw new PackageLoadException("Undefined variable type");
             }
         }
     }

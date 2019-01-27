@@ -5,6 +5,10 @@ import org.json.JSONObject;
 
 public class AdventureVariable extends AbstractEntity
 {
+    public static final String booleanType = "Boolean";
+    public static final String integerType = "Integer";
+    public static final String stringType = "String";
+
     protected String type;
     protected Boolean bValue;
     protected int iValue;
@@ -19,9 +23,9 @@ public class AdventureVariable extends AbstractEntity
 
         switch(type)
         {
-            case "Boolean": parseBoolean(variable); break;
-            case "Integer": parseInt(variable); break;
-            case "String": parseString(variable); break;
+            case booleanType: parseBoolean(variable); break;
+            case integerType: parseInt(variable); break;
+            case stringType: parseString(variable); break;
         }
     }
 
@@ -40,9 +44,9 @@ public class AdventureVariable extends AbstractEntity
     {
         switch(type)
         {
-            case "Boolean": return bValue.toString();
-            case "Integer": return ((Integer) iValue).toString();
-            case "String": return sValue;
+            case booleanType: return bValue.toString();
+            case integerType: return ((Integer) iValue).toString();
+            case stringType: return sValue;
             default: return null;
         }
     }

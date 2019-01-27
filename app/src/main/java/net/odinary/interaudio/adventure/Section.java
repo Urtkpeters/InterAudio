@@ -12,7 +12,7 @@ import java.util.List;
 
 public class Section extends AbstractEntity
 {
-    private List<HashMap<String, String>> conditions;
+    private List<Condition> conditions;
     private HashMap<String, String> directions = new HashMap<>();
     private List<Entity> entities = new ArrayList<>();
     private List<String> setVars = new ArrayList<>();

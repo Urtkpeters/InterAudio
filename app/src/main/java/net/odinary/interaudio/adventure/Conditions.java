@@ -7,23 +7,18 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
 
 public class Conditions
 {
-    public static List<HashMap<String, String>> parseConditions(JSONArray conditionsArray) throws JSONException
+    public static List<Condition> parseConditions(JSONArray conditionsArray) throws JSONException
     {
-        List<HashMap<String, String>> conditions = new ArrayList<>();
+        List<Condition> conditions = new ArrayList<>();
 
         for(int i = 0; i < conditionsArray.length(); i++)
         {
             JSONObject condition = conditionsArray.getJSONObject(i);
 
-            conditions.add(i, new HashMap<>());
-
-            conditions.get(i).put("condition", condition.getString("condition"));
-            conditions.get(i).put("operator", condition.getString("operator"));
-            conditions.get(i).put("failFilename", condition.getString("failFilename"));
+            conditions.add(new Condition(condition.getString("condition"), condition.getString("operator"), condition.getString("failFilename")));
         }
 
         return conditions;
@@ -32,7 +27,7 @@ public class Conditions
     public static String checkConditions(Event event)
     {
         Action action = event.getAction();
-        List<HashMap<String, String>> conditions = action.getConditions();
+        List<Condition> conditions = action.getConditions();
 
         String returnFilename = checkConditions(event, conditions);
 
@@ -44,7 +39,7 @@ public class Conditions
             if(target.checkActionOverride(actionName))
             {
                 Action overrideAction = target.getActionOverride(actionName);
-                List<HashMap<String, String>> overrideConditions = overrideAction.getConditions();
+                List<Condition> overrideConditions = overrideAction.getConditions();
 
                 // I am really not sure if this list > hashmap comparison using .equals is going to work.
                 if(overrideConditions.size() > 0 && !conditions.equals(overrideConditions)) returnFilename = checkConditions(event, event.getAction().getConditions());
@@ -60,7 +55,7 @@ public class Conditions
         return returnFilename;
     }
 
-    private static String checkConditions(Event event, List<HashMap<String, String>> conditions)
+    private static String checkConditions(Event event, List<Condition> conditions)
     {
         String failFilename = null;
 
@@ -68,71 +63,46 @@ public class Conditions
         {
             List<Boolean> finalValues = new ArrayList<>();
 
-            for(HashMap<String, String> conditionRow: conditions)
+            for(Condition condition: conditions)
             {
-                String condition = conditionRow.get("condition");
+                List<ConditionSegment> conditionSegments = condition.getSegments();
+                ConditionSegment firstPath = conditionSegments.get(0);
+                ConditionSegment secondPath;
+                String operator;
 
-                System.out.println("Condition: " + condition);
-
-                List<String> segments = parseNotation(condition, " ");
-
-                System.out.println("Segments: " + segments);
-
-                List<String> firstPath = parseNotation(segments.get(0), ".");
-                List<String> secondPath;
-                AdventureVariable firstVar = null;
-
-                if(firstPath.get(0).equals("variables"))
-                {
-                    firstVar = variables.get(firstPath.get(1)).get(firstPath.get(2));
-                }
-                else if(firstPath.get(0).equals("event"))
-                {
-                    if(firstPath.get(1).equals("section"))
-                    {
-                        // Do shit with sections here
-                    }
-                    else
-                    {
-                        if(firstPath.get(1).equals("target"))
-                        {
-                            firstVar = event.getTarget().getVariable(firstPath.get(2));
-                        }
-                        else if(firstPath.get(1).equals("secondaryTarget"))
-                        {
-                            firstVar = event.getSecondaryTarget().getVariable(firstPath.get(2));
-                        }
-                    }
-                }
+                AdventureVariable firstVar = parseVariable(event, firstPath);
 
                 if(firstVar != null)
                 {
-                    System.out.println("First Var: " + firstVar.getVariableName());
-                    System.out.println("First Value: " + firstVar);
-
                     String compType = firstVar.getType();
 
-                    if(compType != null)
+                    switch(compType)
                     {
-                        // I SHOULD TRY AND SEE IF THERE IS A BETTER WAY OF GETTING THE VALUES OTHER THAN HARD CODED INTEGERS
-                        switch(compType)
-                        {
-                            case "Boolean":
-                                secondPath = parseNotation(segments.get(2), ".");
+                        case AdventureVariable.booleanType:
+                            secondPath = conditionSegments.get(2);
+                            operator = conditionSegments.get(1).getValue();
 
-                                if(secondPath.size() <= 1) finalValues.add(firstVar.checkValue(Boolean.parseBoolean(secondPath.get(0)), segments.get(1)));
-                                    // THESE LONG HARD CODED PATHS SHOULD NOT BE HERE, THEY NEED TO BE DYNAMICALLY PULLED
-                                else finalValues.add(firstVar.checkValue(variables.get(secondPath.get(1)).get(secondPath.get(2)).getBValue(), segments.get(1)));
+                            if(secondPath.getType() == ConditionSegment.raw) finalValues.add(firstVar.checkValue(Boolean.parseBoolean(secondPath.getValue()), operator));
+                            else
+                            {
+                                AdventureVariable secondVar = parseVariable(event, secondPath);
+                                finalValues.add(firstVar.checkValue(secondVar.getBValue(), operator));
+                            }
+                            break;
+                        case AdventureVariable.integerType:
+                            finalValues.add(compareInt(event, conditionSegments, 0, 0, 0, null));
+                            break;
+                        case AdventureVariable.stringType:
+                            secondPath = conditionSegments.get(2);
+                            operator = conditionSegments.get(1).getValue();
 
-                                break;
-                            case "Integer":
-                                finalValues.add(compareInt(variables, segments, 0, 0, 0, null));
-                                break;
-                            case "String":
-                                secondPath = parseNotation(segments.get(2), ".");
-                                finalValues.add(firstVar.checkValue(variables.get(secondPath.get(1)).get(secondPath.get(2)).getSValue(), segments.get(1)));
-                                break;
-                        }
+                            if(secondPath.getType() == ConditionSegment.raw) finalValues.add(firstVar.checkValue(secondPath.getValue(), operator));
+                            else
+                            {
+                                AdventureVariable secondVar = parseVariable(event, secondPath);
+                                finalValues.add(firstVar.checkValue(secondVar.getSValue(), operator));
+                            }
+                            break;
                     }
                 }
             }
@@ -145,9 +115,10 @@ public class Conditions
                 if(andOperator && currentVal) currentVal = finalValues.get(i);
                 else if(!andOperator) currentVal = finalValues.get(i);
 
-                andOperator = conditions.get(i).get("operator").equals("AND");
+                // This needs to not be a hard coded string
+                andOperator = conditions.get(i).getOperator().equals("AND");
 
-                if(!finalValues.get(i)) failFilename = conditions.get(i).get("failFilename");
+                if(!finalValues.get(i)) failFilename = conditions.get(i).getFailFilename();
 
                 if(!andOperator && currentVal) return null;
             }
@@ -156,22 +127,55 @@ public class Conditions
         return failFilename;
     }
 
-    private static Boolean compareInt(HashMap<String, HashMap<String, AdventureVariable>> variables, List<String> segments, int currentIndex, int currentLeftValue, int currentRightValue, String relationalOperator)
+    private static AdventureVariable parseVariable(Event event, ConditionSegment path)
+    {
+        String varName = path.getVariable();
+
+        switch(path.getScope())
+        {
+            case ConditionSegment.global:
+
+                // I don't have a storage place for global variables yet.
+
+                break;
+            case ConditionSegment.player:
+                if(Player.checkVariableExists(varName)) return Player.getVariable(varName);
+
+                break;
+            case ConditionSegment.target:
+                Entity target = event.getTarget();
+
+                if(target.checkVariableExists(varName)) return target.getVariable(varName);
+
+                break;
+            case ConditionSegment.secondaryTarget:
+                Entity secondaryTarget = event.getSecondaryTarget();
+
+                if(secondaryTarget.checkVariableExists(varName)) return secondaryTarget.getVariable(varName);
+
+                break;
+            case ConditionSegment.sections:
+                Section currentSection = event.getSection();
+
+                // Section shit is complete different
+
+                break;
+        }
+
+        return null;
+    }
+
+    private static Boolean compareInt(Event event, List<ConditionSegment> segments, int currentIndex, int currentLeftValue, int currentRightValue, String relationalOperator)
     {
         if(segments.size() > currentIndex + 2)
         {
-            String operatorSegment = segments.get(currentIndex + 1);
+            String operatorSegment = segments.get(currentIndex + 1).getValue();
 
             if(operatorSegment.contains("=") || operatorSegment.contains(">") || operatorSegment.contains("<"))
             {
-                String segmentOne = segments.get(currentIndex);
-                List<String> listOne = parseNotation(segmentOne, ".");
+                AdventureVariable varOne = parseVariable(event, segments.get(currentIndex));
 
-                // THIS CAN BE DIFFERENT LENGTH DEPENDING ON WHAT THE ORIGINAL VARIABLE IS (TARGET VS PLAYER VAR)
-                // I SHOULD PROBABLY JUST COME UP WITH A SEPERATE FUNCTION TO PARSE THE DIFFERENCE AND RETURN A VALUE IN THE SEVERAL PLACES IT IS NEEDED
-                AdventureVariable varOne = variables.get(listOne.get(1)).get(listOne.get(2));
-
-                return compareInt(variables, segments, currentIndex + 2, varOne.getIValue(), currentRightValue, operatorSegment);
+                return compareInt(event, segments, currentIndex + 2, varOne.getIValue(), currentRightValue, operatorSegment);
             }
             else
             {
@@ -179,9 +183,7 @@ public class Conditions
 
                 if(currentIndex == 0)
                 {
-                    String segmentOne = segments.get(currentIndex);
-                    List<String> listOne = parseNotation(segmentOne, ".");
-                    AdventureVariable varOne = variables.get(listOne.get(1)).get(listOne.get(2));
+                    AdventureVariable varOne = parseVariable(event, segments.get(currentIndex));
 
                     intOne = varOne.getIValue();
                 }
@@ -191,18 +193,17 @@ public class Conditions
                     else intOne = currentRightValue;
                 }
 
-                String segmentTwo = segments.get(currentIndex + 2);
                 int intTwo;
+                ConditionSegment segmentTwo = segments.get(currentIndex + 2);
 
-                if(segmentTwo.contains("variables") || segmentTwo.contains("target") || segmentTwo.contains("secondaryTarget") || segmentTwo.contains("section"))
+                if(segmentTwo.getType() == ConditionSegment.variable)
                 {
-                    List<String> listTwo = parseNotation(segmentTwo, ".");
-                    AdventureVariable varTwo = variables.get(listTwo.get(1)).get(listTwo.get(2));
+                    AdventureVariable varTwo = parseVariable(event, segments.get(currentIndex + 2));
                     intTwo = varTwo.getIValue();
                 }
                 else
                 {
-                    intTwo = Integer.parseInt(segmentTwo);
+                    intTwo = Integer.parseInt(segmentTwo.getValue());
                 }
 
                 switch(operatorSegment)
@@ -216,11 +217,11 @@ public class Conditions
 
                 if(relationalOperator == null)
                 {
-                    return compareInt(variables, segments, currentIndex + 2, intOne, currentRightValue, null);
+                    return compareInt(event, segments, currentIndex + 2, intOne, currentRightValue, null);
                 }
                 else
                 {
-                    return compareInt(variables, segments, currentIndex + 2, currentLeftValue, intOne, relationalOperator);
+                    return compareInt(event, segments, currentIndex + 2, currentLeftValue, intOne, relationalOperator);
                 }
             }
         }

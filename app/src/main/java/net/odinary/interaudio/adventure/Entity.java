@@ -116,11 +116,7 @@ public class Entity extends AbstractEntity
         System.out.println("Could not find entity variable");
     }
 
-    public AdventureVariable getVariable(String variable)
-    {
-        if(entityVars.containsKey(variable)) return entityVars.get(variable);
+    public Boolean checkVariableExists(String name) { return entityVars.containsKey(name); }
 
-        System.out.println("Could not find entity variable");
-        return null;
-    }
+    public AdventureVariable getVariable(String variable) { return entityVars.get(variable); }
 }

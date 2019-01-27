@@ -16,7 +16,7 @@ public class Action extends AbstractEntity
     private List<String> targetTypes = new ArrayList<>();
     private List<String> secondaryKeys = new ArrayList<>();
     private List<String> secondaryTargets = new ArrayList<>();
-    private List<HashMap<String, String>> conditions;
+    private List<Condition> conditions;
     private List<String> setVars = new ArrayList<>();
     private List<String> triggers = new ArrayList<>();
 
@@ -95,7 +95,7 @@ public class Action extends AbstractEntity
 
     public List<String> getSecondaryTargets() { return secondaryTargets; }
 
-    public List<HashMap<String, String>> getConditions() { return conditions; }
+    public List<Condition> getConditions() { return conditions; }
 
     public int getTime() { return time; }
 }

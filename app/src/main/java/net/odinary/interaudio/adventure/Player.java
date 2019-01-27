@@ -15,6 +15,8 @@ public class Player
 
     public static PlayerVariable getVariable(String variableName) { return variables.get(variableName); }
 
+    public static Boolean checkVariableExists(String variableName) { return variables.containsKey(variableName); }
+
     public static boolean checkVariable(String variableName, boolean value, String relationalOperator) { return variables.get(variableName).checkValue(value, relationalOperator); }
 
     public static boolean checkVariable(String variableName, int value, String relationalOperator) { return variables.get(variableName).checkValue(value, relationalOperator); }

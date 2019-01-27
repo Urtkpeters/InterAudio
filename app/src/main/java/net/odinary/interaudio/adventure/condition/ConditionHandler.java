@@ -16,6 +16,9 @@ import java.util.List;
 
 public class ConditionHandler
 {
+    private static final String andOperator = "AND";
+    private static final String orOperator = "OR";
+
     public static List<Condition> parseConditions(JSONArray conditionsArray) throws JSONException
     {
         List<Condition> conditions = new ArrayList<>();
@@ -93,7 +96,7 @@ public class ConditionHandler
                 else if(!booleanOperator) currentVal = finalValues.get(i);
 
                 // This needs to not be a hard coded string
-                booleanOperator = conditions.get(i).getOperator().equals("AND");
+                booleanOperator = conditions.get(i).getOperator().equals(andOperator);
 
                 if(!finalValues.get(i)) failFilename = conditions.get(i).getFailFilename();
 

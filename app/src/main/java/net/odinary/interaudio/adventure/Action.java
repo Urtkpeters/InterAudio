@@ -1,11 +1,13 @@
 package net.odinary.interaudio.adventure;
 
+import net.odinary.interaudio.adventure.condition.Condition;
+import net.odinary.interaudio.adventure.condition.ConditionHandler;
+
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 
 public class Action extends AbstractEntity
@@ -49,7 +51,7 @@ public class Action extends AbstractEntity
             secondaryTargets.add(secondaryTargetsArray.getString(i));
         }
 
-        conditions = Conditions.parseConditions(jsonAction.getJSONArray("conditions"));
+        conditions = ConditionHandler.parseConditions(jsonAction.getJSONArray("conditions"));
 
         JSONArray setVarsArray = jsonAction.getJSONArray("setVars");
 
@@ -74,7 +76,7 @@ public class Action extends AbstractEntity
 
         if(actionOverrides.has("failFilename")) failFilename = actionOverrides.getString("failFilename");
 
-        if(actionOverrides.has("conditions")) conditions.addAll(Conditions.parseConditions(actionOverrides.getJSONArray("conditions")));
+        if(actionOverrides.has("conditions")) conditions.addAll(ConditionHandler.parseConditions(actionOverrides.getJSONArray("conditions")));
 
         if(actionOverrides.has("setVars"))
         {

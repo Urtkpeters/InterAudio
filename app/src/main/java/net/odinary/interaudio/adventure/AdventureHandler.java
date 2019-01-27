@@ -7,11 +7,7 @@ import android.net.Uri;
 import android.speech.RecognizerIntent;
 
 import net.odinary.interaudio.MainActivity;
-import net.odinary.interaudio.R;
-
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
+import net.odinary.interaudio.adventure.condition.ConditionHandler;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -190,7 +186,7 @@ public class AdventureHandler
     private void performAction(Event event)
     {
         // Adventure vars will no longer be stored here
-        String conditionResponse = Conditions.checkConditions(event);
+        String conditionResponse = ConditionHandler.checkConditions(event);
 
         clipList.add(conditionResponse);
 

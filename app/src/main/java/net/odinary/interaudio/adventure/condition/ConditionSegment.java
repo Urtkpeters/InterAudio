@@ -1,4 +1,4 @@
-package net.odinary.interaudio.adventure;
+package net.odinary.interaudio.adventure.condition;
 
 import java.util.List;
 
@@ -16,7 +16,6 @@ class ConditionSegment
     public static final String secondaryTarget = "secondaryTarget";
 
     private int type = empty;
-
     private String scope;
     private String entityVariable;
     private String value;

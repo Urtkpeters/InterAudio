@@ -2,7 +2,7 @@ package net.odinary.interaudio;
 
 import net.odinary.interaudio.adventure.Action;
 import net.odinary.interaudio.adventure.AdventureVariable;
-import net.odinary.interaudio.adventure.Conditions;
+import net.odinary.interaudio.adventure.condition.ConditionHandler;
 import net.odinary.interaudio.adventure.Entity;
 import net.odinary.interaudio.adventure.Event;
 import net.odinary.interaudio.adventure.Player;
@@ -97,7 +97,7 @@ public class SimpleTest
                 {
                     JSONObject section = jsonSections.getJSONObject(i);
 
-                    sections.put(section.getString("name"), new Section(section, entities));
+                    sections.put(section.getString("name"), new Section(section));
                 }
 
                 currentSection = sections.get(packageJson.getString("start"));
@@ -123,7 +123,7 @@ public class SimpleTest
 
         try
         {
-//            List<HashMap<String, String>> conditions = Conditions.parseConditions(packageJson.getJSONObject("sections").getJSONObject("attic").getJSONArray("conditions"));
+//            List<HashMap<String, String>> conditions = ConditionHandler.parseConditions(packageJson.getJSONObject("sections").getJSONObject("attic").getJSONArray("conditions"));
 
             Event event = new Event(currentSection);
 
@@ -131,7 +131,7 @@ public class SimpleTest
 
             event.setTarget(currentSection.getEntity("sack"));
 
-            String failFilename = Conditions.checkConditions(event, adventureVars);
+            String failFilename = ConditionHandler.checkConditions(event);
 
             if(failFilename != null) System.out.println("Condition was not met. Fail Filename: " + failFilename);
             else System.out.println("Condition was met!");
@@ -189,7 +189,7 @@ public class SimpleTest
         {
             JSONObject typeEntity = typeEntities.getJSONObject(i);
 
-            entities.get(entityType).put(typeEntity.getString("name"), new Entity(typeEntity, entityType, actions, adventureVars));
+//            entities.get(entityType).put(typeEntity.getString("name"), new Entity(typeEntity, entityType, actions, adventureVars));
         }
     }
 }

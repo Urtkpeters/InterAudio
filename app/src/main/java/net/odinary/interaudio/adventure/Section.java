@@ -1,5 +1,7 @@
 package net.odinary.interaudio.adventure;
 
+import net.odinary.interaudio.adventure.condition.Condition;
+import net.odinary.interaudio.adventure.condition.ConditionHandler;
 import net.odinary.interaudio.adventure.repositories.EntityRepository;
 
 import org.json.JSONArray;
@@ -21,7 +23,7 @@ public class Section extends AbstractEntity
     {
         super(jsonSection, "section");
 
-        conditions = Conditions.parseConditions(jsonSection.getJSONArray("conditions"));
+        conditions = ConditionHandler.parseConditions(jsonSection.getJSONArray("conditions"));
 
         JSONArray jsonDirections = jsonSection.getJSONArray("directions");
 

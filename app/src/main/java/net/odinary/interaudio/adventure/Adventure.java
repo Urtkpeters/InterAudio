@@ -4,7 +4,6 @@ import net.odinary.interaudio.PackageLoadException;
 import net.odinary.interaudio.adventure.component.entity.Action;
 import net.odinary.interaudio.adventure.component.entity.Entity;
 import net.odinary.interaudio.adventure.component.entity.Section;
-import net.odinary.interaudio.adventure.repository.ActionRepository;
 import net.odinary.interaudio.adventure.repository.EntityRepository;
 import net.odinary.interaudio.adventure.repository.PlayerRepository;
 import net.odinary.interaudio.adventure.repository.WorldRepository;
@@ -31,9 +30,9 @@ import java.util.Map;
 
 class Adventure
 {
-    private static final String worldVariable = "world";
-    private static final String playerVariable = "player";
-    private static final String entityVariable = "entity";
+    private static final String worldComponent = "world";
+    private static final String playerComponent = "player";
+    private static final String entityComponent = "entity";
 
     private String packageName;
     private String packageType;
@@ -42,7 +41,6 @@ class Adventure
 
     private WorldRepository worldRepository = new WorldRepository();
     private PlayerRepository playerRepository = new PlayerRepository();
-    private ActionRepository actionRepository = new ActionRepository();
     private EntityRepository entityRepository = new EntityRepository();
 
     Adventure(String packageDir) throws Exception
@@ -150,30 +148,27 @@ class Adventure
 
             switch(varType)
             {
-                case worldVariable: worldRepository.addVariable(new AdventureVariable(variable)); break;
-                case playerVariable: playerRepository.addVariable(new PlayerVariable(variable)); break;
-                case entityVariable: entityRepository.addVariable(new AdventureVariable(variable)); break;
+                case worldComponent: worldRepository.addVariable(new AdventureVariable(variable)); break;
+                case playerComponent: playerRepository.addVariable(new PlayerVariable(variable)); break;
+                case entityComponent: entityRepository.addVariable(new AdventureVariable(variable)); break;
                 default: throw new PackageLoadException("Undefined variable type");
             }
         }
     }
 
-    private void parseActions(JSONObject jsonActions, String actionType) throws JSONException, PackageLoadException
+    private void parseActions(JSONObject jsonActions, String actionType) throws JSONException
     {
         JSONArray typeActions = jsonActions.getJSONArray(actionType);
 
         for(int i = 0; i < typeActions.length(); i++)
         {
             JSONObject typeAction = typeActions.getJSONObject(i);
-            String name = typeAction.getString("name");
 
-            if(actionType.equals("playerRepository"))
+            switch(actionType)
             {
-                playerRepository.addAction(new Action(typeAction));
-            }
-            else
-            {
-                actionRepository.addAction(actionType, name, new Action(typeAction));
+                case worldComponent: worldRepository.addAction(new Action(typeAction));
+                case playerComponent: playerRepository.addAction(new Action(typeAction));
+                case entityComponent: entityRepository.addAction(new Action(typeAction));
             }
         }
     }

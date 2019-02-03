@@ -31,6 +31,10 @@ import java.util.Map;
 
 class Adventure
 {
+    private static final String worldVariable = "world";
+    private static final String playerVariable = "player";
+    private static final String entityVariable = "entity";
+
     private String packageName;
     private String packageType;
     private String author;
@@ -146,9 +150,9 @@ class Adventure
 
             switch(varType)
             {
-                case "world": worldRepository.addVariable(new AdventureVariable(variable)); break;
-                case "player": playerRepository.addVariable(new PlayerVariable(variable)); break;
-                case "entity": entityRepository.addVariable(new AdventureVariable(variable)); break;
+                case worldVariable: worldRepository.addVariable(new AdventureVariable(variable)); break;
+                case playerVariable: playerRepository.addVariable(new PlayerVariable(variable)); break;
+                case entityVariable: entityRepository.addVariable(new AdventureVariable(variable)); break;
                 default: throw new PackageLoadException("Undefined variable type");
             }
         }

@@ -114,7 +114,7 @@ public class ConditionHandler
 
         switch(path.getScope())
         {
-            case ConditionSegment.global:
+            case ConditionSegment.world:
                 if(World.checkVariableExists(varName)) return World.getVariable(varName);
                 break;
             case ConditionSegment.player:

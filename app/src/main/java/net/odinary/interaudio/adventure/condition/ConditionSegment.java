@@ -10,7 +10,7 @@ class ConditionSegment
     public static final int raw = 3;
 
     public static final String player = "player";
-    public static final String global = "global";
+    public static final String world = "world";
     public static final String sections = "sections";
     public static final String target = "target";
     public static final String secondaryTarget = "secondaryTarget";

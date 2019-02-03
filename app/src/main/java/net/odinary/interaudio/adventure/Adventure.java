@@ -134,7 +134,7 @@ class Adventure
 
             switch(varType)
             {
-                case "global": World.addVariable(new AdventureVariable(variable));
+                case "world": World.addVariable(new AdventureVariable(variable));
                 case "player": Player.addPlayerVariable(new PlayerVariable(variable));
                 case "entity": EntityRepository.addEntityVariable(new AdventureVariable(variable));
                 default: throw new PackageLoadException("Undefined variable type");

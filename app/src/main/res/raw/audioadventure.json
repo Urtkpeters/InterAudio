@@ -25,7 +25,7 @@
 		{
 			"name": "attic",
 			"filename": "attic",
-			"conditions": [ { "condition": "variables.player.lightSource.value == true", "operator": "", "failFilename": "tooDark" } ],
+			"conditions": [ { "condition": "player.lightSource.value == true", "operator": "", "failFilename": "tooDark" } ],
 			"directions":
 			[
 				{ "direction": "down", "name": "kitchen" }
@@ -59,8 +59,8 @@
 			"filename": "cellarEntrance",
 			"conditions":
 			[
-				{ "condition": "variables.global.trapdoor.value == true", "operator": "or", "failFilename": "goFail" },
-				{ "condition": "variables.player.lightSource.value == true", "operator": "or", "failFilename": "tooDark" }
+				{ "condition": "world.trapdoor.value == true", "operator": "or", "failFilename": "goFail" },
+				{ "condition": "player.lightSource.value == true", "operator": "or", "failFilename": "tooDark" }
 			],
 			"directions":
 			[
@@ -94,7 +94,7 @@
 			"filename": "finalRoom",
 			"conditions":
 			[
-				{ "condition": "variables.global.doorOpen.value == true", "operator": "or", "failFilename": "doorIsLocked" }
+				{ "condition": "world.doorOpen.value == true", "operator": "or", "failFilename": "doorIsLocked" }
 			],
 			"directions":
 			[
@@ -110,7 +110,7 @@
 	],
 	"variables":
 	{
-		"global":
+		"world":
 		[
 			{
 				"name": "rope",
@@ -266,9 +266,9 @@
 				"secondaryTargets": [],
 				"conditions":
 				[
-					{ "condition": "variables.player.health.value <= 0", "operator": "or", "failFilename": "" },
-					{ "condition": "variables.player.hunger.value <= 0", "operator": "or", "failFilename": "" },
-					{ "condition": "variables.player.thirst.value <= 0", "operator": "or", "failFilename": "" }
+					{ "condition": "player.health.value <= 0", "operator": "or", "failFilename": "" },
+					{ "condition": "player.hunger.value <= 0", "operator": "or", "failFilename": "" },
+					{ "condition": "player.thirst.value <= 0", "operator": "or", "failFilename": "" }
 				],
 				"setVars": [],
 				"triggers": ["death"]
@@ -283,7 +283,7 @@
 				"secondaryKeys": [],
 				"secondaryTargets": [],
 				"conditions": [],
-				"setVars": [ "variables.player.health.value += 1" ],
+				"setVars": [ "player.health.value += 1" ],
 				"triggers": []
 			},
 			{
@@ -296,7 +296,7 @@
 				"secondaryKeys": [],
 				"secondaryTargets": [],
 				"conditions": [],
-				"setVars": [ "variables.player.hunger.value -= 1" ],
+				"setVars": [ "player.hunger.value -= 1" ],
 				"triggers": []
 			},
 			{
@@ -309,7 +309,7 @@
 				"secondaryKeys": [],
 				"secondaryTargets": [],
 				"conditions": [],
-				"setVars": [ "variables.player.thirst.value -= 1" ],
+				"setVars": [ "player.thirst.value -= 1" ],
 				"triggers": []
 			},
 			{
@@ -321,8 +321,8 @@
 				"targets": [],
 				"secondaryKeys": [],
 				"secondaryTargets": [],
-				"conditions": [ { "condition": "variables.player.lightSource.value == true", "operator": "", "failFilename": "" } ],
-				"setVars": [ "variables.inventory.lantern.uses -= 1" ],
+				"conditions": [ { "condition": "player.lightSource.value == true", "operator": "", "failFilename": "" } ],
+				"setVars": [ "inventory.lantern.uses -= 1" ],
 				"triggers": []
 			},
 			{
@@ -334,7 +334,7 @@
 				"targets": [],
 				"secondaryKeys": [],
 				"secondaryTargets": [],
-				"conditions": [ { "condition": "section.entities.containsType | character", "operator": "", "failFilename": "" } ],
+				"conditions": [],
 				"setVars": [],
 				"triggers": []
 			}
@@ -352,7 +352,7 @@
 				"secondaryTargets": [],
 				"conditions": [],
 				"setVars": [],
-				"triggers": []
+				"triggers": ["saveGame"]
 			},
 			{
 				"name": "load",
@@ -365,7 +365,7 @@
 				"secondaryTargets": [],
 				"conditions": [],
 				"setVars": [],
-				"triggers": []
+				"triggers": ["loadGame"]
 			},
 			{
 				"name": "quit",
@@ -378,7 +378,7 @@
 				"secondaryTargets": [],
 				"conditions": [],
 				"setVars": [],
-				"triggers": []
+				"triggers": ["quitGame"]
 			},
 			{
 				"name": "repeat",
@@ -428,7 +428,7 @@
 				"targets": [ "direction" ],
 				"secondaryKeys": [],
 				"secondaryTargets": [],
-				"conditions": [ { "condition": "section.directions.contains | target", "operator": "", "failFilename": "moveFail" } ],
+				"conditions": [],
 				"setVars": [],
 				"triggers": ["changeSection"]
 			},
@@ -444,8 +444,8 @@
 				"conditions": [],
 				"setVars":
 				[
-					"variables.inventory.add target",
-					"variables.player.weight.value += target.weight",
+					"inventory.add target",
+					"player.weight.value += target.weight",
 					"section.remove target"
 				],
 				"triggers": []
@@ -462,8 +462,8 @@
 				"conditions": [],
 				"setVars":
 				[
-					"variables.player.weight.value -= target.weight",
-					"variables.inventory.remove target",
+					"player.weight.value -= target.weight",
+					"inventory.remove target",
 					"section.add target"
 				],
 				"triggers": []
@@ -472,7 +472,7 @@
 				"name": "put",
 				"filename": "",
 				"failFilename": "putFail",
-				"alwaysAllowed": true,
+				"alwaysAllowed": false,
 				"time": 1,
 				"targets": [ "item" ],
 				"secondaryKeys": [ "in", "on" ],
@@ -480,8 +480,8 @@
 				"conditions": [],
 				"setVars": 
 				[
-					"variables.player.weight.value -= target.weight",
-					"variables.inventory.remove target",
+					"player.weight.value -= target.weight",
+					"inventory.remove target",
 					"section.add target"
 				],
 				"triggers": []
@@ -495,7 +495,7 @@
 				"targets": [ "item", "object" ],
 				"secondaryKeys": [],
 				"secondaryTargets": [],
-				"conditions": [ { "condition": "target.uses > 0", "operator": "", "failFilename": "noMoreUses" } ],
+				"conditions": [ { "condition": "target.uses.value > 0", "operator": "", "failFilename": "noMoreUses" } ],
 				"setVars": [],
 				"triggers": []
 			},
@@ -574,7 +574,7 @@
 				"secondaryKeys": [ "with" ],
 				"secondaryTargets": [ "item" ],
 				"conditions": [],
-				"setVars": [ "target.health -= secondaryTarget.power" ],
+				"setVars": [ "target.health.value -= secondaryTarget.power" ],
 				"triggers": [ "kill" ]
 			},
 			{
@@ -586,11 +586,11 @@
 				"targets": [ "item" ],
 				"secondaryKeys": [],
 				"secondaryTargets": [],
-				"conditions": [ { "condition": "target.uses > 0", "operator": "", "failFilename": "noMoreUses" } ],
+				"conditions": [ { "condition": "target.uses.value > 0", "operator": "", "failFilename": "noMoreUses" } ],
 				"setVars":
 				[
-					"variables.player.hunger.value += target.power",
-					"target.uses -= 1"
+					"player.hunger.value += target.power",
+					"target.uses.value -= 1"
 				],
 				"triggers": []
 			},
@@ -603,11 +603,11 @@
 				"targets": [ "item" ],
 				"secondaryKeys": [],
 				"secondaryTargets": [],
-				"conditions": [ { "condition": "target.uses > 0", "operator": "", "failFilename": "noMoreUses" } ],
+				"conditions": [ { "condition": "target.uses.value > 0", "operator": "", "failFilename": "noMoreUses" } ],
 				"setVars":
 				[
-					"variables.player.thirst.value += target.power",
-					"target.uses -= 1"
+					"player.thirst.value += target.power",
+					"target.uses.value -= 1"
 				],
 				"triggers": []
 			},
@@ -620,7 +620,7 @@
 				"targets": [ "character" ],
 				"secondaryKeys": [],
 				"secondaryTargets": [],
-				"conditions": [ { "condition": "target.health <= 0", "operator": "", "failFilename": "" } ],
+				"conditions": [ { "condition": "target.health.value <= 0", "operator": "", "failFilename": "" } ],
 				"setVars": [],
 				"triggers": []
 			}
@@ -802,8 +802,8 @@
 					"put":
 					{
 						"filename": "keyPut",
-						"targets": [ "object" ],
-						"conditions": [ { "condition": "secondaryTarget == entities.objects.closedDoorLocked", "operator": "", "failFilename": "" } ],
+						"failFilename": "keyFailPut",
+						"conditions": [ { "condition": "secondaryTarget == closedDoorLocked", "operator": "", "failFilename": "" } ],
 						"setVars":
 						[
 							"section.remove target",
@@ -859,7 +859,7 @@
 						[
 							"section.remove target",
 							"section.add entities.objects.trapdoorOpen",
-							"variables.global.trapdoor.value = true"
+							"world.trapdoor.value = true"
 						]
 					}
 				},
@@ -883,7 +883,7 @@
 						[
 							"section.remove target",
 							"section.add entities.objects.trapdoorClosed",
-							"variables.global.trapdoor.value = false"
+							"world.trapdoor.value = false"
 						]
 					}
 				},
@@ -922,7 +922,7 @@
 						[
 							"section.remove target",
 							"section.add entities.objects.openDoor",
-							"variables.global.doorOpen.value = true"
+							"world.doorOpen.value = true"
 						]
 					}
 				},
@@ -946,7 +946,7 @@
 						[
 							"section.remove target",
 							"section.add entities.objects.trapdoorClosed",
-							"variables.global.trapdoor.value = false"
+							"world.trapdoor.value = false"
 						]
 					}
 				},

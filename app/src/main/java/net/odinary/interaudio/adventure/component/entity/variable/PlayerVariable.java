@@ -1,4 +1,4 @@
-package net.odinary.interaudio.adventure;
+package net.odinary.interaudio.adventure.component.entity.variable;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -6,7 +6,7 @@ import org.json.JSONObject;
 import java.util.HashMap;
 import java.util.Iterator;
 
-public class PlayerVariable extends AdventureVariable
+public class PlayerVariable extends AdventureVariable implements VariableInterface
 {
     private String maxFailFilename;
     private HashMap<Boolean, String> bFilemap;

@@ -1,5 +1,9 @@
 package net.odinary.interaudio.adventure;
 
+import net.odinary.interaudio.adventure.component.entity.Action;
+import net.odinary.interaudio.adventure.component.entity.Entity;
+import net.odinary.interaudio.adventure.component.entity.Section;
+
 public class Event
 {
     private Action action;

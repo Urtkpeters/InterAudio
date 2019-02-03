@@ -1,12 +1,11 @@
 package net.odinary.interaudio.adventure.condition;
 
-import net.odinary.interaudio.adventure.Action;
-import net.odinary.interaudio.adventure.AdventureVariable;
-import net.odinary.interaudio.adventure.Entity;
+import net.odinary.interaudio.adventure.component.entity.Action;
+import net.odinary.interaudio.adventure.repository.PlayerRepository;
+import net.odinary.interaudio.adventure.repository.WorldRepository;
+import net.odinary.interaudio.adventure.component.entity.variable.AdventureVariable;
+import net.odinary.interaudio.adventure.component.entity.Entity;
 import net.odinary.interaudio.adventure.Event;
-import net.odinary.interaudio.adventure.Player;
-import net.odinary.interaudio.adventure.Section;
-import net.odinary.interaudio.adventure.World;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,6 +18,9 @@ public class ConditionHandler
 {
     private static final String andOperator = "AND";
     private static final String orOperator = "OR";
+
+    private static WorldRepository worldRepository;
+    private static PlayerRepository playerRepository;
 
     public static List<Condition> parseConditions(JSONArray conditionsArray) throws JSONException
     {
@@ -34,8 +36,11 @@ public class ConditionHandler
         return conditions;
     }
 
-    public static String checkConditions(Event event)
+    public static String checkConditions(Event event, WorldRepository worldRepository, PlayerRepository playerRepository)
     {
+        ConditionHandler.worldRepository = worldRepository;
+        ConditionHandler.playerRepository = playerRepository;
+
         Action action = event.getAction();
         List<Condition> conditions = action.getConditions();
 
@@ -115,10 +120,10 @@ public class ConditionHandler
         switch(path.getScope())
         {
             case ConditionSegment.world:
-                if(World.checkVariableExists(varName)) return World.getVariable(varName);
+                if(worldRepository.getVariables().containsKey(varName)) return (AdventureVariable) worldRepository.getVariable(varName);
                 break;
             case ConditionSegment.player:
-                if(Player.checkVariableExists(varName)) return Player.getVariable(varName);
+                if(playerRepository.getVariables().containsKey(varName)) return (AdventureVariable) playerRepository.getVariable(varName);
 
                 break;
             case ConditionSegment.target:

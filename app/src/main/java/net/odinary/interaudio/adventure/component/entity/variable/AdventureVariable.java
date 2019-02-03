@@ -1,14 +1,12 @@
-package net.odinary.interaudio.adventure;
+package net.odinary.interaudio.adventure.component.entity.variable;
+
+import net.odinary.interaudio.adventure.component.entity.AbstractEntity;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class AdventureVariable extends AbstractEntity
+public class AdventureVariable extends AbstractEntity implements VariableInterface
 {
-    public static final String booleanType = "Boolean";
-    public static final String integerType = "Integer";
-    public static final String stringType = "String";
-
     protected String type;
     protected Boolean bValue;
     protected int iValue;
@@ -29,7 +27,7 @@ public class AdventureVariable extends AbstractEntity
         }
     }
 
-    AdventureVariable(AdventureVariable cloner)
+    public AdventureVariable(AdventureVariable cloner)
     {
         super(cloner);
 
@@ -74,7 +72,7 @@ public class AdventureVariable extends AbstractEntity
     // ------------------------------------------------------
     // Boolean Section
 
-    public Boolean checkValue(Boolean var, String relationalOperator)
+    public boolean checkValue(boolean var, String relationalOperator)
     {
         switch(relationalOperator)
         {
@@ -91,7 +89,7 @@ public class AdventureVariable extends AbstractEntity
     // ------------------------------------------------------
     // Integer Section
 
-    public Boolean checkValue(int var, String relationalOperator)
+    public boolean checkValue(int var, String relationalOperator)
     {
         switch(relationalOperator)
         {
@@ -121,7 +119,7 @@ public class AdventureVariable extends AbstractEntity
     // ------------------------------------------------------
     // String section
 
-    public Boolean checkValue(String var, String relationalOperator)
+    public boolean checkValue(String var, String relationalOperator)
     {
         switch(relationalOperator)
         {

@@ -1,7 +1,9 @@
-package net.odinary.interaudio.adventure;
+package net.odinary.interaudio.adventure.component.entity;
 
 import net.odinary.interaudio.PackageLoadException;
-import net.odinary.interaudio.adventure.repositories.EntityRepository;
+import net.odinary.interaudio.adventure.repository.EntityRepository;
+import net.odinary.interaudio.adventure.repository.PlayerRepository;
+import net.odinary.interaudio.adventure.component.entity.variable.AdventureVariable;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -15,7 +17,7 @@ public class Entity extends AbstractEntity
     private HashMap<String, Action> actions = new HashMap<>();
     private HashMap<String, Action> moveset = new HashMap<>();
 
-    public Entity(JSONObject entityJson, String entityType) throws JSONException, PackageLoadException
+    public Entity(JSONObject entityJson, String entityType, EntityRepository entityRepository, PlayerRepository playerRepository) throws JSONException, PackageLoadException
     {
         super(entityJson, entityType);
 
@@ -27,9 +29,9 @@ public class Entity extends AbstractEntity
             String key = keys.next();
             JSONObject jsonEntityVar = jsonEntityVars.getJSONObject(key);
 
-            if(EntityRepository.checkEntityVariableExists(key))
+            if(entityRepository.getVariables().containsKey(key))
             {
-                entityVars.put(key, new AdventureVariable(EntityRepository.getEntityVariable(key)));
+                entityVars.put(key, new AdventureVariable((AdventureVariable) entityRepository.getVariable(key)));
 
                 switch(entityVars.get(key).getType())
                 {
@@ -62,7 +64,7 @@ public class Entity extends AbstractEntity
             String key = keys.next();
             JSONObject jsonAction = jsonActions.getJSONObject(key);
 
-            Action action = Player.getAction(key);
+            Action action = playerRepository.getAction(key);
 
             if(action != null) actions.put(key, new Action(action, jsonAction));
             else throw new PackageLoadException("Could not load actions into entity. Entity: " + name + " Action: " + key);
@@ -77,7 +79,7 @@ public class Entity extends AbstractEntity
             String value = jsonMoveset.getString(key);
 
             // It is using a blank JSON object for now so that an error is not thrown but this needs to be templated with overrides from the JSON
-            if(EntityRepository.checkEntityMoveExists(key)) moveset.put(key, new Action(EntityRepository.getEntityMove(key), new JSONObject()));
+            if(entityRepository.getActions().containsKey(key)) moveset.put(key, new Action(entityRepository.getAction(key), new JSONObject()));
             else throw new PackageLoadException("Could not load actions into entity. Entity: " + name + " Action: " + key);
         }
     }

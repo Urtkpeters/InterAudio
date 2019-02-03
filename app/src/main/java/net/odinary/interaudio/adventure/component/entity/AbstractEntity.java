@@ -1,22 +1,24 @@
-package net.odinary.interaudio.adventure;
+package net.odinary.interaudio.adventure.component.entity;
+
+import net.odinary.interaudio.adventure.component.ComponentInterface;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-abstract class AbstractEntity
+public abstract class AbstractEntity implements ComponentInterface
 {
-    String name;
-    String type;
-    String filename;
+    protected String name;
+    protected String type;
+    protected String filename;
 
-    AbstractEntity(JSONObject entityJson, String type) throws JSONException
+    protected AbstractEntity(JSONObject entityJson, String type) throws JSONException
     {
         this.name = entityJson.getString("name");
         this.filename = entityJson.getString("filename");
         this.type = type;
     }
 
-    AbstractEntity(AbstractEntity cloner)
+    protected AbstractEntity(AbstractEntity cloner)
     {
         this.name = cloner.name;
         this.filename = cloner.filename;

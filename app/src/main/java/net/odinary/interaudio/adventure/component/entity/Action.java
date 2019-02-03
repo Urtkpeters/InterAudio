@@ -1,4 +1,4 @@
-package net.odinary.interaudio.adventure;
+package net.odinary.interaudio.adventure.component.entity;
 
 import net.odinary.interaudio.adventure.condition.Condition;
 import net.odinary.interaudio.adventure.condition.ConditionHandler;

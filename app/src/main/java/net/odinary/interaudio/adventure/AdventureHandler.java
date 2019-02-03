@@ -8,6 +8,8 @@ import android.speech.RecognizerIntent;
 
 import net.odinary.interaudio.MainActivity;
 import net.odinary.interaudio.adventure.condition.ConditionHandler;
+import net.odinary.interaudio.adventure.component.entity.Action;
+import net.odinary.interaudio.adventure.component.entity.Entity;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -42,7 +44,7 @@ public class AdventureHandler
         {
             currentAdventure = new Adventure(mainActivity.getPackageHandler().getPackageDir() + jsonFilename);
 
-            clipList.add(World.getCurrentSection().getFilename());
+            clipList.add(currentAdventure.getWorldRepository().getCurrentSection().getFilename());
 
             playClips();
         }
@@ -107,7 +109,7 @@ public class AdventureHandler
     {
         // Get the resulting VTT responses from Google
         ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-        Event event = new Event(World.getCurrentSection());
+        Event event = new Event(currentAdventure.getWorldRepository().getCurrentSection());
 
         try
         {
@@ -119,7 +121,7 @@ public class AdventureHandler
             {
                 Boolean validAction = true;
 
-                Action action = Player.getActionFromResult(resultPhrase);
+                Action action = currentAdventure.getPlayerRepository().getActionFromResult(resultPhrase);
 
                 if(action != null)
                 {
@@ -191,7 +193,7 @@ public class AdventureHandler
     private void performAction(Event event)
     {
         // Adventure vars will no longer be stored here
-        String conditionResponse = ConditionHandler.checkConditions(event);
+        String conditionResponse = ConditionHandler.checkConditions(event, currentAdventure.getWorldRepository(), currentAdventure.getPlayerRepository());
 
         clipList.add(conditionResponse);
 
@@ -257,7 +259,7 @@ public class AdventureHandler
 
         if(targetSection != null)
         {
-            clipList.add(World.setCurrentSection(targetSection));
+            clipList.add(currentAdventure.getWorldRepository().setCurrentSection(targetSection));
             return true;
         }
 

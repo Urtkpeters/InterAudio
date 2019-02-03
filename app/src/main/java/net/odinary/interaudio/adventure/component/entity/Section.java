@@ -1,8 +1,10 @@
-package net.odinary.interaudio.adventure;
+package net.odinary.interaudio.adventure.component.entity;
 
 import net.odinary.interaudio.adventure.condition.Condition;
 import net.odinary.interaudio.adventure.condition.ConditionHandler;
-import net.odinary.interaudio.adventure.repositories.EntityRepository;
+import net.odinary.interaudio.adventure.component.entity.AbstractEntity;
+import net.odinary.interaudio.adventure.component.entity.Entity;
+import net.odinary.interaudio.adventure.repository.EntityRepository;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,7 +21,7 @@ public class Section extends AbstractEntity
     private List<Entity> entities = new ArrayList<>();
     private List<String> setVars = new ArrayList<>();
 
-    public Section(JSONObject jsonSection) throws JSONException
+    public Section(JSONObject jsonSection, EntityRepository entityRepository) throws JSONException
     {
         super(jsonSection, "section");
 
@@ -41,7 +43,7 @@ public class Section extends AbstractEntity
             String entityType = entity.getString("type");
             String entityName = entity.getString("name");
 
-            entities.add(new Entity(EntityRepository.getEntity(entityType, entityName)));
+            entities.add(new Entity(entityRepository.getEntity(entityType, entityName)));
         }
 
         JSONArray varArray = jsonSection.getJSONArray("setVariables");

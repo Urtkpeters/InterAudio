@@ -1,8 +1,15 @@
 package net.odinary.interaudio.adventure;
 
 import net.odinary.interaudio.PackageLoadException;
-import net.odinary.interaudio.adventure.repositories.ActionRepository;
-import net.odinary.interaudio.adventure.repositories.EntityRepository;
+import net.odinary.interaudio.adventure.component.entity.Action;
+import net.odinary.interaudio.adventure.component.entity.Entity;
+import net.odinary.interaudio.adventure.component.entity.Section;
+import net.odinary.interaudio.adventure.repository.ActionRepository;
+import net.odinary.interaudio.adventure.repository.EntityRepository;
+import net.odinary.interaudio.adventure.repository.PlayerRepository;
+import net.odinary.interaudio.adventure.repository.WorldRepository;
+import net.odinary.interaudio.adventure.component.entity.variable.AdventureVariable;
+import net.odinary.interaudio.adventure.component.entity.variable.PlayerVariable;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -28,6 +35,11 @@ class Adventure
     private String packageType;
     private String author;
     private String audioFileExt;
+
+    private WorldRepository worldRepository = new WorldRepository();
+    private PlayerRepository playerRepository = new PlayerRepository();
+    private ActionRepository actionRepository = new ActionRepository();
+    private EntityRepository entityRepository = new EntityRepository();
 
     Adventure(String packageDir) throws Exception
     {
@@ -101,10 +113,10 @@ class Adventure
             {
                 JSONObject section = jsonSections.getJSONObject(i);
 
-                World.addSection(new Section(section));
+                worldRepository.addSection(new Section(section, entityRepository));
             }
 
-            World.setCurrentSection(packageJson.getString("start"));
+            worldRepository.setCurrentSection(packageJson.getString("start"));
 
             // Associate Entities to Vars
 
@@ -134,9 +146,9 @@ class Adventure
 
             switch(varType)
             {
-                case "world": World.addVariable(new AdventureVariable(variable));
-                case "player": Player.addPlayerVariable(new PlayerVariable(variable));
-                case "entity": EntityRepository.addEntityVariable(new AdventureVariable(variable));
+                case "world": worldRepository.addVariable(new AdventureVariable(variable)); break;
+                case "player": playerRepository.addVariable(new PlayerVariable(variable)); break;
+                case "entity": entityRepository.addVariable(new AdventureVariable(variable)); break;
                 default: throw new PackageLoadException("Undefined variable type");
             }
         }
@@ -151,13 +163,13 @@ class Adventure
             JSONObject typeAction = typeActions.getJSONObject(i);
             String name = typeAction.getString("name");
 
-            if(actionType.equals("player"))
+            if(actionType.equals("playerRepository"))
             {
-                Player.addAction(new Action(typeAction));
+                playerRepository.addAction(new Action(typeAction));
             }
             else
             {
-                ActionRepository.addAction(actionType, name, new Action(typeAction));
+                actionRepository.addAction(actionType, name, new Action(typeAction));
             }
         }
     }
@@ -170,7 +182,7 @@ class Adventure
         {
             JSONObject typeEntity = typeEntities.getJSONObject(i);
 
-            EntityRepository.addEntity(entityType, typeEntity.getString("name"), new Entity(typeEntity, entityType));
+            entityRepository.addEntity(entityType, typeEntity.getString("name"), new Entity(typeEntity, entityType, entityRepository, playerRepository));
         }
     }
 
@@ -192,12 +204,17 @@ class Adventure
     public Entity checkTarget(String resultPhrase, List<String> targetTypes, String primaryTarget)
     {
         // Check section entities
-        checkTarget(resultPhrase, targetTypes, primaryTarget, World.getCurrentSection().getEntities());
+        Entity target = checkTarget(resultPhrase, targetTypes, primaryTarget, worldRepository.getCurrentSection().getEntities());
 
-        // Check player inventory
-        checkTarget(resultPhrase, targetTypes, primaryTarget, Player.getInventory());
+        if(target != null) return target;
 
-        return Player.checkInventory(resultPhrase);
+        // Check playerRepository inventory
+        target = checkTarget(resultPhrase, targetTypes, primaryTarget, playerRepository.getInventory());
+
+        if(target != null) return target;
+        else return playerRepository.checkInventory(resultPhrase);
+
+
     }
 
     private Entity checkTarget(String resultPhrase, List<String> targetTypes, String primaryTarget, List<Entity> entities)
@@ -225,18 +242,24 @@ class Adventure
 
     public String checkDirection(String resultPhrase)
     {
-        HashMap<String, String> directions = World.getCurrentSection().getDirections();
+        HashMap<String, String> directions = worldRepository.getCurrentSection().getDirections();
 
         for (Map.Entry<String, String> direction: directions.entrySet())
         {
             String key = direction.getKey();
             String value = direction.getValue();
 
-            if(resultPhrase.contains(key) && World.checkSection(value)) return value;
+            if(resultPhrase.contains(key) && worldRepository.getSections().containsKey(value)) return value;
         }
 
         return null;
     }
+
+    public WorldRepository getWorldRepository() { return worldRepository; }
+
+    public PlayerRepository getPlayerRepository() { return playerRepository; }
+
+    public EntityRepository getEntityRepository() { return entityRepository; }
 
     public String getPackageName() { return packageName; }
 

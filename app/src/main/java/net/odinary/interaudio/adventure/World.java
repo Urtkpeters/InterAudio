@@ -13,7 +13,11 @@ public class World
 
     public static void addVariable(AdventureVariable variable) { variables.put(variable.getName(), variable); }
 
-    public static void setCurrentSection(String name) { currentSection = sections.get(name); }
+    public static String setCurrentSection(String name)
+    {
+        currentSection = sections.get(name);
+        return currentSection.getFilename();
+    }
 
     public static Boolean checkSection(String name) { return sections.containsKey(name); }
 

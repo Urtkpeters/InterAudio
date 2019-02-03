@@ -41,6 +41,8 @@ public class Player
 
     public static void addToInventory(Entity item) { inventory.add(item); }
 
+    public static List<Entity> getInventory() { return inventory; }
+
     public static Entity checkInventory(String resultPhrase)
     {
         for(Entity item: inventory)

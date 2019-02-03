@@ -17,8 +17,10 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.io.StringWriter;
 import java.io.Writer;
+import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Map;
 
 class Adventure
 {
@@ -189,8 +191,17 @@ class Adventure
 
     public Entity checkTarget(String resultPhrase, List<String> targetTypes, String primaryTarget)
     {
-        List<Entity> entities = World.getCurrentSection().getEntities();
+        // Check section entities
+        checkTarget(resultPhrase, targetTypes, primaryTarget, World.getCurrentSection().getEntities());
 
+        // Check player inventory
+        checkTarget(resultPhrase, targetTypes, primaryTarget, Player.getInventory());
+
+        return Player.checkInventory(resultPhrase);
+    }
+
+    private Entity checkTarget(String resultPhrase, List<String> targetTypes, String primaryTarget, List<Entity> entities)
+    {
         for(Entity entity: entities)
         {
             String entityName = entity.getName();
@@ -209,7 +220,22 @@ class Adventure
             }
         }
 
-        return Player.checkInventory(resultPhrase);
+        return null;
+    }
+
+    public String checkDirection(String resultPhrase)
+    {
+        HashMap<String, String> directions = World.getCurrentSection().getDirections();
+
+        for (Map.Entry<String, String> direction: directions.entrySet())
+        {
+            String key = direction.getKey();
+            String value = direction.getValue();
+
+            if(resultPhrase.contains(key) && World.checkSection(value)) return value;
+        }
+
+        return null;
     }
 
     public String getPackageName() { return packageName; }

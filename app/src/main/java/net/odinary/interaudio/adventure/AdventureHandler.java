@@ -15,6 +15,13 @@ import java.util.Locale;
 
 public class AdventureHandler
 {
+    private static final String saveCommand = "save";
+    private static final String loadCommand = "load";
+    private static final String quitCommand = "quit";
+    private static final String repeatCommand = "repeat";
+    private static final String goCommand = "go";
+    private static final String statusCommand = "status";
+    private static final String inventoryCommand = "inventory";
     private static final String jsonFilename = "audioAdventure.json";
 
     private Adventure currentAdventure;
@@ -106,11 +113,9 @@ public class AdventureHandler
         {
             String resultPhrase = result.get(0);
 
-            if(resultPhrase.contains("repeat"))
-            {
-                clipList = lastClipList;
-            }
-            else
+            boolean systemCommand = checkSystemCommands(resultPhrase);
+
+            if(!systemCommand)
             {
                 Boolean validAction = true;
 
@@ -204,6 +209,59 @@ public class AdventureHandler
         {
 
         }
+    }
+
+    private boolean checkSystemCommands(String resultPhrase)
+    {
+        if(resultPhrase.contains(saveCommand))
+        {
+            // Do save action
+        }
+
+        if(resultPhrase.contains(loadCommand))
+        {
+            // Do load action
+        }
+
+        if(resultPhrase.contains(quitCommand))
+        {
+            // Do quit action
+        }
+
+        if(resultPhrase.contains(repeatCommand))
+        {
+            clipList = lastClipList;
+        }
+
+        if(resultPhrase.contains(goCommand))
+        {
+            return go(resultPhrase);
+        }
+
+        if(resultPhrase.contains(statusCommand))
+        {
+            // Do status action
+        }
+
+        if(resultPhrase.contains(inventoryCommand))
+        {
+            // Do inventory action
+        }
+
+        return false;
+    }
+
+    private boolean go(String resultPhrase)
+    {
+        String targetSection = currentAdventure.checkDirection(resultPhrase);
+
+        if(targetSection != null)
+        {
+            clipList.add(World.setCurrentSection(targetSection));
+            return true;
+        }
+
+        return false;
     }
 
     private void createPlaybackAndListener(String nextSection)

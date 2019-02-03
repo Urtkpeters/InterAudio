@@ -65,4 +65,6 @@ public class Section extends AbstractEntity
     public String getFilename() { return filename; }
 
     public List<Entity> getEntities() { return entities; }
+
+    public HashMap<String, String> getDirections() { return directions; }
 }

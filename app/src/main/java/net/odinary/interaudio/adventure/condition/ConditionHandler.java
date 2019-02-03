@@ -131,12 +131,6 @@ public class ConditionHandler
                 if(secondaryTarget.checkVariableExists(varName)) return secondaryTarget.getVariable(varName);
 
                 break;
-            case ConditionSegment.sections:
-                Section currentSection = event.getSection();
-
-                // Section shit is complete different
-
-                break;
         }
 
         return null;

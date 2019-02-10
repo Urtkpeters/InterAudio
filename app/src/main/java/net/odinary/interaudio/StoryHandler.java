@@ -72,35 +72,31 @@ class StoryHandler
 
     private void createVoiceListener(MediaPlayer mediaPlayer)
     {
-        mediaPlayer.setOnCompletionListener(new MediaPlayer.OnCompletionListener()
+        mediaPlayer.setOnCompletionListener((MediaPlayer mediaPlayerListen) ->
         {
-            @Override
-            public void onCompletion(MediaPlayer mediaPlayer)
+            try
             {
-                try
+                if(currentPath.getJSONArray("keywords").length() > 0)
                 {
-                    if(currentPath.getJSONArray("keywords").length() > 0)
-                    {
-                        // When audio is done playing, trigger VTT
-                        Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-                        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-                        intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+                    // When audio is done playing, trigger VTT
+                    Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+                    intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+                    intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
 
-                        // This action will ultimately trigger onActivityResult
-                        mainActivity.startActivityForResult(intent, MainActivity.SPEECH_INPUT);
-                    }
-                    else
-                    {
-                        String redirect = currentPath.getString("redirect");
-
-                        if(redirect != null && !redirect.isEmpty()) createPlaybackAndListener(redirect);
-                        else System.out.println("End of story!");
-                    }
+                    // This action will ultimately trigger onActivityResult
+                    mainActivity.startActivityForResult(intent, MainActivity.SPEECH_INPUT);
                 }
-                catch(JSONException|ActivityNotFoundException e)
+                else
                 {
-                    e.printStackTrace();
+                    String redirect = currentPath.getString("redirect");
+
+                    if(redirect != null && !redirect.isEmpty()) createPlaybackAndListener(redirect);
+                    else System.out.println("End of story!");
                 }
+            }
+            catch(JSONException|ActivityNotFoundException e)
+            {
+                e.printStackTrace();
             }
         });
     }

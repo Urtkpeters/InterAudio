@@ -27,14 +27,10 @@ class UIHandler
             downloadButton.setVisibility(View.INVISIBLE);
             testButton.setVisibility(View.VISIBLE);
 
-            testButton.setOnClickListener(new View.OnClickListener()
+            testButton.setOnClickListener((View v) ->
             {
-                @Override
-                public void onClick(View v)
-                {
-                    if(MainActivity.simpleTestMode) SimpleTest.doSimpleTest(mainActivity);
-                    else mainActivity.getAdventureHandler().startPlay();
-                }
+                if(MainActivity.simpleTestMode) SimpleTest.doSimpleTest(mainActivity);
+                else mainActivity.getAdventureHandler().startPlay();
             });
         }
         else
@@ -46,39 +42,27 @@ class UIHandler
                 deleteButton.setVisibility(View.VISIBLE);
             }
 
-            downloadButton.setOnClickListener(new View.OnClickListener()
+            downloadButton.setOnClickListener((View v) ->
             {
-                @Override
-                public void onClick(View v)
-                {
-                    mainActivity.getPackageHandler().downloadPackage();
+                mainActivity.getPackageHandler().downloadPackage();
 
-                    downloadButton.setText(R.string.updateButton);
-                    playButton.setVisibility(View.VISIBLE);
-                    deleteButton.setVisibility(View.VISIBLE);
-                }
+                downloadButton.setText(R.string.updateButton);
+                playButton.setVisibility(View.VISIBLE);
+                deleteButton.setVisibility(View.VISIBLE);
             });
 
-            playButton.setOnClickListener(new View.OnClickListener()
+            playButton.setOnClickListener((View v) ->
             {
-                @Override
-                public void onClick(View v)
-                {
-                    //mainActivity.getStoryHandler().startPlay();
-                    mainActivity.getAdventureHandler().startPlay();
-                }
+                //mainActivity.getStoryHandler().startPlay();
+                mainActivity.getAdventureHandler().startPlay();
             });
 
-            deleteButton.setOnClickListener(new View.OnClickListener()
+            deleteButton.setOnClickListener((View v) ->
             {
-                @Override
-                public void onClick(View v)
-                {
-                    mainActivity.getPackageHandler().deleteCurrentPackage();
-                    downloadButton.setText(R.string.downloadButton);
-                    playButton.setVisibility(View.INVISIBLE);
-                    deleteButton.setVisibility(View.INVISIBLE);
-                }
+                mainActivity.getPackageHandler().deleteCurrentPackage();
+                downloadButton.setText(R.string.downloadButton);
+                playButton.setVisibility(View.INVISIBLE);
+                deleteButton.setVisibility(View.INVISIBLE);
             });
         }
     }

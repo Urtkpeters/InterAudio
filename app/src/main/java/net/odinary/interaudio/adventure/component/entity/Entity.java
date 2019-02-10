@@ -79,8 +79,9 @@ public class Entity extends AbstractEntity
             String value = jsonMoveset.getString(key);
 
             // It is using a blank JSON object for now so that an error is not thrown but this needs to be templated with overrides from the JSON
-            if(entityRepository.getActions().containsKey(key)) moveset.put(key, new Action(entityRepository.getAction(key), new JSONObject()));
-            else throw new PackageLoadException("Could not load actions into entity. Entity: " + name + " Action: " + key);
+            // Per the above comment it is not working. I am commenting out the below entirely because it is still throwing an error.
+//            if(entityRepository.getActions().containsKey(key)) moveset.put(key, new Action(entityRepository.getAction(key), new JSONObject()));
+//            else throw new PackageLoadException("Could not load actions into entity. Entity: " + name + " - Action: " + key);
         }
     }
 

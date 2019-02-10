@@ -10,6 +10,7 @@ import net.odinary.interaudio.MainActivity;
 import net.odinary.interaudio.adventure.condition.ConditionHandler;
 import net.odinary.interaudio.adventure.component.entity.Action;
 import net.odinary.interaudio.adventure.component.entity.Entity;
+import net.odinary.interaudio.adventure.repository.PlayerRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +34,7 @@ public class AdventureHandler
     private List<String> clipList = new ArrayList<>();
     private List<String> lastClipList = new ArrayList<>();
 
-    AdventureHandler(MainActivity activity)
+    public AdventureHandler(MainActivity activity)
     {
         mainActivity = activity;
     }
@@ -42,7 +43,8 @@ public class AdventureHandler
     {
         try
         {
-            currentAdventure = new Adventure(mainActivity.getPackageHandler().getPackageDir() + jsonFilename);
+            if(MainActivity.testPackageMode) currentAdventure = new Adventure(mainActivity);
+            else currentAdventure = new Adventure(mainActivity.getPackageHandler().getPackageDir() + jsonFilename);
 
             clipList.add(currentAdventure.getWorldRepository().getCurrentSection().getFilename());
 
@@ -57,20 +59,31 @@ public class AdventureHandler
 
     private void playClips()
     {
-        String clipFile = mainActivity.getPackageHandler().getPackageDir() + clipList.get(0) + "." + currentAdventure.getAudioFileExt();
-
         if(!uiClip)
         {
             lastClipList.clear();
             lastClipList.add(clipList.get(0));
         }
 
-        clipList.remove(0);
+        MediaPlayer mediaPlayer;
 
-        MediaPlayer mediaPlayer = MediaPlayer.create(mainActivity.getApplicationContext(), Uri.parse(clipFile));
+        if(MainActivity.testPackageMode) mediaPlayer = getResClip();
+        else mediaPlayer = getPathClip();
+
+        clipList.remove(0);
         createMediaListener(mediaPlayer);
 
         mediaPlayer.start();
+    }
+
+    private MediaPlayer getPathClip()
+    {
+        return MediaPlayer.create(mainActivity.getApplicationContext(), Uri.parse(mainActivity.getPackageHandler().getPackageDir() + clipList.get(0) + "." + currentAdventure.getAudioFileExt()));
+    }
+
+    private MediaPlayer getResClip()
+    {
+        return MediaPlayer.create(mainActivity.getApplicationContext(), mainActivity.getResources().getIdentifier(clipList.get(0), "raw", mainActivity.getPackageName()));
     }
 
     private void createMediaListener(MediaPlayer mediaPlayer)
@@ -192,16 +205,18 @@ public class AdventureHandler
 
     private void performAction(Event event)
     {
-        // Adventure vars will no longer be stored here
-        String conditionResponse = ConditionHandler.checkConditions(event, currentAdventure.getWorldRepository(), currentAdventure.getPlayerRepository());
+        PlayerRepository playerRepository = currentAdventure.getPlayerRepository();
 
-        clipList.add(conditionResponse);
+        String conditionResponse = ConditionHandler.checkConditions(event, currentAdventure.getWorldRepository(), playerRepository);
 
-        if(!conditionResponse.isEmpty())
+        if(conditionResponse.isEmpty())
         {
-            // Add response filename to array of filenames to be played
+            Action action = event.getAction();
 
-            // Deduct time
+            clipList.add(action.getFilename());
+
+            // I am allowing time to go into the negative in the case that there are needs for moves that take multiple turns to complete
+            playerRepository.decrementTime(action.getTime());
 
             // Set vars
 
@@ -209,7 +224,7 @@ public class AdventureHandler
         }
         else
         {
-
+            clipList.add(conditionResponse);
         }
     }
 

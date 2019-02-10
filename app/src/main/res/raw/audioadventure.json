@@ -25,7 +25,7 @@
 		{
 			"name": "attic",
 			"filename": "attic",
-			"conditions": [ { "condition": "player.lightSource.value == true", "operator": "", "failFilename": "tooDark" } ],
+			"conditions": [ { "type": "Boolean", "condition": "player.lightSource.value == true", "operator": "", "failFilename": "tooDark" } ],
 			"directions":
 			[
 				{ "direction": "down", "name": "kitchen" }
@@ -59,8 +59,8 @@
 			"filename": "cellarEntrance",
 			"conditions":
 			[
-				{ "condition": "world.trapdoor.value == true", "operator": "or", "failFilename": "goFail" },
-				{ "condition": "player.lightSource.value == true", "operator": "or", "failFilename": "tooDark" }
+				{ "type": "Boolean", "condition": "world.trapdoor.value == true", "operator": "or", "failFilename": "goFail" },
+				{ "type": "Boolean", "condition": "player.lightSource.value == true", "operator": "or", "failFilename": "tooDark" }
 			],
 			"directions":
 			[
@@ -94,7 +94,7 @@
 			"filename": "finalRoom",
 			"conditions":
 			[
-				{ "condition": "world.doorOpen.value == true", "operator": "or", "failFilename": "doorIsLocked" }
+				{ "type": "Boolean", "condition": "world.doorOpen.value == true", "operator": "or", "failFilename": "doorIsLocked" }
 			],
 			"directions":
 			[
@@ -266,9 +266,9 @@
 				"secondaryTargets": [],
 				"conditions":
 				[
-					{ "condition": "player.health.value <= 0", "operator": "or", "failFilename": "" },
-					{ "condition": "player.hunger.value <= 0", "operator": "or", "failFilename": "" },
-					{ "condition": "player.thirst.value <= 0", "operator": "or", "failFilename": "" }
+					{ "type": "Integer", "condition": "player.health.value <= 0", "operator": "or", "failFilename": "" },
+					{ "type": "Integer", "condition": "player.hunger.value <= 0", "operator": "or", "failFilename": "" },
+					{ "type": "Integer", "condition": "player.thirst.value <= 0", "operator": "or", "failFilename": "" }
 				],
 				"setVars": [],
 				"triggers": ["death"]
@@ -321,7 +321,7 @@
 				"targets": [],
 				"secondaryKeys": [],
 				"secondaryTargets": [],
-				"conditions": [ { "condition": "player.lightSource.value == true", "operator": "", "failFilename": "" } ],
+				"conditions": [ { "type": "Boolean", "condition": "player.lightSource.value == true", "operator": "", "failFilename": "" } ],
 				"setVars": [ "inventory.lantern.uses -= 1" ],
 				"triggers": []
 			},
@@ -495,7 +495,7 @@
 				"targets": [ "item", "object" ],
 				"secondaryKeys": [],
 				"secondaryTargets": [],
-				"conditions": [ { "condition": "target.uses.value > 0", "operator": "", "failFilename": "noMoreUses" } ],
+				"conditions": [ { "type": "Integer", "condition": "target.uses.value > 0", "operator": "", "failFilename": "noMoreUses" } ],
 				"setVars": [],
 				"triggers": []
 			},
@@ -586,7 +586,7 @@
 				"targets": [ "item" ],
 				"secondaryKeys": [],
 				"secondaryTargets": [],
-				"conditions": [ { "condition": "target.uses.value > 0", "operator": "", "failFilename": "noMoreUses" } ],
+				"conditions": [ { "type": "Integer", "condition": "target.uses.value > 0", "operator": "", "failFilename": "noMoreUses" } ],
 				"setVars":
 				[
 					"player.hunger.value += target.power",
@@ -603,7 +603,7 @@
 				"targets": [ "item" ],
 				"secondaryKeys": [],
 				"secondaryTargets": [],
-				"conditions": [ { "condition": "target.uses.value > 0", "operator": "", "failFilename": "noMoreUses" } ],
+				"conditions": [ { "type": "Integer", "condition": "target.uses.value > 0", "operator": "", "failFilename": "noMoreUses" } ],
 				"setVars":
 				[
 					"player.thirst.value += target.power",
@@ -620,7 +620,7 @@
 				"targets": [ "character" ],
 				"secondaryKeys": [],
 				"secondaryTargets": [],
-				"conditions": [ { "condition": "target.health.value <= 0", "operator": "", "failFilename": "" } ],
+				"conditions": [ { "type": "Integer", "condition": "target.health.value <= 0", "operator": "", "failFilename": "" } ],
 				"setVars": [],
 				"triggers": []
 			}
@@ -803,7 +803,7 @@
 					{
 						"filename": "keyPut",
 						"failFilename": "keyFailPut",
-						"conditions": [ { "condition": "secondaryTarget == closedDoorLocked", "operator": "", "failFilename": "" } ],
+						"conditions": [ { "type": "String", "condition": "secondaryTarget == closedDoorLocked", "operator": "", "failFilename": "" } ],
 						"setVars":
 						[
 							"section.remove target",

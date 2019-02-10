@@ -9,8 +9,8 @@ import java.util.List;
 public class PlayerRepository extends AbstractRepository
 {
     private List<Entity> inventory = new ArrayList<>();
-
-    public Boolean checkVariableExists(String variableName) { return variables.containsKey(variableName); }
+    private int maxTime = 1;
+    private int time = 0;
 
     public Action getActionFromResult(String resultPhrase)
     {
@@ -23,6 +23,12 @@ public class PlayerRepository extends AbstractRepository
 
         return null;
     }
+
+    public void decrementTime(int actionTime) { time -= actionTime; }
+
+    public void resetTime() { time = maxTime; }
+
+    public int getTime() { return time; }
 
     public void addToInventory(Entity item) { inventory.add(item); }
 

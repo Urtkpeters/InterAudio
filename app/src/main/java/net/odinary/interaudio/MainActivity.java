@@ -10,7 +10,8 @@ import net.odinary.interaudio.adventure.AdventureHandler;
 public class MainActivity extends AppCompatActivity
 {
     public static final boolean debugMode = true;
-    public static final boolean simpleTestMode = true;
+    public static final boolean simpleTestMode = false;
+    public static final boolean testPackageMode = true;
     public static final int SPEECH_INPUT = 100;
 
     private UIHandler uiHandler;
@@ -33,6 +34,7 @@ public class MainActivity extends AppCompatActivity
         uiHandler = new UIHandler(this);
         packageHandler = new PackageHandler(this);
         storyHandler = new StoryHandler(this);
+        adventureHandler = new AdventureHandler(this);
 
         uiHandler.initializeUI();
     }

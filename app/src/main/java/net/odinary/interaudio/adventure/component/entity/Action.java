@@ -18,7 +18,7 @@ public class Action extends AbstractEntity
     private List<String> targetTypes = new ArrayList<>();
     private List<String> secondaryKeys = new ArrayList<>();
     private List<String> secondaryTargets = new ArrayList<>();
-    private List<Condition> conditions;
+    private List<Condition> conditions = new ArrayList<>();
     private List<String> setVars = new ArrayList<>();
     private List<String> triggers = new ArrayList<>();
 

@@ -22,7 +22,7 @@ class UIHandler
 
     public void initializeUI()
     {
-        if(MainActivity.simpleTestMode)
+        if(MainActivity.simpleTestMode || MainActivity.testPackageMode)
         {
             downloadButton.setVisibility(View.INVISIBLE);
             testButton.setVisibility(View.VISIBLE);
@@ -32,7 +32,8 @@ class UIHandler
                 @Override
                 public void onClick(View v)
                 {
-                    SimpleTest.doSimpleTest(mainActivity);
+                    if(MainActivity.simpleTestMode) SimpleTest.doSimpleTest(mainActivity);
+                    else mainActivity.getAdventureHandler().startPlay();
                 }
             });
         }

@@ -1,6 +1,8 @@
 package net.odinary.interaudio.adventure;
 
+import net.odinary.interaudio.MainActivity;
 import net.odinary.interaudio.PackageLoadException;
+import net.odinary.interaudio.R;
 import net.odinary.interaudio.adventure.component.entity.Action;
 import net.odinary.interaudio.adventure.component.entity.Entity;
 import net.odinary.interaudio.adventure.component.entity.Section;
@@ -43,9 +45,30 @@ class Adventure
     private PlayerRepository playerRepository = new PlayerRepository();
     private EntityRepository entityRepository = new EntityRepository();
 
+    Adventure(MainActivity mainActivity)
+    {
+        try(InputStream inputStream = mainActivity.getResources().openRawResource(R.raw.audioadventure))
+        {
+            Writer writer = new StringWriter();
+            char[] buffer = new char[1024];
+            Reader reader = new BufferedReader(new InputStreamReader(inputStream, "UTF-8"));
+            int n;
+
+            while((n = reader.read(buffer)) != -1)
+            {
+                writer.write(buffer, 0, n);
+            }
+
+            parseJSON(new JSONObject(writer.toString()));
+        }
+        catch(Exception e)
+        {
+            e.printStackTrace();
+        }
+    }
+
     Adventure(String packageDir) throws Exception
     {
-        JSONObject packageJson;
         File storyFile = new File(packageDir);
 
         if(!storyFile.exists()) throw new Exception("Could not find json file");
@@ -62,7 +85,7 @@ class Adventure
                 writer.write(buffer, 0, n);
             }
 
-            packageJson = new JSONObject(writer.toString());
+            parseJSON(new JSONObject(writer.toString()));
         }
         catch(IOException | JSONException e)
         {
@@ -70,7 +93,10 @@ class Adventure
 
             throw new Exception("Failure to read package json");
         }
+    }
 
+    private void parseJSON(JSONObject packageJson) throws Exception
+    {
         try
         {
             packageName = packageJson.getString("packageName");

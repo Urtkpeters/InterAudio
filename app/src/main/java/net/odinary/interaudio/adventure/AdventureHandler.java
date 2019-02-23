@@ -166,7 +166,7 @@ public class AdventureHandler
                                         clipList.add("noTarget");
                                         validAction = false;
                                     }
-                                    else if(!secondaryTargets.contains(secondaryTarget))
+                                    else if(!secondaryTargets.contains(secondaryTarget.getType()))
                                     {
                                         clipList.add(action.getFailFilename());
                                         validAction = false;

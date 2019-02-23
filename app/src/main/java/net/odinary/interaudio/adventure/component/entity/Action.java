@@ -91,6 +91,8 @@ public class Action extends AbstractEntity
 
     public String getName() { return name; }
 
+    public String getFailFilename() { return failFilename; }
+
     public List<String> getTargetTypes() { return targetTypes; }
 
     public List<String> getSecondaryKeys() { return secondaryKeys; }

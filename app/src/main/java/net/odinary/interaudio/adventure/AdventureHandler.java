@@ -120,27 +120,27 @@ public class AdventureHandler
         ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
         Event event = new Event(currentAdventure.getWorldRepository().getCurrentSection());
 
-        try
+        String resultPhrase = result.get(0);
+
+        boolean systemCommand = checkSystemCommands(resultPhrase);
+
+        if(!systemCommand)
         {
-            String resultPhrase = result.get(0);
+            Boolean validAction = true;
 
-            boolean systemCommand = checkSystemCommands(resultPhrase);
+            Action action = currentAdventure.getPlayerRepository().getActionFromResult(resultPhrase);
 
-            if(!systemCommand)
+            if(action != null)
             {
-                Boolean validAction = true;
+                List<String> targetTypes = action.getTargetTypes();
 
-                Action action = currentAdventure.getPlayerRepository().getActionFromResult(resultPhrase);
-
-                if(action != null)
+                if(!targetTypes.isEmpty())
                 {
-                    List<String> targetTypes = action.getTargetTypes();
+                    Entity target = currentAdventure.checkTarget(resultPhrase);
 
-                    if(!targetTypes.isEmpty())
+                    if(target != null)
                     {
-                        Entity target = currentAdventure.checkTarget(resultPhrase, targetTypes);
-
-                        if(target != null)
+                        if(targetTypes.contains(target.getType()))
                         {
                             event.setTarget(target);
 
@@ -159,12 +159,21 @@ public class AdventureHandler
                                 if(event.getSecondaryAction() != null)
                                 {
                                     List<String> secondaryTargets = action.getSecondaryTargets();
-                                    event.setSecondaryTarget(currentAdventure.checkTarget(resultPhrase, secondaryTargets, event.getTarget().getName()));
+                                    Entity secondaryTarget = currentAdventure.checkTarget(resultPhrase, event.getTarget().getName());
 
                                     if(event.getSecondaryTarget() == null)
                                     {
                                         clipList.add("noTarget");
                                         validAction = false;
+                                    }
+                                    else if(!secondaryTargets.contains(secondaryTarget))
+                                    {
+                                        clipList.add(action.getFailFilename());
+                                        validAction = false;
+                                    }
+                                    else
+                                    {
+                                        event.setSecondaryTarget(secondaryTarget);
                                     }
                                 }
                                 else
@@ -176,27 +185,28 @@ public class AdventureHandler
                         }
                         else
                         {
-                            clipList.add("noTarget");
+                            clipList.add(action.getFailFilename());
                             validAction = false;
                         }
                     }
+                    else
+                    {
+                        clipList.add("noTarget");
+                        validAction = false;
+                    }
                 }
-                else
-                {
-                    clipList.add("noAction");
-                    validAction = false;
-                }
-
-                if(validAction) performAction(event);
-                else uiClip = true;
+            }
+            else
+            {
+                clipList.add("noAction");
+                validAction = false;
             }
 
-            playClips();
+            if(validAction) performAction(event);
+            else uiClip = true;
         }
-        catch(Exception e)
-        {
-            e.printStackTrace();
-        }
+
+        playClips();
     }
 
     private void performAction(Event event)

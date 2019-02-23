@@ -221,20 +221,20 @@ class Adventure
         return null;
     }
 
-    public Entity checkTarget(String resultPhrase, List<String> targets)
+    public Entity checkTarget(String resultPhrase)
     {
-        return checkTarget(resultPhrase, targets, null);
+        return checkTarget(resultPhrase, null);
     }
 
-    public Entity checkTarget(String resultPhrase, List<String> targetTypes, String primaryTarget)
+    public Entity checkTarget(String resultPhrase, String primaryTarget)
     {
         // Check section entities
-        Entity target = checkTarget(resultPhrase, targetTypes, primaryTarget, worldRepository.getCurrentSection().getEntities());
+        Entity target = checkTarget(resultPhrase, primaryTarget, worldRepository.getCurrentSection().getEntities());
 
         if(target != null) return target;
 
         // Check playerRepository inventory
-        target = checkTarget(resultPhrase, targetTypes, primaryTarget, playerRepository.getInventory());
+        target = checkTarget(resultPhrase, primaryTarget, playerRepository.getInventory());
 
         if(target != null) return target;
         else return playerRepository.checkInventory(resultPhrase);
@@ -242,7 +242,7 @@ class Adventure
 
     }
 
-    private Entity checkTarget(String resultPhrase, List<String> targetTypes, String primaryTarget, List<Entity> entities)
+    private Entity checkTarget(String resultPhrase, String primaryTarget, List<Entity> entities)
     {
         for(Entity entity: entities)
         {
@@ -250,15 +250,7 @@ class Adventure
 
             if(!entityName.equals(primaryTarget) && resultPhrase.contains(entityName))
             {
-                for(String targetType: targetTypes)
-                {
-                    if(entity.getType().equals(targetType))
-                    {
-                        return entity;
-                    }
-                }
-
-                return null;
+                return entity;
             }
         }
 

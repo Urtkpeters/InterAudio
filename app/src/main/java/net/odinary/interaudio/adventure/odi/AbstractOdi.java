@@ -1,37 +1,30 @@
-package net.odinary.interaudio.adventure.condition;
+package net.odinary.interaudio.adventure.odi;
 
 import java.util.ArrayList;
 import java.util.List;
 
-public class Condition
+public abstract class AbstractOdi implements Odi
 {
-    public static final String booleanComparison = "Boolean";
-    public static final String integerComparison = "Integer";
-    public static final String stringComparison = "String";
+    protected String type;
+    protected String operator;
+    protected OdiSegment operatorSegment;
+    private List<OdiSegment> leftSegments = new ArrayList<>();
+    private List<OdiSegment> rightSegments = new ArrayList<>();
 
-    private String type;
-    private String operator;
-    private String failFilename;
-
-    private List<ConditionSegment> leftSegments = new ArrayList<>();
-    private List<ConditionSegment> rightSegments = new ArrayList<>();
-    private ConditionSegment operatorSegment;
-
-    Condition(String type, String condition, String operator, String failFilename)
+    public AbstractOdi(String type, String odi, String operator)
     {
         this.type = type;
         this.operator = operator;
-        this.failFilename = failFilename;
 
         boolean passedOperator = false;
 
-        List<String> segments = parseNotation(condition, " ");
+        List<String> segments = parseNotation(odi, " ");
 
         for(int i = 0; i < segments.size(); i++)
         {
-            ConditionSegment tmpSeg = new ConditionSegment(parseNotation(segments.get(i), "."));
+            OdiSegment tmpSeg = new OdiSegment(parseNotation(segments.get(i), "."));
 
-            if(tmpSeg.getType() == ConditionSegment.operator)
+            if(tmpSeg.getType() == OdiSegmentInterface.operator)
             {
                 operatorSegment = tmpSeg;
                 passedOperator = true;
@@ -47,7 +40,7 @@ public class Condition
         }
     }
 
-    private static List<String> parseNotation(String input, String character)
+    private List<String> parseNotation(String input, String character)
     {
         List<String> list = new ArrayList<>();
 
@@ -72,15 +65,13 @@ public class Condition
         return list;
     }
 
-    public List<ConditionSegment> getLeftSegments() { return leftSegments; }
+    public List<OdiSegment> getLeftSegments() { return leftSegments; }
 
-    public List<ConditionSegment> getRightSegments() { return rightSegments; }
+    public List<OdiSegment> getRightSegments() { return rightSegments; }
 
-    public ConditionSegment getOperatorSegment() { return operatorSegment; }
+    public OdiSegment getOperatorSegment() { return operatorSegment; }
 
     public String getType() { return type; }
 
     public String getOperator() { return operator; }
-
-    public String getFailFilename() { return failFilename; }
 }

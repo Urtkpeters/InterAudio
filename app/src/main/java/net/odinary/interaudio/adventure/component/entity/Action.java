@@ -1,7 +1,9 @@
 package net.odinary.interaudio.adventure.component.entity;
 
-import net.odinary.interaudio.adventure.condition.Condition;
-import net.odinary.interaudio.adventure.condition.ConditionHandler;
+import net.odinary.interaudio.adventure.odi.condition.Condition;
+import net.odinary.interaudio.adventure.odi.condition.ConditionHandler;
+import net.odinary.interaudio.adventure.odi.trigger.Trigger;
+import net.odinary.interaudio.adventure.odi.trigger.TriggerHandler;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,10 +21,9 @@ public class Action extends AbstractEntity
     private List<String> secondaryKeys = new ArrayList<>();
     private List<String> secondaryTargets = new ArrayList<>();
     private List<Condition> conditions = new ArrayList<>();
-    private List<String> setVars = new ArrayList<>();
-    private List<String> triggers = new ArrayList<>();
+    private List<Trigger> triggers = new ArrayList<>();
 
-    public Action(JSONObject jsonAction) throws JSONException
+    public Action(JSONObject jsonAction, TriggerHandler triggerHandler) throws JSONException
     {
         super(jsonAction, "action");
 
@@ -53,22 +54,10 @@ public class Action extends AbstractEntity
 
         conditions = ConditionHandler.parseConditions(jsonAction.getJSONArray("conditions"));
 
-        JSONArray setVarsArray = jsonAction.getJSONArray("setVars");
-
-        for(int i = 0; i < setVarsArray.length(); i++)
-        {
-            setVars.add(setVarsArray.getString(i));
-        }
-
-        JSONArray triggersArray = jsonAction.getJSONArray("triggers");
-
-        for(int i = 0; i < triggersArray.length(); i++)
-        {
-            triggers.add(triggersArray.getString(i));
-        }
+        triggers = triggerHandler.parse(jsonAction.getJSONArray("triggers"));
     }
 
-    public Action(Action cloner, JSONObject actionOverrides) throws JSONException
+    public Action(Action cloner, JSONObject actionOverrides, TriggerHandler triggerHandler) throws JSONException
     {
         super(cloner);
 
@@ -78,15 +67,7 @@ public class Action extends AbstractEntity
 
         if(actionOverrides.has("conditions")) conditions.addAll(ConditionHandler.parseConditions(actionOverrides.getJSONArray("conditions")));
 
-        if(actionOverrides.has("setVars"))
-        {
-            JSONArray newSetVars = actionOverrides.getJSONArray("setVars");
-
-            for(int i = 0; i < newSetVars.length(); i++)
-            {
-                setVars.add(newSetVars.getString(i));
-            }
-        }
+        if(actionOverrides.has("triggers")) triggers.addAll(triggerHandler.parse(actionOverrides.getJSONArray("triggers")));
     }
 
     public String getName() { return name; }
@@ -100,6 +81,8 @@ public class Action extends AbstractEntity
     public List<String> getSecondaryTargets() { return secondaryTargets; }
 
     public List<Condition> getConditions() { return conditions; }
+
+    public List<Trigger> getTriggers() { return triggers; }
 
     public int getTime() { return time; }
 }

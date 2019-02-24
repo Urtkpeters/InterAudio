@@ -7,7 +7,7 @@ import android.net.Uri;
 import android.speech.RecognizerIntent;
 
 import net.odinary.interaudio.MainActivity;
-import net.odinary.interaudio.adventure.condition.ConditionHandler;
+import net.odinary.interaudio.adventure.odi.condition.ConditionHandler;
 import net.odinary.interaudio.adventure.component.entity.Action;
 import net.odinary.interaudio.adventure.component.entity.Entity;
 import net.odinary.interaudio.adventure.repository.PlayerRepository;
@@ -225,6 +225,8 @@ public class AdventureHandler
             playerRepository.decrementTime(action.getTime());
 
             // Set vars
+
+
 
             // Check triggers
         }

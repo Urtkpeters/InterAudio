@@ -20,7 +20,7 @@
 				{ "type": "item", "name": "sack" }, 
 				{ "type": "item", "name": "bottle" }
 			],
-			"setVariables": []
+			"triggers": []
 		},
 		{
 			"name": "attic",
@@ -36,7 +36,7 @@
 				{ "type": "item", "name": "lantern" },
 				{ "type": "item", "name": "sword" }
 			],
-			"setVariables": []
+			"triggers": []
 		},
 		{
 			"name": "livingRoom",
@@ -52,7 +52,7 @@
 				{ "type": "item", "name": "rope" }, 
 				{ "type": "item", "name": "brick" }
 			],
-			"setVariables": []
+			"triggers": []
 		},
 		{
 			"name": "cellarEntrance",
@@ -72,7 +72,7 @@
 				{ "type": "item", "name": "rope" }, 
 				{ "type": "item", "name": "brick" }
 			],
-			"setVariables": []
+			"triggers": []
 		},
 		{
 			"name": "trollRoom",
@@ -87,7 +87,7 @@
 				{ "type": "character", "name": "troll" },
 				{ "type": "object", "name": "closedDoorLocked" }
 			],
-			"setVariables": []
+			"triggers": []
 		},
 		{
 			"name": "finalRoom",
@@ -105,7 +105,7 @@
 				{ "type": "character", "name": "troll" },
 				{ "type": "object", "name": "closedDoorLocked" }
 			],
-			"setVariables": []
+			"triggers": []
 		}
 	],
 	"variables":
@@ -270,8 +270,10 @@
 					{ "type": "Integer", "condition": "player.hunger.value <= 0", "operator": "or", "failFilename": "" },
 					{ "type": "Integer", "condition": "player.thirst.value <= 0", "operator": "or", "failFilename": "" }
 				],
-				"setVars": [],
-				"triggers": ["death"]
+				"triggers":
+				[
+					{ "type": "System", "trigger": "gameover" }
+				]
 			},
 			{
 				"name": "regen",
@@ -283,8 +285,10 @@
 				"secondaryKeys": [],
 				"secondaryTargets": [],
 				"conditions": [],
-				"setVars": [ "player.health.value += 1" ],
-				"triggers": []
+				"triggers":
+				[
+					{ "type": "Integer", "trigger": "player.health.value += 1" }
+				]
 			},
 			{
 				"name": "hunger",
@@ -296,8 +300,10 @@
 				"secondaryKeys": [],
 				"secondaryTargets": [],
 				"conditions": [],
-				"setVars": [ "player.hunger.value -= 1" ],
-				"triggers": []
+				"triggers":
+				[
+					{ "type": "Integer", "trigger": "player.hunger.value -= 1" }
+				]
 			},
 			{
 				"name": "thirst",
@@ -309,8 +315,10 @@
 				"secondaryKeys": [],
 				"secondaryTargets": [],
 				"conditions": [],
-				"setVars": [ "player.thirst.value -= 1" ],
-				"triggers": []
+				"triggers":
+				[
+					{ "type": "Integer", "trigger": "player.thirst.value -= 1" }
+				]
 			},
 			{
 				"name": "battery",
@@ -322,8 +330,10 @@
 				"secondaryKeys": [],
 				"secondaryTargets": [],
 				"conditions": [ { "type": "Boolean", "condition": "player.lightSource.value == true", "operator": "", "failFilename": "" } ],
-				"setVars": [ "inventory.lantern.uses -= 1" ],
-				"triggers": []
+				"triggers":
+				[
+					{ "type": "Integer", "trigger": "inventory.lantern.uses -= 1" }
+				]
 			},
 			{
 				"name": "characterAct",
@@ -335,7 +345,6 @@
 				"secondaryKeys": [],
 				"secondaryTargets": [],
 				"conditions": [],
-				"setVars": [],
 				"triggers": []
 			}
 		],
@@ -351,8 +360,10 @@
 				"secondaryKeys": [],
 				"secondaryTargets": [],
 				"conditions": [],
-				"setVars": [],
-				"triggers": ["saveGame"]
+				"triggers":
+				[
+					{ "type": "System", "trigger": "saveGame" }
+				]
 			},
 			{
 				"name": "load",
@@ -364,8 +375,10 @@
 				"secondaryKeys": [],
 				"secondaryTargets": [],
 				"conditions": [],
-				"setVars": [],
-				"triggers": ["loadGame"]
+				"triggers":
+				[
+					{ "type": "System", "trigger": "loadGame" }
+				]
 			},
 			{
 				"name": "quit",
@@ -377,8 +390,10 @@
 				"secondaryKeys": [],
 				"secondaryTargets": [],
 				"conditions": [],
-				"setVars": [],
-				"triggers": ["quitGame"]
+				"triggers": 
+				[
+					{ "type": "System", "trigger": "quitGame" }
+				]
 			},
 			{
 				"name": "repeat",
@@ -390,8 +405,10 @@
 				"secondaryKeys": [],
 				"secondaryTargets": [],
 				"conditions": [],
-				"setVars": [],
-				"triggers": []
+				"triggers":
+				[
+					{ "type": "System", "trigger": "repeat" }
+				]
 			},
 			{
 				"name": "status",
@@ -403,7 +420,6 @@
 				"secondaryKeys": [],
 				"secondaryTargets": [],
 				"conditions": [],
-				"setVars": [],
 				"triggers": []
 			},
 			{
@@ -416,7 +432,6 @@
 				"secondaryKeys": [],
 				"secondaryTargets": [],
 				"conditions": [],
-				"setVars": [],
 				"triggers": []
 			},
 			{
@@ -429,8 +444,10 @@
 				"secondaryKeys": [],
 				"secondaryTargets": [],
 				"conditions": [],
-				"setVars": [],
-				"triggers": ["changeSection"]
+				"triggers":
+				[
+					{ "type": "System", "trigger": "changeSection" }
+				]
 			},
 			{
 				"name": "take",
@@ -442,13 +459,12 @@
 				"secondaryKeys": [],
 				"secondaryTargets": [],
 				"conditions": [],
-				"setVars":
+				"triggers":
 				[
-					"inventory.add target",
-					"player.weight.value += target.weight",
-					"section.remove target"
-				],
-				"triggers": []
+					{ "type": "Integer", "trigger": "player.weight.value += target.weight.value" },
+					{ "type": "Contain", "trigger": "inventory ++ target" },
+					{ "type": "Contain", "trigger": "section -- target" }
+				]
 			},
 			{
 				"name": "drop",
@@ -460,13 +476,12 @@
 				"secondaryKeys": [],
 				"secondaryTargets": [],
 				"conditions": [],
-				"setVars":
+				"triggers":
 				[
-					"player.weight.value -= target.weight",
-					"inventory.remove target",
-					"section.add target"
-				],
-				"triggers": []
+					{ "type": "Integer", "trigger": "player.weight.value -= target.weight.value" },
+					{ "type": "Contain", "trigger": "inventory -- target" },
+					{ "type": "Contain", "trigger": "section ++ target" }
+				]
 			},
 			{
 				"name": "put",
@@ -478,13 +493,12 @@
 				"secondaryKeys": [ "in", "on" ],
 				"secondaryTargets": [ "object" ],
 				"conditions": [],
-				"setVars": 
+				"triggers": 
 				[
-					"player.weight.value -= target.weight",
-					"inventory.remove target",
-					"section.add target"
-				],
-				"triggers": []
+					{ "type": "Integer", "trigger": "player.weight.value -= target.weight.value" },
+					{ "type": "Contain", "trigger": "inventory -- target" },
+					{ "type": "Contain", "trigger": "section ++ target" }
+				]
 			},
 			{
 				"name": "activate",
@@ -496,7 +510,6 @@
 				"secondaryKeys": [],
 				"secondaryTargets": [],
 				"conditions": [ { "type": "Integer", "condition": "target.uses.value > 0", "operator": "", "failFilename": "noMoreUses" } ],
-				"setVars": [],
 				"triggers": []
 			},
 			{
@@ -509,7 +522,6 @@
 				"secondaryKeys": [],
 				"secondaryTargets": [ "object" ],
 				"conditions": [],
-				"setVars": [],
 				"triggers": []
 			},
 			{
@@ -522,7 +534,6 @@
 				"secondaryKeys": [],
 				"secondaryTargets": [],
 				"conditions": [],
-				"setVars": [],
 				"triggers": []
 			},
 			{
@@ -535,7 +546,6 @@
 				"secondaryKeys": [],
 				"secondaryTargets": [],
 				"conditions": [],
-				"setVars": [],
 				"triggers": []
 			},
 			{
@@ -548,7 +558,6 @@
 				"secondaryKeys": [],
 				"secondaryTargets": [],
 				"conditions": [],
-				"setVars": [],
 				"triggers": []
 			},
 			{
@@ -561,7 +570,6 @@
 				"secondaryKeys": [],
 				"secondaryTargets": [],
 				"conditions": [],
-				"setVars": [],
 				"triggers": []
 			},
 			{
@@ -574,8 +582,11 @@
 				"secondaryKeys": [ "with" ],
 				"secondaryTargets": [ "item" ],
 				"conditions": [],
-				"setVars": [ "target.health.value -= secondaryTarget.power" ],
-				"triggers": [ "kill" ]
+				"triggers":
+				[
+					{ "type": "Integer", "trigger": "target.health.value -= secondaryTarget.power.value" },
+					{ "type": "Action", "trigger": "kill" }
+				]
 			},
 			{
 				"name": "eat",
@@ -587,12 +598,11 @@
 				"secondaryKeys": [],
 				"secondaryTargets": [],
 				"conditions": [ { "type": "Integer", "condition": "target.uses.value > 0", "operator": "", "failFilename": "noMoreUses" } ],
-				"setVars":
+				"triggers":
 				[
-					"player.hunger.value += target.power",
-					"target.uses.value -= 1"
-				],
-				"triggers": []
+					{ "type": "Integer", "trigger": "player.hunger.value += target.power.value" },
+					{ "type": "Integer", "trigger": "target.uses.value -= 1" }
+				]
 			},
 			{
 				"name": "drink",
@@ -604,12 +614,11 @@
 				"secondaryKeys": [],
 				"secondaryTargets": [],
 				"conditions": [ { "type": "Integer", "condition": "target.uses.value > 0", "operator": "", "failFilename": "noMoreUses" } ],
-				"setVars":
+				"triggers":
 				[
-					"player.thirst.value += target.power",
-					"target.uses.value -= 1"
-				],
-				"triggers": []
+					{ "type": "Integer", "trigger": "player.thirst.value += target.power.value" },
+					{ "type": "Integer", "trigger": "target.uses.value -= 1" }
+				]
 			},
 			{
 				"name": "kill",
@@ -621,7 +630,6 @@
 				"secondaryKeys": [],
 				"secondaryTargets": [],
 				"conditions": [ { "type": "Integer", "condition": "target.health.value <= 0", "operator": "", "failFilename": "" } ],
-				"setVars": [],
 				"triggers": []
 			}
 		],
@@ -637,8 +645,10 @@
 				"secondaryKeys": [],
 				"secondaryTargets": [],
 				"conditions": [],
-				"setVars": [ "target.health.value -= character.power" ],
-				"triggers": []
+				"triggers":
+				[
+					{ "type": "Integer", "trigger": "target.health.value -= character.power.value" }
+				]
 			},
 			{
 				"name": "trollDoNothing",
@@ -650,7 +660,6 @@
 				"secondaryKeys": [],
 				"secondaryTargets": [],
 				"conditions": [],
-				"setVars": [],
 				"triggers": []
 			},
 			{
@@ -663,7 +672,6 @@
 				"secondaryKeys": [],
 				"secondaryTargets": [],
 				"conditions": [],
-				"setVars": [],
 				"triggers": []
 			}
 		]
@@ -803,13 +811,13 @@
 					{
 						"filename": "keyPut",
 						"failFilename": "keyFailPut",
-						"conditions": [ { "type": "String", "condition": "secondaryTarget == closedDoorLocked", "operator": "", "failFilename": "" } ],
-						"setVars":
+						"conditions": [ { "type": "String", "condition": "secondaryTarget.name.value == closedDoorLocked", "operator": "", "failFilename": "" } ],
+						"triggers":
 						[
-							"section.remove target",
-							"section.remove secondaryTarget",
-							"section.entities.add entities.objects.openDoor",
-							"section.directions.west.add sections.trollRoom"
+							{ "type": "Contain", "trigger": "sections.current.entities -- target" },
+							{ "type": "Contain", "trigger": "sections.current.entities -- secondaryTarget" },
+							{ "type": "Contain", "trigger": "sections.current.entities ++ entities.objects.openDoor" },
+							{ "type": "Contain", "trigger": "sections.current.west == sections.trollRoom" }
 						]
 					}
 				},
@@ -832,10 +840,10 @@
 					"move": 
 					{
 						"filename": "rugMove",
-						"setVars":
+						"triggers":
 						[
-							"section.remove target",
-							"section.add entities.objects.trapdoorClosed"
+							{ "type": "Contain", "trigger": "section.current.entities -- target" },
+							{ "type": "Contain", "trigger": "section.current.entities ++ entities.objects.trapdoorClosed" }
 						]
 					}
 				},
@@ -855,11 +863,11 @@
 					"open": 
 					{
 						"filename": "trapdoorSetOpen",
-						"setVars":
+						"triggers":
 						[
-							"section.remove target",
-							"section.add entities.objects.trapdoorOpen",
-							"world.trapdoor.value = true"
+							{ "type": "Contain", "trigger": "sections.current.entities -- target" },
+							{ "type": "Contain", "trigger": "sections.current.entities ++ entities.objects.trapdoorOpen" },
+							{ "type": "Boolean", "trigger": "world.trapdoor.value = true" }
 						]
 					}
 				},
@@ -879,11 +887,11 @@
 					"close": 
 					{
 						"filename": "doorSetClose",
-						"setVars":
+						"triggers":
 						[
-							"section.remove target",
-							"section.add entities.objects.trapdoorClosed",
-							"world.trapdoor.value = false"
+							{ "type": "Contain", "trigger": "sections.current.entities -- target" },
+							{ "type": "Contain", "trigger": "sections.current.entities ++ entities.objects.trapdoorClosed" },
+							{ "type": "Boolean", "trigger": "world.trapdoor.value = false" }
 						]
 					}
 				},
@@ -918,11 +926,11 @@
 					"open": 
 					{
 						"filename": "closedDoorSetOpen",
-						"setVars":
+						"triggers":
 						[
-							"section.remove target",
-							"section.add entities.objects.openDoor",
-							"world.doorOpen.value = true"
+							{ "type": "Contain", "trigger": "sections.current.entities -- target" },
+							{ "type": "Contain", "trigger": "sections.current.entities ++ entities.objects.openDoor" },
+							{ "type": "Boolean", "trigger": "world.doorOpen.value = true" }
 						]
 					}
 				},
@@ -942,11 +950,11 @@
 					"close": 
 					{
 						"filename": "doorSetClose",
-						"setVars":
+						"triggers":
 						[
-							"section.remove target",
-							"section.add entities.objects.trapdoorClosed",
-							"world.trapdoor.value = false"
+							{ "type": "Contain", "trigger": "sections.current.entities -- target" },
+							{ "type": "Contain", "trigger": "sections.current.entities ++ entities.objects.trapdoorClosed" },
+							{ "type": "Boolean", "trigger": "world.trapdoor.value = false" }
 						]
 					}
 				},
@@ -965,10 +973,10 @@
 					"examine": 
 					{
 						"filename": "trollCorpseExamine",
-						"setVars":
+						"triggers":
 						[
-							"section.remove target",
-							"section.add entities.objects.trollCorpseEmpty"
+							{ "type": "Contain", "trigger": "sections.current.entities -- target" },
+							{ "type": "Contain", "trigger": "sections.current.entities ++ entities.objects.trollCorpseEmpty" }
 						]
 					}
 				},
@@ -1008,10 +1016,10 @@
 					"kill":
 					{
 						"filename": "trollSlain",
-						"setVars":
+						"triggers":
 						[
-							"section.remove target",
-							"section.add entities.objects.trollCorpse"
+							{ "type": "Contain", "trigger": "sections.current.entities -- target" },
+							{ "type": "Contain", "trigger": "sections.current.entities ++ entities.objects.trollCorpse" }
 						]
 					}
 				},

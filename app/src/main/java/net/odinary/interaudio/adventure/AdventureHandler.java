@@ -219,7 +219,7 @@ public class AdventureHandler
         playClips();
     }
 
-    private void performAction(Event event)
+    public void performAction(Event event)
     {
         PlayerRepository playerRepository = currentAdventure.getPlayerRepository();
 
@@ -234,11 +234,7 @@ public class AdventureHandler
             // I am allowing time to go into the negative in the case that there are needs for moves that take multiple turns to complete
             playerRepository.decrementTime(action.getTime());
 
-            // Set vars
-
-
-
-            // Check triggers
+            triggerHandler.runTriggers(this, event);
         }
         else
         {

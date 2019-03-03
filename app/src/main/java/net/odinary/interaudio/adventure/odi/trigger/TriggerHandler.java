@@ -1,5 +1,6 @@
 package net.odinary.interaudio.adventure.odi.trigger;
 
+import net.odinary.interaudio.adventure.AdventureHandler;
 import net.odinary.interaudio.adventure.Event;
 import net.odinary.interaudio.adventure.component.Component;
 import net.odinary.interaudio.adventure.component.entity.Action;
@@ -45,7 +46,7 @@ public class TriggerHandler extends AbstractOdiHandler
         return triggers;
     }
 
-    public void runTriggers(Event event)
+    public void runTriggers(AdventureHandler adventureHandler, Event event)
     {
         Action action = event.getAction();
         List<Trigger> triggers = action.getTriggers();
@@ -65,7 +66,7 @@ public class TriggerHandler extends AbstractOdiHandler
                     case Trigger.stringType: triggerString(event, leftSegments, rightSegments, operatorSegment); break;
                     case Trigger.integerType: triggerInt(event, leftSegments, rightSegments, operatorSegment); break;
                     case Trigger.containType: triggerContain(event, leftSegments, rightSegments, operatorSegment); break;
-                    case Trigger.actionType: triggerAction(event, leftSegments, rightSegments, operatorSegment); break;
+                    case Trigger.actionType: triggerAction(adventureHandler, event, leftSegments); break;
                     case Trigger.systemType: triggerSystem(event, leftSegments, rightSegments, operatorSegment); break;
                 }
             }
@@ -161,9 +162,13 @@ public class TriggerHandler extends AbstractOdiHandler
         }
     }
 
-    private void triggerAction(Event event, List<OdiSegment> leftSegments, List<OdiSegment> rightSegments, OdiSegment operatorSegment)
+    private void triggerAction(AdventureHandler adventureHandler, Event event, List<OdiSegment> leftSegments)
     {
+        Event secondaryEvent = new Event(event);
 
+        secondaryEvent.setAction(playerRepository.getAction(leftSegments.get(0).getScope()));
+
+        adventureHandler.performAction(event);
     }
 
     private void triggerSystem(Event event, List<OdiSegment> leftSegments, List<OdiSegment> rightSegments, OdiSegment operatorSegment)

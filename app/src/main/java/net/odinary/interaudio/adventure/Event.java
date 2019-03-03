@@ -14,6 +14,15 @@ public class Event
 
     public Event(Section currentSection) { section = currentSection; }
 
+    public Event(Event cloner)
+    {
+        this.action = cloner.action;
+        this.secondaryAction = cloner.secondaryAction;
+        this.target = cloner.target;
+        this.secondaryTarget = cloner.secondaryTarget;
+        this.section = cloner.section;
+    }
+
     public void setAction(Action action) { this.action = action; }
 
     public void setSecondaryAction(String secondaryAction) { this.secondaryAction = secondaryAction; }

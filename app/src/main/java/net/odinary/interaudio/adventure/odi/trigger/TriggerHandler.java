@@ -120,33 +120,35 @@ public class TriggerHandler extends AbstractOdiHandler
         OdiSegment rightSegment = rightSegments.get(0);
         Entity rightEntity = null;
 
-        switch(rightSegment.getScope())
+        List<String> rightScopes = rightSegment.getScopes();
+        String rightFirstScope = rightScopes.get(1);
+
+        if(rightFirstScope.equals(OdiSegment.eventScope))
         {
-            case OdiSegment.entities:
-                rightEntity = entityRepository.getEntity(rightSegment.getVariable(), rightSegment.getValue());
-                break;
-            case OdiSegment.target:
-                rightEntity = event.getTarget();
-                break;
-            case OdiSegment.secondaryTarget:
-                rightEntity = event.getSecondaryTarget();
-                break;
+            if(rightScopes.get(2).equals(OdiSegment.target)) rightEntity = event.getTarget();
+            else if(rightScopes.get(2).equals(OdiSegment.secondaryTarget)) rightEntity = event.getSecondaryTarget();
+        }
+        else if(rightFirstScope.equals(OdiSegment.entitiesScope))
+        {
+            rightEntity = entityRepository.getEntity(rightScopes.get(2), rightSegment.getValue());
         }
 
         if(rightEntity != null)
         {
             // Same as the right segment above
             OdiSegment leftSegment = leftSegments.get(0);
-            String leftScope = leftSegment.getScope();
+            List<String> leftScopes = leftSegment.getScopes();
+
+            String firstLeftScope = leftScopes.get(0);
             String operator = operatorSegment.getValue();
 
-            if(leftScope.equals(OdiSegment.sections))
+            if(firstLeftScope.equals(OdiSegment.worldScope))
             {
-                String varName = leftSegment.getVariable();
+                String sectionName = leftScopes.get(2);
                 Section section = null;
 
-                if(varName.equals("current")) section = event.getSection();
-                else if(worldRepository.getSections().containsKey(varName)) section = worldRepository.getSection(varName);
+                if(sectionName.equals("current")) section = event.getSection();
+                else if(worldRepository.getSections().containsKey(sectionName)) section = worldRepository.getSection(sectionName);
 
                 if(section != null)
                 {
@@ -154,7 +156,7 @@ public class TriggerHandler extends AbstractOdiHandler
                     else if(operator.equals("--")) section.removeEntity(rightEntity.getName());
                 }
             }
-            else if(leftScope.equals(OdiSegment.inventory))
+            else if(firstLeftScope.equals(OdiSegment.playerScope))
             {
                 if(operator.equals("++")) playerRepository.addToInventory(rightEntity);
                 else if(operator.equals("--")) playerRepository.removeFromInventory(rightEntity.getName());
@@ -166,7 +168,7 @@ public class TriggerHandler extends AbstractOdiHandler
     {
         Event secondaryEvent = new Event(event);
 
-        secondaryEvent.setAction(playerRepository.getAction(leftSegments.get(0).getScope()));
+        secondaryEvent.setAction(playerRepository.getAction(leftSegments.get(0).getScopes().get(2)));
 
         adventureHandler.performAction(event);
     }

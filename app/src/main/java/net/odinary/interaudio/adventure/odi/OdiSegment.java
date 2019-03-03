@@ -5,42 +5,47 @@ import java.util.List;
 public class OdiSegment implements OdiSegmentInterface
 {
     protected int type = empty;
-    protected String scope;
-    protected String entityVariable;
+    protected List<String> scopes;
     protected String value;
 
     public OdiSegment(List<String> segment)
     {
-        if(segment.size() > 0)
+        int segmentSize = segment.size();
+
+        if(segmentSize > 0)
         {
-            if(segment.get(0).equals("variable"))
+            String firstPiece = segment.get(0);
+
+            if(firstPiece.equals("variable"))
             {
                 type = variable;
 
-                scope = segment.get(1);
-                entityVariable = segment.get(2);
-                value = segment.get(3);
+                for(int i = 1; i < segment.size() - 2; i++)
+                {
+                    scopes.add(segment.get(i));
+                }
+
+                // Have to minus one because because lists start with zero numbering
+                value = segment.get(segmentSize - 1);
             }
-            else if(segment.get(0).contains("=") || segment.get(0).contains(">") || segment.get(0).contains("<") || segment.get(0).contains("{") || segment.get(0).contains("[") || segment.get(0).contains("+") || segment.get(0).contains("-"))
+            else if(firstPiece.contains("=") || firstPiece.contains(">") || firstPiece.contains("<") || firstPiece.contains("{") || firstPiece.contains("[") || firstPiece.contains("+") || firstPiece.contains("-"))
             {
                 type = operator;
 
-                value = segment.get(0);
+                value = firstPiece;
             }
             else
             {
                 type = raw;
 
-                value = segment.get(0);
+                value = firstPiece;
             }
         }
     }
 
     public Integer getType() { return type; }
 
-    public String getScope() { return scope; }
-
-    public String getVariable() { return entityVariable; }
+    public List<String> getScopes() { return scopes; }
 
     public String getValue() { return value; }
 }

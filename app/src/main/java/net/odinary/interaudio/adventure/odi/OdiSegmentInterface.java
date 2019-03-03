@@ -1,5 +1,7 @@
 package net.odinary.interaudio.adventure.odi;
 
+import java.util.List;
+
 public interface OdiSegmentInterface
 {
     int empty = 0;
@@ -7,16 +9,24 @@ public interface OdiSegmentInterface
     int operator = 2;
     int raw = 3;
 
-    String player = "player";
-    String world = "world";
+    String worldScope = "world";
     String sections = "sections";
+    String current = "current";
+
+    String playerScope = "player";
+    String inventory = "inventory";
+
+    String entitiesScope = "entities";
+    String objects = "objects";
+    String characters = "characters";
+    String items = "items";
+
+    String eventScope = "event";
+    String actor = "actor";
     String target = "target";
     String secondaryTarget = "secondaryTarget";
-    String inventory = "inventory";
-    String entities = "entities";
 
     Integer getType();
-    String getScope();
-    String getVariable();
+    List<String> getScopes();
     String getValue();
 }

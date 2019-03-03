@@ -1,10 +1,14 @@
 package net.odinary.interaudio.adventure.odi.trigger;
 
 import net.odinary.interaudio.adventure.Event;
+import net.odinary.interaudio.adventure.component.Component;
 import net.odinary.interaudio.adventure.component.entity.Action;
+import net.odinary.interaudio.adventure.component.entity.Entity;
+import net.odinary.interaudio.adventure.component.entity.Section;
 import net.odinary.interaudio.adventure.component.entity.variable.AdventureVariable;
 import net.odinary.interaudio.adventure.odi.AbstractOdiHandler;
 import net.odinary.interaudio.adventure.odi.OdiSegment;
+import net.odinary.interaudio.adventure.repository.EntityRepository;
 import net.odinary.interaudio.adventure.repository.PlayerRepository;
 import net.odinary.interaudio.adventure.repository.WorldRepository;
 
@@ -14,10 +18,18 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class TriggerHandler extends AbstractOdiHandler
 {
-    public TriggerHandler(WorldRepository worldRepository, PlayerRepository playerRepository) { super(worldRepository, playerRepository); }
+    private EntityRepository entityRepository;
+
+    public TriggerHandler(WorldRepository worldRepository, PlayerRepository playerRepository, EntityRepository entityRepository)
+    {
+        super(worldRepository, playerRepository);
+
+        this.entityRepository = entityRepository;
+    }
 
     public List<Trigger> parse(JSONArray jsonArray) throws JSONException
     {
@@ -103,7 +115,50 @@ public class TriggerHandler extends AbstractOdiHandler
 
     private void triggerContain(Event event, List<OdiSegment> leftSegments, List<OdiSegment> rightSegments, OdiSegment operatorSegment)
     {
+        // Even if there are more than one segment only get the first as there should only ever be one
+        OdiSegment rightSegment = rightSegments.get(0);
+        Entity rightEntity = null;
 
+        switch(rightSegment.getScope())
+        {
+            case OdiSegment.entities:
+                rightEntity = entityRepository.getEntity(rightSegment.getVariable(), rightSegment.getValue());
+                break;
+            case OdiSegment.target:
+                rightEntity = event.getTarget();
+                break;
+            case OdiSegment.secondaryTarget:
+                rightEntity = event.getSecondaryTarget();
+                break;
+        }
+
+        if(rightEntity != null)
+        {
+            // Same as the right segment above
+            OdiSegment leftSegment = leftSegments.get(0);
+            String leftScope = leftSegment.getScope();
+            String operator = operatorSegment.getValue();
+
+            if(leftScope.equals(OdiSegment.sections))
+            {
+                String varName = leftSegment.getVariable();
+                Section section = null;
+
+                if(varName.equals("current")) section = event.getSection();
+                else if(worldRepository.getSections().containsKey(varName)) section = worldRepository.getSection(varName);
+
+                if(section != null)
+                {
+                    if(operator.equals("++")) section.addEntity(rightEntity);
+                    else if(operator.equals("--")) section.removeEntity(rightEntity.getName());
+                }
+            }
+            else if(leftScope.equals(OdiSegment.inventory))
+            {
+                if(operator.equals("++")) playerRepository.addToInventory(rightEntity);
+                else if(operator.equals("--")) playerRepository.removeFromInventory(rightEntity.getName());
+            }
+        }
     }
 
     private void triggerAction(Event event, List<OdiSegment> leftSegments, List<OdiSegment> rightSegments, OdiSegment operatorSegment)

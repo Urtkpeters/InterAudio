@@ -32,6 +32,14 @@ public class PlayerRepository extends AbstractRepository
 
     public void addToInventory(Entity item) { inventory.add(item); }
 
+    public void removeFromInventory(String itemName)
+    {
+        for(Entity item: inventory)
+        {
+            if(item.getName().equals(itemName)) inventory.remove(item);
+        }
+    }
+
     public List<Entity> getInventory() { return inventory; }
 
     public Entity checkInventory(String resultPhrase)

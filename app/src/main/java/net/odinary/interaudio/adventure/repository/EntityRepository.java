@@ -36,4 +36,15 @@ public class EntityRepository extends AbstractRepository
 
         return returnEntity;
     }
+
+    public Map<String, Entity> getEntities(String type)
+    {
+        switch(type)
+        {
+            case "item": return items;
+            case "object": return objects;
+            case "character": return characters;
+            default: return null;
+        }
+    }
 }

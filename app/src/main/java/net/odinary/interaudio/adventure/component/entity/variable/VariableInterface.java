@@ -1,8 +1,8 @@
 package net.odinary.interaudio.adventure.component.entity.variable;
 
-import net.odinary.interaudio.adventure.component.ComponentInterface;
+import net.odinary.interaudio.adventure.component.Component;
 
-public interface VariableInterface extends ComponentInterface
+public interface VariableInterface extends Component
 {
     String booleanType = "Boolean";
     String integerType = "Integer";

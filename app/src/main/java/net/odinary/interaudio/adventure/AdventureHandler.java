@@ -51,7 +51,7 @@ public class AdventureHandler
             PlayerRepository playerRepository = currentAdventure.getPlayerRepository();
 
             conditionHandler = new ConditionHandler(worldRepository, playerRepository);
-            triggerHandler = new TriggerHandler(worldRepository, playerRepository);
+            triggerHandler = new TriggerHandler(worldRepository, playerRepository, currentAdventure.getEntityRepository());
 
             if(MainActivity.testPackageMode) currentAdventure = new Adventure(mainActivity, conditionHandler, triggerHandler);
             else currentAdventure = new Adventure(mainActivity.getPackageHandler().getPackageDir() + jsonFilename, conditionHandler, triggerHandler);

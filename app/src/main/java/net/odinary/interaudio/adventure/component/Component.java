@@ -1,6 +1,6 @@
 package net.odinary.interaudio.adventure.component;
 
-public interface ComponentInterface
+public interface Component
 {
     String getName();
 

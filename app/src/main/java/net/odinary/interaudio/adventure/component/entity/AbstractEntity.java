@@ -1,11 +1,11 @@
 package net.odinary.interaudio.adventure.component.entity;
 
-import net.odinary.interaudio.adventure.component.ComponentInterface;
+import net.odinary.interaudio.adventure.component.Component;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public abstract class AbstractEntity implements ComponentInterface
+public abstract class AbstractEntity implements Component
 {
     protected String name;
     protected String type;

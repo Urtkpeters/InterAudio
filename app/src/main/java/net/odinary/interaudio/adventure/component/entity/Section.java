@@ -62,6 +62,19 @@ public class Section extends AbstractEntity
         return null;
     }
 
+    public void addEntity(Entity entity)
+    {
+        entities.add(entity);
+    }
+
+    public void removeEntity(String entityName)
+    {
+        for(Entity entity: entities)
+        {
+            if(entity.name.equals(entityName)) entities.remove(entity);
+        }
+    }
+
     public String getFilename() { return filename; }
 
     public List<Entity> getEntities() { return entities; }

@@ -68,11 +68,11 @@ public abstract class AbstractOdiHandler implements OdiHandler
         return sideValue;
     }
 
-    protected AdventureVariable parseVariable(Event event, OdiSegment path)
+    protected AdventureVariable parseVariable(Event event, OdiSegment segment)
     {
-        String varName = path.getVariable();
+        String varName = segment.getVariable();
 
-        switch(path.getScope())
+        switch(segment.getScope())
         {
             case OdiSegment.world:
                 if(worldRepository.getVariables().containsKey(varName)) return (AdventureVariable) worldRepository.getVariable(varName);

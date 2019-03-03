@@ -1,6 +1,8 @@
 package net.odinary.interaudio.adventure.component.entity;
 
 import net.odinary.interaudio.PackageLoadException;
+import net.odinary.interaudio.adventure.odi.condition.ConditionHandler;
+import net.odinary.interaudio.adventure.odi.trigger.TriggerHandler;
 import net.odinary.interaudio.adventure.repository.EntityRepository;
 import net.odinary.interaudio.adventure.repository.PlayerRepository;
 import net.odinary.interaudio.adventure.component.entity.variable.AdventureVariable;
@@ -17,7 +19,7 @@ public class Entity extends AbstractEntity
     private HashMap<String, Action> actions = new HashMap<>();
     private HashMap<String, Action> moveset = new HashMap<>();
 
-    public Entity(JSONObject entityJson, String entityType, EntityRepository entityRepository, PlayerRepository playerRepository) throws JSONException, PackageLoadException
+    public Entity(JSONObject entityJson, String entityType, EntityRepository entityRepository, PlayerRepository playerRepository, ConditionHandler conditionHandler, TriggerHandler triggerHandler) throws JSONException, PackageLoadException
     {
         super(entityJson, entityType);
 
@@ -66,7 +68,7 @@ public class Entity extends AbstractEntity
 
             Action action = playerRepository.getAction(key);
 
-            if(action != null) actions.put(key, new Action(action, jsonAction));
+            if(action != null) actions.put(key, new Action(action, jsonAction, conditionHandler, triggerHandler));
             else throw new PackageLoadException("Could not load actions into entity. Entity: " + name + " Action: " + key);
         }
 

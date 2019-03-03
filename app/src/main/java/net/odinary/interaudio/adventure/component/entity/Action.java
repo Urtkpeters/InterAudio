@@ -23,7 +23,7 @@ public class Action extends AbstractEntity
     private List<Condition> conditions = new ArrayList<>();
     private List<Trigger> triggers = new ArrayList<>();
 
-    public Action(JSONObject jsonAction, TriggerHandler triggerHandler) throws JSONException
+    public Action(JSONObject jsonAction, ConditionHandler conditionHandler, TriggerHandler triggerHandler) throws JSONException
     {
         super(jsonAction, "action");
 
@@ -52,12 +52,12 @@ public class Action extends AbstractEntity
             secondaryTargets.add(secondaryTargetsArray.getString(i));
         }
 
-        conditions = ConditionHandler.parseConditions(jsonAction.getJSONArray("conditions"));
+        conditions = conditionHandler.parse(jsonAction.getJSONArray("conditions"));
 
         triggers = triggerHandler.parse(jsonAction.getJSONArray("triggers"));
     }
 
-    public Action(Action cloner, JSONObject actionOverrides, TriggerHandler triggerHandler) throws JSONException
+    public Action(Action cloner, JSONObject actionOverrides, ConditionHandler conditionHandler, TriggerHandler triggerHandler) throws JSONException
     {
         super(cloner);
 
@@ -65,7 +65,7 @@ public class Action extends AbstractEntity
 
         if(actionOverrides.has("failFilename")) failFilename = actionOverrides.getString("failFilename");
 
-        if(actionOverrides.has("conditions")) conditions.addAll(ConditionHandler.parseConditions(actionOverrides.getJSONArray("conditions")));
+        if(actionOverrides.has("conditions")) conditions.addAll(conditionHandler.parse(actionOverrides.getJSONArray("conditions")));
 
         if(actionOverrides.has("triggers")) triggers.addAll(triggerHandler.parse(actionOverrides.getJSONArray("triggers")));
     }

@@ -6,6 +6,8 @@ import net.odinary.interaudio.R;
 import net.odinary.interaudio.adventure.component.entity.Action;
 import net.odinary.interaudio.adventure.component.entity.Entity;
 import net.odinary.interaudio.adventure.component.entity.Section;
+import net.odinary.interaudio.adventure.odi.condition.ConditionHandler;
+import net.odinary.interaudio.adventure.odi.trigger.TriggerHandler;
 import net.odinary.interaudio.adventure.repository.EntityRepository;
 import net.odinary.interaudio.adventure.repository.PlayerRepository;
 import net.odinary.interaudio.adventure.repository.WorldRepository;
@@ -41,12 +43,18 @@ class Adventure
     private String author;
     private String audioFileExt;
 
+    private ConditionHandler conditionHandler;
+    private TriggerHandler triggerHandler;
+
     private WorldRepository worldRepository = new WorldRepository();
     private PlayerRepository playerRepository = new PlayerRepository();
     private EntityRepository entityRepository = new EntityRepository();
 
-    Adventure(MainActivity mainActivity)
+    Adventure(MainActivity mainActivity, ConditionHandler conditionHandler, TriggerHandler triggerHandler)
     {
+        this.conditionHandler = conditionHandler;
+        this.triggerHandler = triggerHandler;
+
         try(InputStream inputStream = mainActivity.getResources().openRawResource(R.raw.audioadventure))
         {
             Writer writer = new StringWriter();
@@ -67,8 +75,11 @@ class Adventure
         }
     }
 
-    Adventure(String packageDir) throws Exception
+    Adventure(String packageDir, ConditionHandler conditionHandler, TriggerHandler triggerHandler) throws Exception
     {
+        this.conditionHandler = conditionHandler;
+        this.triggerHandler = triggerHandler;
+
         File storyFile = new File(packageDir);
 
         if(!storyFile.exists()) throw new Exception("Could not find json file");
@@ -141,7 +152,7 @@ class Adventure
             {
                 JSONObject section = jsonSections.getJSONObject(i);
 
-                worldRepository.addSection(new Section(section, entityRepository));
+                worldRepository.addSection(new Section(section, entityRepository, conditionHandler));
             }
 
             worldRepository.setCurrentSection(packageJson.getString("start"));
@@ -192,9 +203,9 @@ class Adventure
 
             switch(actionType)
             {
-                case worldComponent: worldRepository.addAction(new Action(typeAction));
-                case playerComponent: playerRepository.addAction(new Action(typeAction));
-                case entityComponent: entityRepository.addAction(new Action(typeAction));
+                case worldComponent: worldRepository.addAction(new Action(typeAction, conditionHandler, triggerHandler));
+                case playerComponent: playerRepository.addAction(new Action(typeAction, conditionHandler, triggerHandler));
+                case entityComponent: entityRepository.addAction(new Action(typeAction, conditionHandler, triggerHandler));
             }
         }
     }
@@ -207,7 +218,7 @@ class Adventure
         {
             JSONObject typeEntity = typeEntities.getJSONObject(i);
 
-            entityRepository.addEntity(entityType, typeEntity.getString("name"), new Entity(typeEntity, entityType, entityRepository, playerRepository));
+            entityRepository.addEntity(entityType, typeEntity.getString("name"), new Entity(typeEntity, entityType, entityRepository, playerRepository, conditionHandler, triggerHandler));
         }
     }
 

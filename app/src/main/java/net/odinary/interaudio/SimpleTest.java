@@ -5,6 +5,8 @@ import net.odinary.interaudio.adventure.component.entity.variable.AdventureVaria
 import net.odinary.interaudio.adventure.component.entity.Entity;
 import net.odinary.interaudio.adventure.Event;
 import net.odinary.interaudio.adventure.component.entity.Section;
+import net.odinary.interaudio.adventure.odi.condition.ConditionHandler;
+import net.odinary.interaudio.adventure.odi.trigger.TriggerHandler;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -71,10 +73,13 @@ public class SimpleTest
                 JSONObject jsonActions = packageJson.getJSONObject("actions");
                 keys = jsonActions.keys();
 
+//                ConditionHandler conditionHandler = new ConditionHandler();
+//                TriggerHandler triggerHandler = new TriggerHandler();
+
                 while(keys.hasNext())
                 {
                     String key = keys.next();
-                    parseActions(jsonActions, key);
+//                    parseActions(jsonActions, key, conditionHandler, triggerHandler);
                 }
 
                 // Parse Entities
@@ -141,7 +146,7 @@ public class SimpleTest
 
     private static void parseVars(JSONObject jsonVars, String varType) throws JSONException
     {
-        if(!varType.equals("player")) adventureVars.put(varType, new HashMap<String, AdventureVariable>());
+        if(!varType.equals("player")) adventureVars.put(varType, new HashMap<>());
 
         JSONArray variables = jsonVars.getJSONArray(varType);
 
@@ -160,9 +165,9 @@ public class SimpleTest
         }
     }
 
-    private static void parseActions(JSONObject jsonActions, String actionType) throws JSONException
+    private static void parseActions(JSONObject jsonActions, String actionType, ConditionHandler conditionHandler, TriggerHandler triggerHandler) throws JSONException
     {
-        actions.put(actionType, new HashMap<String, Action>());
+        actions.put(actionType, new HashMap<>());
 
         JSONArray typeActions = jsonActions.getJSONArray(actionType);
 
@@ -171,7 +176,7 @@ public class SimpleTest
             JSONObject typeAction = typeActions.getJSONObject(i);
             String name = typeAction.getString("name");
 
-            actions.get(actionType).put(name, new Action(typeAction));
+            actions.get(actionType).put(name, new Action(typeAction, conditionHandler, triggerHandler));
             if(actionType.equals("player")) playerActionList.add(name);
         }
     }

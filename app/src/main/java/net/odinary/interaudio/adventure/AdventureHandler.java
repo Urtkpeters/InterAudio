@@ -10,7 +10,9 @@ import net.odinary.interaudio.MainActivity;
 import net.odinary.interaudio.adventure.odi.condition.ConditionHandler;
 import net.odinary.interaudio.adventure.component.entity.Action;
 import net.odinary.interaudio.adventure.component.entity.Entity;
+import net.odinary.interaudio.adventure.odi.trigger.TriggerHandler;
 import net.odinary.interaudio.adventure.repository.PlayerRepository;
+import net.odinary.interaudio.adventure.repository.WorldRepository;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -29,6 +31,8 @@ public class AdventureHandler
 
     private Adventure currentAdventure;
     private MainActivity mainActivity;
+    private ConditionHandler conditionHandler;
+    private TriggerHandler triggerHandler;
 
     private Boolean uiClip = false;
     private List<String> clipList = new ArrayList<>();
@@ -43,10 +47,16 @@ public class AdventureHandler
     {
         try
         {
-            if(MainActivity.testPackageMode) currentAdventure = new Adventure(mainActivity);
-            else currentAdventure = new Adventure(mainActivity.getPackageHandler().getPackageDir() + jsonFilename);
+            WorldRepository worldRepository = currentAdventure.getWorldRepository();
+            PlayerRepository playerRepository = currentAdventure.getPlayerRepository();
 
-            clipList.add(currentAdventure.getWorldRepository().getCurrentSection().getFilename());
+            conditionHandler = new ConditionHandler(worldRepository, playerRepository);
+            triggerHandler = new TriggerHandler(worldRepository, playerRepository);
+
+            if(MainActivity.testPackageMode) currentAdventure = new Adventure(mainActivity, conditionHandler, triggerHandler);
+            else currentAdventure = new Adventure(mainActivity.getPackageHandler().getPackageDir() + jsonFilename, conditionHandler, triggerHandler);
+
+            clipList.add(worldRepository.getCurrentSection().getFilename());
 
             playClips();
         }
@@ -213,7 +223,7 @@ public class AdventureHandler
     {
         PlayerRepository playerRepository = currentAdventure.getPlayerRepository();
 
-        String conditionResponse = ConditionHandler.checkConditions(event, currentAdventure.getWorldRepository(), playerRepository);
+        String conditionResponse = conditionHandler.checkConditions(event);
 
         if(conditionResponse.isEmpty())
         {

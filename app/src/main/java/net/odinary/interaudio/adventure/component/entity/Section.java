@@ -19,11 +19,11 @@ public class Section extends AbstractEntity
     private List<Entity> entities = new ArrayList<>();
     private List<String> setVars = new ArrayList<>();
 
-    public Section(JSONObject jsonSection, EntityRepository entityRepository) throws JSONException
+    public Section(JSONObject jsonSection, EntityRepository entityRepository, ConditionHandler conditionHandler) throws JSONException
     {
         super(jsonSection, "section");
 
-        conditions = ConditionHandler.parseConditions(jsonSection.getJSONArray("conditions"));
+        conditions = conditionHandler.parse(jsonSection.getJSONArray("conditions"));
 
         JSONArray jsonDirections = jsonSection.getJSONArray("directions");
 

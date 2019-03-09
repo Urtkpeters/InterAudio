@@ -194,6 +194,8 @@ class Adventure
                 default: throw new PackageLoadException("Undefined variable type");
             }
         }
+
+        playerRepository.addVariable(new PlayerVariable("Alive", "", PlayerVariable.booleanType));
     }
 
     private void parseActions(JSONObject jsonActions, String actionType) throws JSONException

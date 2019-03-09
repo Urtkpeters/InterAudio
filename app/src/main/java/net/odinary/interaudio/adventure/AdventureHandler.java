@@ -243,7 +243,13 @@ public class AdventureHandler
             timeVariable.setValue(timeVariable.getIValue() + 1);
             checkTimeActions(timeVariable);
             //Check character actions
-            playerRepository.incrementTime();
+
+            if(playerRepository.isAlive()) playerRepository.incrementTime();
+            else
+            {
+                gameover();
+                break;
+            }
         }
     }
 
@@ -339,6 +345,11 @@ public class AdventureHandler
         }
 
         return false;
+    }
+
+    private void gameover()
+    {
+
     }
 
     private void createPlaybackAndListener(String nextSection)

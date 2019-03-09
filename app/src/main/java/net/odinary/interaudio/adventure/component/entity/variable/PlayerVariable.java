@@ -19,12 +19,17 @@ public class PlayerVariable extends AdventureVariable implements VariableInterfa
 
         maxFailFilename = variable.getString("maxFailFilename");
 
-        switch(type)
+        switch(varType)
         {
             case "Boolean": parseBooleanMap(variable); break;
             case "Integer": parseIntMap(variable); break;
             case "String": parseStringMap(variable); break;
         }
+    }
+
+    public PlayerVariable(String name, String filename, String varType)
+    {
+        super(name, filename, varType);
     }
 
     private void parseBooleanMap(JSONObject variable) throws JSONException

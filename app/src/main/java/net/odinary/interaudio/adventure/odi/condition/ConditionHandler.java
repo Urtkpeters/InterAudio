@@ -54,8 +54,7 @@ public class ConditionHandler extends AbstractOdiHandler
                 Action overrideAction = target.getActionOverride(actionName);
                 List<Condition> overrideConditions = overrideAction.getConditions();
 
-                // This comparison will probably not work. I need to rework it
-                if(overrideConditions.size() > 0 && !conditions.equals(overrideConditions)) returnFilename = checkConditions(event, event.getAction().getConditions());
+                if(overrideConditions.size() > 0) returnFilename = checkConditions(event, event.getAction().getConditions());
 
                 if(returnFilename == null || returnFilename.isEmpty()) returnFilename = overrideAction.getFilename();
             }

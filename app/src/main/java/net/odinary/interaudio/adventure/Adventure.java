@@ -6,6 +6,7 @@ import net.odinary.interaudio.R;
 import net.odinary.interaudio.adventure.component.entity.Action;
 import net.odinary.interaudio.adventure.component.entity.Entity;
 import net.odinary.interaudio.adventure.component.entity.Section;
+import net.odinary.interaudio.adventure.component.entity.variable.VariableInterface;
 import net.odinary.interaudio.adventure.odi.condition.ConditionHandler;
 import net.odinary.interaudio.adventure.odi.trigger.TriggerHandler;
 import net.odinary.interaudio.adventure.repository.EntityRepository;
@@ -35,6 +36,7 @@ import java.util.Map;
 class Adventure
 {
     private static final String worldComponent = "world";
+    private static final String timeComponent = "time";
     private static final String playerComponent = "player";
     private static final String entityComponent = "entity";
 
@@ -156,6 +158,7 @@ class Adventure
             }
 
             worldRepository.setCurrentSection(packageJson.getString("start"));
+            worldRepository.addVariable(new AdventureVariable("time", "", AdventureVariable.integerType));
 
             // Associate Entities to Vars
 
@@ -203,7 +206,7 @@ class Adventure
 
             switch(actionType)
             {
-                case worldComponent: worldRepository.addAction(new Action(typeAction, conditionHandler, triggerHandler));
+                case timeComponent: worldRepository.addAction(new Action(typeAction, conditionHandler, triggerHandler));
                 case playerComponent: playerRepository.addAction(new Action(typeAction, conditionHandler, triggerHandler));
                 case entityComponent: entityRepository.addAction(new Action(typeAction, conditionHandler, triggerHandler));
             }

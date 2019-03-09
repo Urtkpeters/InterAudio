@@ -13,4 +13,10 @@ public interface VariableInterface extends Component
     boolean checkValue(int var, String relationalOperator);
 
     boolean checkValue(String var, String relationalOperator);
+
+    void setValue(boolean var);
+
+    void setValue(int var);
+
+    void setValue(String var);
 }

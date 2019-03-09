@@ -35,7 +35,7 @@ public class Entity extends AbstractEntity
             {
                 entityVars.put(key, new AdventureVariable((AdventureVariable) entityRepository.getVariable(key)));
 
-                switch(entityVars.get(key).getType())
+                switch(entityVars.get(key).getVarType())
                 {
                     case "Boolean":
                         if(jsonEntityVar.has("value")) entityVars.get(key).setValue(jsonEntityVar.getBoolean("value"));

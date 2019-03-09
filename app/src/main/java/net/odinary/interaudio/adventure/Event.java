@@ -6,6 +6,11 @@ import net.odinary.interaudio.adventure.component.entity.Section;
 
 public class Event
 {
+    public static final int playerEvent = 0;
+    public static final int characterEvent = 1;
+    public static final int timeEvent = 2;
+
+    private int type;
     private Entity actor;
     private Action action;
     private String secondaryAction;
@@ -13,7 +18,7 @@ public class Event
     private Entity secondaryTarget;
     private Section section;
 
-    public Event(Section currentSection) { section = currentSection; }
+    public Event(int type) { this.type = type; }
 
     public Event(Event cloner)
     {
@@ -36,6 +41,8 @@ public class Event
     public void setSecondaryTarget(Entity secondaryTarget) { this.secondaryTarget = secondaryTarget; }
 
     public void setSection(Section section) { this.section = section; }
+
+    public int getType() { return type; }
 
     public Entity getActor() { return actor; }
 

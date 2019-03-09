@@ -18,6 +18,13 @@ public abstract class AbstractEntity implements Component
         this.type = type;
     }
 
+    protected AbstractEntity(String name, String filename, String type)
+    {
+        this.name = name;
+        this.filename = filename;
+        this.type = type;
+    }
+
     protected AbstractEntity(AbstractEntity cloner)
     {
         this.name = cloner.name;

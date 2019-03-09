@@ -7,7 +7,7 @@ import org.json.JSONObject;
 
 public class AdventureVariable extends AbstractEntity implements VariableInterface
 {
-    protected String type;
+    protected String varType;
     protected Boolean bValue;
     protected int iValue;
     protected int iMax;
@@ -17,9 +17,9 @@ public class AdventureVariable extends AbstractEntity implements VariableInterfa
     {
         super(variable, "adventureVariable");
 
-        type = variable.getString("type");
+        varType = variable.getString("type");
 
-        switch(type)
+        switch(varType)
         {
             case booleanType: parseBoolean(variable); break;
             case integerType: parseInt(variable); break;
@@ -27,11 +27,25 @@ public class AdventureVariable extends AbstractEntity implements VariableInterfa
         }
     }
 
+    public AdventureVariable(String name, String filename, String varType)
+    {
+        super(name, filename, "adventureVariable");
+
+        this.varType = varType;
+
+        switch(varType)
+        {
+            case booleanType: bValue = false; break;
+            case integerType: iValue = 0; break;
+            case stringType: sValue = ""; break;
+        }
+    }
+
     public AdventureVariable(AdventureVariable cloner)
     {
         super(cloner);
 
-        this.type = cloner.type;
+        this.varType = cloner.varType;
         this.bValue = cloner.bValue;
         this.iValue = cloner.iValue;
         this.iMax = cloner.iMax;
@@ -40,7 +54,7 @@ public class AdventureVariable extends AbstractEntity implements VariableInterfa
 
     public String toString()
     {
-        switch(type)
+        switch(varType)
         {
             case booleanType: return bValue.toString();
             case integerType: return ((Integer) iValue).toString();
@@ -67,7 +81,7 @@ public class AdventureVariable extends AbstractEntity implements VariableInterfa
         sValue = variable.getString("value");
     }
 
-    public String getType() { return type; }
+    public String getVarType() { return varType; }
 
     // ------------------------------------------------------
     // Boolean Section
@@ -82,7 +96,7 @@ public class AdventureVariable extends AbstractEntity implements VariableInterfa
         }
     }
 
-    public void setValue(Boolean var) { bValue = var; }
+    public void setValue(boolean var) { bValue = var; }
 
     public Boolean getBValue() { return bValue; }
 

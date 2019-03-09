@@ -7,6 +7,7 @@ import android.net.Uri;
 import android.speech.RecognizerIntent;
 
 import net.odinary.interaudio.MainActivity;
+import net.odinary.interaudio.adventure.component.entity.variable.AdventureVariable;
 import net.odinary.interaudio.adventure.odi.condition.ConditionHandler;
 import net.odinary.interaudio.adventure.component.entity.Action;
 import net.odinary.interaudio.adventure.component.entity.Entity;
@@ -14,9 +15,13 @@ import net.odinary.interaudio.adventure.odi.trigger.TriggerHandler;
 import net.odinary.interaudio.adventure.repository.PlayerRepository;
 import net.odinary.interaudio.adventure.repository.WorldRepository;
 
+import org.json.JSONObject;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
+import java.util.Map;
+import java.util.stream.Collectors;
 
 public class AdventureHandler
 {
@@ -128,7 +133,8 @@ public class AdventureHandler
     {
         // Get the resulting VTT responses from Google
         ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
-        Event event = new Event(currentAdventure.getWorldRepository().getCurrentSection());
+        Event event = new Event(Event.playerEvent);
+        event.setSection(currentAdventure.getWorldRepository().getCurrentSection());
 
         String resultPhrase = result.get(0);
 
@@ -212,7 +218,16 @@ public class AdventureHandler
                 validAction = false;
             }
 
-            if(validAction) performAction(event);
+            if(validAction)
+            {
+                WorldRepository worldRepository = currentAdventure.getWorldRepository();
+                AdventureVariable timeVariable = (AdventureVariable) worldRepository.getVariable("time");
+                timeVariable.setValue(timeVariable.getIValue() + 1);
+
+                performAction(event);
+                checkTimeActions(timeVariable);
+                // Add check character actions
+            }
             else uiClip = true;
         }
 
@@ -221,18 +236,20 @@ public class AdventureHandler
 
     public void performAction(Event event)
     {
-        PlayerRepository playerRepository = currentAdventure.getPlayerRepository();
-
         String conditionResponse = conditionHandler.checkConditions(event);
 
         if(conditionResponse.isEmpty())
         {
+            PlayerRepository playerRepository = currentAdventure.getPlayerRepository();
             Action action = event.getAction();
+            String actionFilename = action.getFilename();
 
-            clipList.add(action.getFilename());
+            if(!actionFilename.isEmpty()) clipList.add(actionFilename);
+
+            int eventType = event.getType();
 
             // I am allowing time to go into the negative in the case that there are needs for moves that take multiple turns to complete
-            playerRepository.decrementTime(action.getTime());
+            if(eventType == Event.playerEvent) playerRepository.decrementTime(action.getTime());
 
             triggerHandler.runTriggers(this, event);
         }
@@ -280,6 +297,22 @@ public class AdventureHandler
         }
 
         return false;
+    }
+
+    private void checkTimeActions(AdventureVariable timeVariable)
+    {
+        List<Action> timeActions = new ArrayList<>(currentAdventure.getWorldRepository().getActions().values());
+
+        for(Action timeAction: timeActions)
+        {
+            if(timeVariable.getIValue() % timeAction.getTime() == 0)
+            {
+                Event event = new Event(Event.timeEvent);
+                event.setAction(timeAction);
+
+                performAction(event);
+            }
+        }
     }
 
     private boolean go(String resultPhrase)

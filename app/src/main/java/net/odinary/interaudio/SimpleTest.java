@@ -127,7 +127,8 @@ public class SimpleTest
         {
 //            List<HashMap<String, String>> conditions = ConditionHandler.parseConditions(packageJson.getJSONObject("sections").getJSONObject("attic").getJSONArray("conditions"));
 
-            Event event = new Event(currentSection);
+            Event event = new Event(Event.playerEvent);
+            event.setSection(currentSection);
 
             event.setAction(actions.get("player").get("eat"));
 

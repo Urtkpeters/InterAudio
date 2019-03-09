@@ -647,7 +647,7 @@
 				"conditions": [],
 				"triggers":
 				[
-					{ "type": "Integer", "trigger": "variable.target.health.value -= variable.character.power.value" }
+					{ "type": "Integer", "trigger": "variable.target.health.value -= variable.event.actor.power.value" }
 				]
 			},
 			{

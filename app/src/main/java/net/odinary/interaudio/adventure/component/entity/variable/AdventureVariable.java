@@ -7,6 +7,14 @@ import org.json.JSONObject;
 
 public class AdventureVariable extends AbstractEntity implements VariableInterface
 {
+    public static final String equals = "==";
+    public static final String notEquals = "!=";
+    public static final String lessThan = "<";
+    public static final String lessThanOrEquals = "<=";
+    public static final String greaterThan = ">";
+    public static final String greaterThanOrEquals = ">=";
+    public static final String contains = "[]";
+
     protected String varType;
     protected Boolean bValue;
     protected int iValue;
@@ -111,8 +119,8 @@ public class AdventureVariable extends AbstractEntity implements VariableInterfa
     {
         switch(relationalOperator)
         {
-            case "==": return bValue == var;
-            case "!=": return bValue != var;
+            case equals: return bValue == var;
+            case notEquals: return bValue != var;
             default: System.out.println("Invalid type of relational operator"); return false;
         }
     }
@@ -128,12 +136,12 @@ public class AdventureVariable extends AbstractEntity implements VariableInterfa
     {
         switch(relationalOperator)
         {
-            case "==": return iValue == var;
-            case "!=": return iValue != var;
-            case "<": return iValue < var;
-            case ">": return iValue > var;
-            case "<=": return iValue <= var;
-            case ">=": return iValue >= var;
+            case equals: return iValue == var;
+            case notEquals: return iValue != var;
+            case lessThan: return iValue < var;
+            case lessThanOrEquals: return iValue <= var;
+            case greaterThan: return iValue > var;
+            case greaterThanOrEquals: return iValue >= var;
             default: System.out.println("Invalid type of relational operator"); return false;
         }
     }
@@ -158,9 +166,9 @@ public class AdventureVariable extends AbstractEntity implements VariableInterfa
     {
         switch(relationalOperator)
         {
-            case "==": return sValue.equals(var);
-            case "!=": return !sValue.equals(var);
-            case "[]": return sValue.contains(var);
+            case equals: return sValue.equals(var);
+            case notEquals: return !sValue.equals(var);
+            case contains: return sValue.contains(var);
             default: System.out.println("Invalid type of relational operator"); return false;
         }
     }

@@ -13,6 +13,11 @@ import java.util.List;
 
 public abstract class AbstractOdiHandler implements OdiHandler
 {
+    public static final String add = "+";
+    public static final String subtract = "-";
+    public static final String multiply = "*";
+    public static final String divide = "/";
+
     protected WorldRepository worldRepository;
     protected PlayerRepository playerRepository;
 
@@ -51,10 +56,10 @@ public abstract class AbstractOdiHandler implements OdiHandler
                 {
                     switch(arithmeticOperator)
                     {
-                        case "+": sideValue += tmpSide; break;
-                        case "-": sideValue -= tmpSide; break;
-                        case "*": sideValue *= tmpSide; break;
-                        case "/": if(tmpSide != 0) sideValue /= tmpSide; break;
+                        case add: sideValue += tmpSide; break;
+                        case subtract: sideValue -= tmpSide; break;
+                        case multiply: sideValue *= tmpSide; break;
+                        case divide: if(tmpSide != 0) sideValue /= tmpSide; break;
                         default: System.out.println("Invalid type of operator segment"); break;
                     }
                 }

@@ -2,6 +2,7 @@ package net.odinary.interaudio.adventure.repository;
 
 import net.odinary.interaudio.adventure.component.entity.Action;
 import net.odinary.interaudio.adventure.component.entity.Entity;
+import net.odinary.interaudio.adventure.component.entity.variable.AdventureVariable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,7 +34,7 @@ public class PlayerRepository extends AbstractRepository
 
     public int getTime() { return time; }
 
-    public boolean isAlive() { return variables.get("Alive").checkValue(true, "=="); }
+    public boolean isAlive() { return variables.get("Alive").checkValue(true, AdventureVariable.equals); }
 
     public void addToInventory(Entity item) { inventory.add(item); }
 

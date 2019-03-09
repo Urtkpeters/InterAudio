@@ -18,6 +18,13 @@ import java.util.List;
 
 public class ConditionHandler extends AbstractOdiHandler
 {
+    public static final String equals = "==";
+    public static final String notEquals = "!=";
+    public static final String lessThan = "<";
+    public static final String lessThanOrEquals = "<=";
+    public static final String greaterThan = ">";
+    public static final String greaterThanOrEquals = ">=";
+
     private static final String andOperator = "AND";
     private static final String orOperator = "OR";
 
@@ -139,12 +146,12 @@ public class ConditionHandler extends AbstractOdiHandler
 
         switch(operatorSegment.getValue())
         {
-            case "==": return leftSide == rightSide;
-            case "!=": return leftSide != rightSide;
-            case "<": return leftSide < rightSide;
-            case ">": return leftSide > rightSide;
-            case "<=": return leftSide <= rightSide;
-            case ">=": return leftSide >= rightSide;
+            case equals: return leftSide == rightSide;
+            case notEquals: return leftSide != rightSide;
+            case lessThan: return leftSide < rightSide;
+            case lessThanOrEquals: return leftSide <= rightSide;
+            case greaterThan: return leftSide > rightSide;
+            case greaterThanOrEquals: return leftSide >= rightSide;
             default: System.out.println("Invalid type of relational operator"); return false;
         }
     }

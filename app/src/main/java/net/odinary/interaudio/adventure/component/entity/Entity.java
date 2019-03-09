@@ -31,31 +31,7 @@ public class Entity extends AbstractEntity
             String key = keys.next();
             JSONObject jsonEntityVar = jsonEntityVars.getJSONObject(key);
 
-            if(entityRepository.getVariables().containsKey(key))
-            {
-                entityVars.put(key, new AdventureVariable((AdventureVariable) entityRepository.getVariable(key)));
-
-                switch(entityVars.get(key).getVarType())
-                {
-                    case "Boolean":
-                        if(jsonEntityVar.has("value")) entityVars.get(key).setValue(jsonEntityVar.getBoolean("value"));
-                        break;
-                    case "Integer":
-                        if(jsonEntityVar.has("max")) entityVars.get(key).setMax(jsonEntityVar.getInt("max"));
-                        if(jsonEntityVar.has("value"))
-                        {
-                            int val = jsonEntityVar.getInt("value");
-
-                            if(val == -2) val = entityVars.get(key).getMax();
-
-                            entityVars.get(key).setValue(val);
-                        }
-                        break;
-                    case "String":
-                        if(jsonEntityVar.has("value")) entityVars.get(key).setValue(jsonEntityVar.getString("value"));
-                        break;
-                }
-            }
+            if(entityRepository.getVariables().containsKey(key)) entityVars.put(key, new AdventureVariable((AdventureVariable) entityRepository.getVariable(key), jsonEntityVar));
         }
 
         JSONObject jsonActions = entityJson.getJSONObject("actions");

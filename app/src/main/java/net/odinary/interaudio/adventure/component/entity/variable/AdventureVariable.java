@@ -41,7 +41,7 @@ public class AdventureVariable extends AbstractEntity implements VariableInterfa
         }
     }
 
-    public AdventureVariable(AdventureVariable cloner)
+    public AdventureVariable(AdventureVariable cloner, JSONObject override) throws JSONException
     {
         super(cloner);
 
@@ -50,6 +50,27 @@ public class AdventureVariable extends AbstractEntity implements VariableInterfa
         this.iValue = cloner.iValue;
         this.iMax = cloner.iMax;
         this.sValue = cloner.sValue;
+
+        switch(varType)
+        {
+            case booleanType:
+                if(override.has("value")) bValue = override.getBoolean("value");
+                break;
+            case integerType:
+                if(override.has("max")) iMax = override.getInt("max");
+                if(override.has("value"))
+                {
+                    int val = override.getInt("value");
+
+                    if(val == -2) val = iMax;
+
+                    iValue = val;
+                }
+                break;
+            case stringType:
+                if(override.has("value")) sValue = override.getString("value");
+                break;
+        }
     }
 
     public String toString()

@@ -11,6 +11,7 @@ public class PlayerRepository extends AbstractRepository
     private List<Entity> inventory = new ArrayList<>();
     private int maxTime = 1;
     private int time = 0;
+    private int timeRegen = 1;
 
     public Action getActionFromResult(String resultPhrase)
     {
@@ -25,6 +26,8 @@ public class PlayerRepository extends AbstractRepository
     }
 
     public void decrementTime(int actionTime) { time -= actionTime; }
+
+    public void incrementTime() { time += timeRegen; }
 
     public void resetTime() { time = maxTime; }
 

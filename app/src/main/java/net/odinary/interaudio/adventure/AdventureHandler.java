@@ -220,18 +220,31 @@ public class AdventureHandler
 
             if(validAction)
             {
-                WorldRepository worldRepository = currentAdventure.getWorldRepository();
-                AdventureVariable timeVariable = (AdventureVariable) worldRepository.getVariable("time");
-                timeVariable.setValue(timeVariable.getIValue() + 1);
+                performActions(event);
 
-                performAction(event);
-                checkTimeActions(timeVariable);
                 // Add check character actions
             }
             else uiClip = true;
         }
 
         playClips();
+    }
+
+    private void performActions(Event event)
+    {
+        PlayerRepository playerRepository = currentAdventure.getPlayerRepository();
+        WorldRepository worldRepository = currentAdventure.getWorldRepository();
+        AdventureVariable timeVariable = (AdventureVariable) worldRepository.getVariable("time");
+
+        performAction(event);
+
+        while(playerRepository.getTime() < 1)
+        {
+            timeVariable.setValue(timeVariable.getIValue() + 1);
+            checkTimeActions(timeVariable);
+            //Check character actions
+            playerRepository.incrementTime();
+        }
     }
 
     public void performAction(Event event)

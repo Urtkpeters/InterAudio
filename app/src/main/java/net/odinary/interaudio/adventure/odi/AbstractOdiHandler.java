@@ -126,7 +126,9 @@ public abstract class AbstractOdiHandler implements OdiHandler
                 switch(scopes.get(1))
                 {
                     case OdiSegment.actor:
-                        // Add event actor
+                        String actorVarName = scopes.get(2);
+                        Entity actor = event.getActor();
+                        if(actor.checkVariableExists(actorVarName)) return actor.getVariable(actorVarName);
                         break;
                     case OdiSegment.target:
                         String targetVarName = scopes.get(2);

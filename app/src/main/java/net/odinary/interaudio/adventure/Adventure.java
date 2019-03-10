@@ -36,7 +36,6 @@ import java.util.Map;
 class Adventure
 {
     private static final String worldComponent = "world";
-    private static final String timeComponent = "time";
     private static final String playerComponent = "player";
     private static final String entityComponent = "entity";
 
@@ -208,7 +207,7 @@ class Adventure
 
             switch(actionType)
             {
-                case timeComponent: worldRepository.addAction(new Action(typeAction, conditionHandler, triggerHandler));
+                case worldComponent: worldRepository.addAction(new Action(typeAction, conditionHandler, triggerHandler));
                 case playerComponent: playerRepository.addAction(new Action(typeAction, conditionHandler, triggerHandler));
                 case entityComponent: entityRepository.addAction(new Action(typeAction, conditionHandler, triggerHandler));
             }
@@ -254,8 +253,6 @@ class Adventure
 
         if(target != null) return target;
         else return playerRepository.checkInventory(resultPhrase);
-
-
     }
 
     private Entity checkTarget(String resultPhrase, String primaryTarget, List<Entity> entities)

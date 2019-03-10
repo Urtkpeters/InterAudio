@@ -253,7 +253,7 @@
 	},
 	"actions":
 	{
-		"time":
+		"world":
 		[
 			{
 				"name": "playerDeathCheck",
@@ -272,7 +272,7 @@
 				],
 				"triggers":
 				[
-					{ "type": "System", "trigger": "variable.gameover" }
+					{ "type": "Boolean", "trigger": "variable.player.alive.value = false" }
 				]
 			},
 			{
@@ -633,7 +633,7 @@
 				"triggers": []
 			}
 		],
-		"moveset":
+		"entity":
 		[
 			{
 				"name": "trollDoAttack",
@@ -1025,9 +1025,9 @@
 				},
 				"moveset":
 				{
-					"trollDoAttack": 40,
-					"trollDoNothing": 30,
-					"trollDoMiss": 30
+					"trollDoAttack": { "useChance": 40 },
+					"trollDoNothing": { "useChance": 30 },
+					"trollDoMiss": { "useChance": 30 }
 				}
 			}
 		]

@@ -10,7 +10,7 @@ public class PlayerVariable extends AdventureVariable implements VariableInterfa
 {
     private String maxFailFilename;
     private HashMap<Boolean, String> bFilemap;
-    private HashMap<Integer, String> iFilemap;
+    private HashMap<Double, String> nFilemap;
     private HashMap<String, String> sFilemap;
 
     public PlayerVariable(JSONObject variable) throws JSONException
@@ -22,7 +22,7 @@ public class PlayerVariable extends AdventureVariable implements VariableInterfa
         switch(varType)
         {
             case "Boolean": parseBooleanMap(variable); break;
-            case "Integer": parseIntMap(variable); break;
+            case "Number": parseNumberMap(variable); break;
             case "String": parseStringMap(variable); break;
         }
     }
@@ -45,9 +45,9 @@ public class PlayerVariable extends AdventureVariable implements VariableInterfa
         }
     }
 
-    private void parseIntMap(JSONObject variable) throws JSONException
+    private void parseNumberMap(JSONObject variable) throws JSONException
     {
-        iFilemap = new HashMap<>();
+        nFilemap = new HashMap<>();
         JSONObject jsonFilenames = variable.getJSONObject("filenames");
         Iterator<String> keys = jsonFilenames.keys();
 
@@ -58,17 +58,17 @@ public class PlayerVariable extends AdventureVariable implements VariableInterfa
 
             if(key.contains("-"))
             {
-                int numberOne = Integer.parseInt(key.substring(0, key.indexOf("-")));
-                int numberTwo = Integer.parseInt(key.substring(key.indexOf("-") + 1, key.length()));
+                double numberOne = Double.parseDouble(key.substring(0, key.indexOf("-")));
+                double numberTwo = Double.parseDouble(key.substring(key.indexOf("-") + 1, key.length()));
 
-                for(int i = numberOne; i < numberTwo - numberOne; i++)
+                for(double i = numberOne; i < numberTwo - numberOne; i++)
                 {
-                    iFilemap.put(i, filename);
+                    nFilemap.put(i, filename);
                 }
             }
             else
             {
-                iFilemap.put(Integer.parseInt(key), filename);
+                nFilemap.put(Double.parseDouble(key), filename);
             }
         }
     }

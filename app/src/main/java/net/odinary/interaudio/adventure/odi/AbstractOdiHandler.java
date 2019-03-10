@@ -27,9 +27,9 @@ public abstract class AbstractOdiHandler implements OdiHandler
         this.playerRepository = playerRepository;
     }
 
-    protected int evaluateSide(Event event, List<OdiSegment> segments)
+    protected double evaluateSide(Event event, List<OdiSegment> segments)
     {
-        int sideValue = 0;
+        double sideValue = 0;
         String arithmeticOperator = "+";
 
         if(segments.size() > 1)
@@ -37,7 +37,7 @@ public abstract class AbstractOdiHandler implements OdiHandler
             for(OdiSegment segment: segments)
             {
                 boolean isOperator = false;
-                int tmpSide = 0;
+                double tmpSide = 0;
 
                 if(segment.getType() == OdiSegment.raw)
                 {
@@ -50,7 +50,7 @@ public abstract class AbstractOdiHandler implements OdiHandler
                     }
                     else tmpSide = Integer.parseInt(tmpVal);
                 }
-                else tmpSide = parseVariable(event, segment).getIValue();
+                else tmpSide = parseVariable(event, segment).getNValue();
 
                 if(!isOperator)
                 {
@@ -68,7 +68,7 @@ public abstract class AbstractOdiHandler implements OdiHandler
         else if(segments.size() > 0)
         {
             if(segments.get(0).getType() == OdiSegment.raw) sideValue = Integer.parseInt(segments.get(0).getValue());
-            else sideValue = parseVariable(event, segments.get(0)).getIValue();
+            else sideValue = parseVariable(event, segments.get(0)).getNValue();
         }
 
         return sideValue;

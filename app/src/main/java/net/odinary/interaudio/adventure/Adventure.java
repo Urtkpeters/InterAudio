@@ -157,7 +157,7 @@ class Adventure
             }
 
             worldRepository.setCurrentSection(packageJson.getString("start"));
-            worldRepository.addVariable(new AdventureVariable("time", "", AdventureVariable.integerType));
+            worldRepository.addVariable(new AdventureVariable("time", "", AdventureVariable.numberType));
 
             // Associate Entities to Vars
 

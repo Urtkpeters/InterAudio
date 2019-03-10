@@ -98,8 +98,8 @@ public class TriggerHandler extends AbstractOdiHandler
     private void triggerInt(Event event, List<OdiSegment> leftSegments, List<OdiSegment> rightSegments, OdiSegment operatorSegment)
     {
         AdventureVariable leftSide = parseVariable(event, leftSegments.get(0));
-        int rightSide = evaluateSide(event, rightSegments);
-        int finalValue = leftSide.getIValue();
+        double rightSide = evaluateSide(event, rightSegments);
+        double finalValue = leftSide.getNValue();
 
         switch(operatorSegment.getValue())
         {

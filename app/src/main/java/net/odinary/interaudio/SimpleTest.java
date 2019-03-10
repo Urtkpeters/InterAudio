@@ -121,7 +121,7 @@ public class SimpleTest
 
     private static void sendCheckCondition(JSONObject packageJson, Entity target)
     {
-        System.out.println("Checking value set to " + target.getVariable("health").getIValue());
+        System.out.println("Checking value set to " + target.getVariable("health").getNValue());
 
         try
         {

@@ -240,7 +240,7 @@ public class AdventureHandler
 
         while(playerRepository.getTime() < 1)
         {
-            timeVariable.setValue(timeVariable.getIValue() + 1);
+            timeVariable.setValue(timeVariable.getNValue() + 1);
             checkTimeActions(timeVariable);
             //Check character actions
 
@@ -324,7 +324,7 @@ public class AdventureHandler
 
         for(Action timeAction: timeActions)
         {
-            if(timeVariable.getIValue() % timeAction.getTime() == 0)
+            if(timeVariable.getNValue() % timeAction.getTime() == 0)
             {
                 Event event = new Event(Event.timeEvent);
                 event.setAction(timeAction);

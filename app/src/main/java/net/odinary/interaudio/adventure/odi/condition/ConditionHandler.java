@@ -92,7 +92,7 @@ public class ConditionHandler extends AbstractOdiHandler
                 switch(comparisonType)
                 {
                     case Condition.booleanType: finalValues.add(compareBoolean(event, leftSegments, rightSegments, operatorSegment)); break;
-                    case Condition.integerType: finalValues.add(compareInt(event, leftSegments, rightSegments, operatorSegment)); break;
+                    case Condition.integerType: finalValues.add(compareDouble(event, leftSegments, rightSegments, operatorSegment)); break;
                     case Condition.stringType: finalValues.add(compareString(event, leftSegments, rightSegments, operatorSegment)); break;
                 }
             }
@@ -139,10 +139,10 @@ public class ConditionHandler extends AbstractOdiHandler
         return leftSide.checkValue(rightSide, operatorSegment.getValue());
     }
 
-    private Boolean compareInt(Event event, List<OdiSegment> leftSegments, List<OdiSegment> rightSegments, OdiSegment operatorSegment)
+    private Boolean compareDouble(Event event, List<OdiSegment> leftSegments, List<OdiSegment> rightSegments, OdiSegment operatorSegment)
     {
-        int leftSide = evaluateSide(event, leftSegments);
-        int rightSide = evaluateSide(event, rightSegments);
+        double leftSide = evaluateSide(event, leftSegments);
+        double rightSide = evaluateSide(event, rightSegments);
 
         switch(operatorSegment.getValue())
         {

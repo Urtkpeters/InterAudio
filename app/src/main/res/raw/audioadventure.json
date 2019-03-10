@@ -139,7 +139,7 @@
 			{
 				"name": "health",
 				"filename": "",
-				"type": "Integer",
+				"type": "Number",
 				"value": 3,
 				"max": 3,
 				"maxFailFilename": "",
@@ -153,7 +153,7 @@
 			{
 				"name": "hunger",
 				"filename": "",
-				"type": "Integer",
+				"type": "Number",
 				"value": 5,
 				"max": 5,
 				"maxFailFilename": "",
@@ -169,7 +169,7 @@
 			{
 				"name": "thirst",
 				"filename": "",
-				"type": "Integer",
+				"type": "Number",
 				"value": 5,
 				"max": 5,
 				"maxFailFilename": "",
@@ -185,7 +185,7 @@
 			{
 				"name": "weight",
 				"filename": "",
-				"type": "Integer",
+				"type": "Number",
 				"value": 0,
 				"max": 100,
 				"maxFailFilename": "weightFail",
@@ -217,35 +217,35 @@
 			{
 				"name": "health",
 				"filename": "",
-				"type": "Integer",
+				"type": "Number",
 				"value": 0,
 				"max": -2
 			},
 			{
 				"name": "uses",
 				"filename": "",
-				"type": "Integer",
+				"type": "Number",
 				"value": 0,
 				"max": -2
 			},
 			{
 				"name": "weight",
 				"filename": "",
-				"type": "Integer",
+				"type": "Number",
 				"value": 0,
 				"max": -1
 			},
 			{
 				"name": "power",
 				"filename": "",
-				"type": "Integer",
+				"type": "Number",
 				"value": 0,
 				"max": -1
 			},
 			{
 				"name": "time",
 				"filename": "",
-				"type": "Integer",
+				"type": "Number",
 				"value": 0,
 				"max": -1
 			}
@@ -266,9 +266,9 @@
 				"secondaryTargets": [],
 				"conditions":
 				[
-					{ "type": "Integer", "condition": "variable.player.health.value <= 0", "operator": "or", "failFilename": "" },
-					{ "type": "Integer", "condition": "variable.player.hunger.value <= 0", "operator": "or", "failFilename": "" },
-					{ "type": "Integer", "condition": "variable.player.thirst.value <= 0", "operator": "or", "failFilename": "" }
+					{ "type": "Number", "condition": "variable.player.health.value <= 0", "operator": "or", "failFilename": "" },
+					{ "type": "Number", "condition": "variable.player.hunger.value <= 0", "operator": "or", "failFilename": "" },
+					{ "type": "Number", "condition": "variable.player.thirst.value <= 0", "operator": "or", "failFilename": "" }
 				],
 				"triggers":
 				[
@@ -287,7 +287,7 @@
 				"conditions": [],
 				"triggers":
 				[
-					{ "type": "Integer", "trigger": "variable.player.health.value += 1" }
+					{ "type": "Number", "trigger": "variable.player.health.value += 1" }
 				]
 			},
 			{
@@ -302,7 +302,7 @@
 				"conditions": [],
 				"triggers":
 				[
-					{ "type": "Integer", "trigger": "variable.player.hunger.value -= 1" }
+					{ "type": "Number", "trigger": "variable.player.hunger.value -= 1" }
 				]
 			},
 			{
@@ -317,7 +317,7 @@
 				"conditions": [],
 				"triggers":
 				[
-					{ "type": "Integer", "trigger": "variable.player.thirst.value -= 1" }
+					{ "type": "Number", "trigger": "variable.player.thirst.value -= 1" }
 				]
 			},
 			{
@@ -332,7 +332,7 @@
 				"conditions": [ { "type": "Boolean", "condition": "variable.player.lightSource.value == true", "operator": "", "failFilename": "" } ],
 				"triggers":
 				[
-					{ "type": "Integer", "trigger": "variable.inventory.lantern.uses -= 1" }
+					{ "type": "Number", "trigger": "variable.inventory.lantern.uses -= 1" }
 				]
 			},
 			{
@@ -461,7 +461,7 @@
 				"conditions": [],
 				"triggers":
 				[
-					{ "type": "Integer", "trigger": "variable.player.weight.value += variable.target.weight.value" },
+					{ "type": "Number", "trigger": "variable.player.weight.value += variable.target.weight.value" },
 					{ "type": "Contain", "trigger": "variable.inventory ++ variable.target" },
 					{ "type": "Contain", "trigger": "variable.sections.current.entities -- variable.target" }
 				]
@@ -478,7 +478,7 @@
 				"conditions": [],
 				"triggers":
 				[
-					{ "type": "Integer", "trigger": "variable.player.weight.value -= variable.target.weight.value" },
+					{ "type": "Number", "trigger": "variable.player.weight.value -= variable.target.weight.value" },
 					{ "type": "Contain", "trigger": "variable.inventory -- variable.target" },
 					{ "type": "Contain", "trigger": "variable.section ++ variable.target" }
 				]
@@ -495,7 +495,7 @@
 				"conditions": [],
 				"triggers": 
 				[
-					{ "type": "Integer", "trigger": "variable.player.weight.value -= variable.target.weight.value" },
+					{ "type": "Number", "trigger": "variable.player.weight.value -= variable.target.weight.value" },
 					{ "type": "Contain", "trigger": "variable.inventory -- variable.target" },
 					{ "type": "Contain", "trigger": "variable.sections.current.entities ++ variable.target" }
 				]
@@ -509,7 +509,7 @@
 				"targets": [ "item", "object" ],
 				"secondaryKeys": [],
 				"secondaryTargets": [],
-				"conditions": [ { "type": "Integer", "condition": "variable.target.uses.value > 0", "operator": "", "failFilename": "noMoreUses" } ],
+				"conditions": [ { "type": "Number", "condition": "variable.target.uses.value > 0", "operator": "", "failFilename": "noMoreUses" } ],
 				"triggers": []
 			},
 			{
@@ -584,7 +584,7 @@
 				"conditions": [],
 				"triggers":
 				[
-					{ "type": "Integer", "trigger": "variable.target.health.value -= variable.secondaryTarget.power.value" },
+					{ "type": "Number", "trigger": "variable.target.health.value -= variable.secondaryTarget.power.value" },
 					{ "type": "Action", "trigger": "variable.kill" }
 				]
 			},
@@ -597,11 +597,11 @@
 				"targets": [ "item" ],
 				"secondaryKeys": [],
 				"secondaryTargets": [],
-				"conditions": [ { "type": "Integer", "condition": "variable.target.uses.value > 0", "operator": "", "failFilename": "noMoreUses" } ],
+				"conditions": [ { "type": "Number", "condition": "variable.target.uses.value > 0", "operator": "", "failFilename": "noMoreUses" } ],
 				"triggers":
 				[
-					{ "type": "Integer", "trigger": "variable.player.hunger.value += variable.target.power.value" },
-					{ "type": "Integer", "trigger": "variable.target.uses.value -= 1" }
+					{ "type": "Number", "trigger": "variable.player.hunger.value += variable.target.power.value" },
+					{ "type": "Number", "trigger": "variable.target.uses.value -= 1" }
 				]
 			},
 			{
@@ -613,11 +613,11 @@
 				"targets": [ "item" ],
 				"secondaryKeys": [],
 				"secondaryTargets": [],
-				"conditions": [ { "type": "Integer", "condition": "variable.target.uses.value > 0", "operator": "", "failFilename": "noMoreUses" } ],
+				"conditions": [ { "type": "Number", "condition": "variable.target.uses.value > 0", "operator": "", "failFilename": "noMoreUses" } ],
 				"triggers":
 				[
-					{ "type": "Integer", "trigger": "variable.player.thirst.value += variable.target.power.value" },
-					{ "type": "Integer", "trigger": "variable.target.uses.value -= 1" }
+					{ "type": "Number", "trigger": "variable.player.thirst.value += variable.target.power.value" },
+					{ "type": "Number", "trigger": "variable.target.uses.value -= 1" }
 				]
 			},
 			{
@@ -629,7 +629,7 @@
 				"targets": [ "character" ],
 				"secondaryKeys": [],
 				"secondaryTargets": [],
-				"conditions": [ { "type": "Integer", "condition": "variable.target.health.value <= 0", "operator": "", "failFilename": "" } ],
+				"conditions": [ { "type": "Number", "condition": "variable.target.health.value <= 0", "operator": "", "failFilename": "" } ],
 				"triggers": []
 			}
 		],
@@ -647,7 +647,7 @@
 				"conditions": [],
 				"triggers":
 				[
-					{ "type": "Integer", "trigger": "variable.target.health.value -= variable.event.actor.power.value" }
+					{ "type": "Number", "trigger": "variable.target.health.value -= variable.event.actor.power.value" }
 				]
 			},
 			{

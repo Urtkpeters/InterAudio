@@ -92,7 +92,7 @@ public class ConditionHandler extends AbstractOdiHandler
                 switch(comparisonType)
                 {
                     case Condition.booleanType: finalValues.add(compareBoolean(event, leftSegments, rightSegments, operatorSegment)); break;
-                    case Condition.integerType: finalValues.add(compareDouble(event, leftSegments, rightSegments, operatorSegment)); break;
+                    case Condition.numberType: finalValues.add(compareDouble(event, leftSegments, rightSegments, operatorSegment)); break;
                     case Condition.stringType: finalValues.add(compareString(event, leftSegments, rightSegments, operatorSegment)); break;
                 }
             }

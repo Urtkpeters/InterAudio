@@ -64,7 +64,7 @@ public class TriggerHandler extends AbstractOdiHandler
                 {
                     case Trigger.booleanType: triggerBoolean(event, leftSegments, rightSegments, operatorSegment); break;
                     case Trigger.stringType: triggerString(event, leftSegments, rightSegments, operatorSegment); break;
-                    case Trigger.integerType: triggerInt(event, leftSegments, rightSegments, operatorSegment); break;
+                    case Trigger.numberType: triggerInt(event, leftSegments, rightSegments, operatorSegment); break;
                     case Trigger.containType: triggerContain(event, leftSegments, rightSegments, operatorSegment); break;
                     case Trigger.actionType: triggerAction(adventureHandler, event, leftSegments); break;
                     case Trigger.systemType: triggerSystem(event, leftSegments, rightSegments, operatorSegment); break;

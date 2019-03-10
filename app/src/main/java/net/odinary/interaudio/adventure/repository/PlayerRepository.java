@@ -10,7 +10,6 @@ import java.util.List;
 public class PlayerRepository extends AbstractRepository
 {
     private List<Entity> inventory = new ArrayList<>();
-    private int maxTime = 1;
     private int time = 0;
     private int timeRegen = 1;
 
@@ -30,9 +29,9 @@ public class PlayerRepository extends AbstractRepository
 
     public void incrementTime() { time += timeRegen; }
 
-    public void resetTime() { time = maxTime; }
-
     public int getTime() { return time; }
+
+    public void setTimeRegen(int timeRegen) { this.timeRegen = timeRegen; }
 
     public boolean isAlive() { return variables.get("Alive").checkValue(true, AdventureVariable.equals); }
 

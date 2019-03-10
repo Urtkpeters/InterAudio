@@ -141,18 +141,18 @@ public class AdventureVariable extends AbstractEntity implements VariableInterfa
         }
     }
 
-    public void setValue(double var) { nValue = var; }
+    public void setValue(double var)
+    {
+        // The -1 stands for unlimited uses
+        if(nMax != -1 && nMax < var) nValue = nMax;
+        else nValue = var;
+    }
+
+    public double getNValue() { return nValue; }
 
     public void setMax(double var) { nValue = var; }
 
     public double getMax() { return nMax; }
-
-    public Boolean checkMax(double var)
-    {
-        return false;
-    }
-
-    public double getNValue() { return nValue; }
 
     // ------------------------------------------------------
     // String section

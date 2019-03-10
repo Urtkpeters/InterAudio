@@ -64,7 +64,7 @@ public class TriggerHandler extends AbstractOdiHandler
                 {
                     case Trigger.booleanType: triggerBoolean(event, leftSegments, rightSegments, operatorSegment); break;
                     case Trigger.stringType: triggerString(event, leftSegments, rightSegments, operatorSegment); break;
-                    case Trigger.numberType: triggerInt(event, leftSegments, rightSegments, operatorSegment); break;
+                    case Trigger.numberType: triggerNumber(event, leftSegments, rightSegments, operatorSegment); break;
                     case Trigger.containType: triggerContain(event, leftSegments, rightSegments, operatorSegment); break;
                     case Trigger.actionType: triggerAction(adventureHandler, event, leftSegments); break;
                     case Trigger.systemType: triggerSystem(event, leftSegments, rightSegments, operatorSegment); break;
@@ -95,7 +95,7 @@ public class TriggerHandler extends AbstractOdiHandler
         leftSide.setValue(rightSide);
     }
 
-    private void triggerInt(Event event, List<OdiSegment> leftSegments, List<OdiSegment> rightSegments, OdiSegment operatorSegment)
+    private void triggerNumber(Event event, List<OdiSegment> leftSegments, List<OdiSegment> rightSegments, OdiSegment operatorSegment)
     {
         AdventureVariable leftSide = parseVariable(event, leftSegments.get(0));
         double rightSide = evaluateSide(event, rightSegments);

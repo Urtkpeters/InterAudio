@@ -35,7 +35,7 @@ class UIHandler
         }
         else
         {
-            if(mainActivity.getPackageHandler().checkPackage())
+            if(mainActivity.getFolioHandler().checkPackage())
             {
                 downloadButton.setText(R.string.updateButton);
                 playButton.setVisibility(View.VISIBLE);
@@ -44,7 +44,7 @@ class UIHandler
 
             downloadButton.setOnClickListener((View v) ->
             {
-                mainActivity.getPackageHandler().downloadPackage();
+                mainActivity.getFolioHandler().downloadPackage();
 
                 downloadButton.setText(R.string.updateButton);
                 playButton.setVisibility(View.VISIBLE);
@@ -53,13 +53,13 @@ class UIHandler
 
             playButton.setOnClickListener((View v) ->
             {
-                //mainActivity.getStoryHandler().startPlay();
+                //mainActivity.getInteractiveHandler().startPlay();
                 mainActivity.getAdventureHandler().startPlay();
             });
 
             deleteButton.setOnClickListener((View v) ->
             {
-                mainActivity.getPackageHandler().deleteCurrentPackage();
+                mainActivity.getFolioHandler().deleteCurrentPackage();
                 downloadButton.setText(R.string.downloadButton);
                 playButton.setVisibility(View.INVISIBLE);
                 deleteButton.setVisibility(View.INVISIBLE);

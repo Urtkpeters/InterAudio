@@ -5,7 +5,9 @@ import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-import net.odinary.interaudio.adventure.AdventureHandler;
+import net.odinary.interaudio.folio.adventure.AdventureHandler;
+import net.odinary.interaudio.folio.FolioHandler;
+import net.odinary.interaudio.folio.interactive.InteractiveHandler;
 
 public class MainActivity extends AppCompatActivity
 {
@@ -15,8 +17,8 @@ public class MainActivity extends AppCompatActivity
     public static final int SPEECH_INPUT = 100;
 
     private UIHandler uiHandler;
-    private PackageHandler packageHandler;
-    private StoryHandler storyHandler;
+    private FolioHandler folioHandler;
+    private InteractiveHandler interactiveHandler;
     private AdventureHandler adventureHandler;
 
     private String currentPackage = "package";
@@ -32,8 +34,8 @@ public class MainActivity extends AppCompatActivity
         StrictMode.setThreadPolicy(policy);
 
         uiHandler = new UIHandler(this);
-        packageHandler = new PackageHandler(this);
-        storyHandler = new StoryHandler(this);
+        folioHandler = new FolioHandler(this);
+        interactiveHandler = new InteractiveHandler(this);
         adventureHandler = new AdventureHandler(this);
 
         uiHandler.initializeUI();
@@ -45,9 +47,9 @@ public class MainActivity extends AppCompatActivity
 
     public UIHandler getUIHandler() { return uiHandler; }
 
-    public PackageHandler getPackageHandler() { return packageHandler; }
+    public FolioHandler getFolioHandler() { return folioHandler; }
 
-    public StoryHandler getStoryHandler() { return storyHandler; }
+    public InteractiveHandler getInteractiveHandler() { return interactiveHandler; }
 
     public AdventureHandler getAdventureHandler() { return adventureHandler; }
 

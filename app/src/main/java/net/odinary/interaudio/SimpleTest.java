@@ -1,12 +1,13 @@
 package net.odinary.interaudio;
 
-import net.odinary.interaudio.adventure.component.entity.Action;
-import net.odinary.interaudio.adventure.component.entity.variable.AdventureVariable;
-import net.odinary.interaudio.adventure.component.entity.Entity;
-import net.odinary.interaudio.adventure.Event;
-import net.odinary.interaudio.adventure.component.entity.Section;
-import net.odinary.interaudio.adventure.odi.condition.ConditionHandler;
-import net.odinary.interaudio.adventure.odi.trigger.TriggerHandler;
+import net.odinary.interaudio.folio.adventure.component.entity.Action;
+import net.odinary.interaudio.folio.adventure.component.entity.variable.AdventureVariable;
+import net.odinary.interaudio.folio.adventure.component.entity.Entity;
+import net.odinary.interaudio.folio.adventure.Event;
+import net.odinary.interaudio.folio.adventure.component.entity.Section;
+import net.odinary.interaudio.folio.adventure.odi.condition.ConditionHandler;
+import net.odinary.interaudio.folio.adventure.odi.trigger.TriggerHandler;
+import net.odinary.interaudio.folio.FolioLoadException;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -182,7 +183,7 @@ public class SimpleTest
         }
     }
 
-    private static void parseEntities(JSONObject jsonEntities, String entityType) throws JSONException, PackageLoadException
+    private static void parseEntities(JSONObject jsonEntities, String entityType) throws JSONException, FolioLoadException
     {
         entities.put(entityType, new HashMap<String, Entity>());
 

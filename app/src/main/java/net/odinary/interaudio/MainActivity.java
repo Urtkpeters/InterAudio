@@ -5,9 +5,9 @@ import android.os.StrictMode;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 
-import net.odinary.interaudio.folio.adventure.AdventureHandler;
+import net.odinary.interaudio.story.adventure.AdventureHandler;
 import net.odinary.interaudio.folio.FolioHandler;
-import net.odinary.interaudio.folio.interactive.InteractiveHandler;
+import net.odinary.interaudio.story.interactive.InteractiveHandler;
 
 public class MainActivity extends AppCompatActivity
 {

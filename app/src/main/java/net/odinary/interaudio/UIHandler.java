@@ -30,7 +30,7 @@ class UIHandler
             testButton.setOnClickListener((View v) ->
             {
                 if(MainActivity.simpleTestMode) SimpleTest.doSimpleTest(mainActivity);
-                else mainActivity.getAdventureHandler().startPlay();
+                else mainActivity.getAdventureHandler().start();
             });
         }
         else
@@ -54,7 +54,7 @@ class UIHandler
             playButton.setOnClickListener((View v) ->
             {
                 //mainActivity.getInteractiveHandler().startPlay();
-                mainActivity.getAdventureHandler().startPlay();
+                mainActivity.getAdventureHandler().start();
             });
 
             deleteButton.setOnClickListener((View v) ->

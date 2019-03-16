@@ -1,12 +1,12 @@
 package net.odinary.interaudio;
 
-import net.odinary.interaudio.folio.adventure.component.entity.Action;
-import net.odinary.interaudio.folio.adventure.component.entity.variable.AdventureVariable;
-import net.odinary.interaudio.folio.adventure.component.entity.Entity;
-import net.odinary.interaudio.folio.adventure.Event;
-import net.odinary.interaudio.folio.adventure.component.entity.Section;
-import net.odinary.interaudio.folio.adventure.odi.condition.ConditionHandler;
-import net.odinary.interaudio.folio.adventure.odi.trigger.TriggerHandler;
+import net.odinary.interaudio.story.adventure.component.entity.Action;
+import net.odinary.interaudio.story.adventure.component.entity.variable.AdventureVariable;
+import net.odinary.interaudio.story.adventure.component.entity.Entity;
+import net.odinary.interaudio.story.adventure.Event;
+import net.odinary.interaudio.story.adventure.component.entity.Section;
+import net.odinary.interaudio.story.adventure.odi.condition.ConditionHandler;
+import net.odinary.interaudio.story.adventure.odi.trigger.TriggerHandler;
 import net.odinary.interaudio.folio.FolioLoadException;
 
 import org.json.JSONArray;

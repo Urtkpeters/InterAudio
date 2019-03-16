@@ -20,6 +20,11 @@ public class PlayerRepository extends AbstractRepository
             Action action = actions.get(key);
 
             if(resultPhrase.contains(actions.get(key).getName())) return action;
+
+            for(String keyword: action.getKeywords())
+            {
+                if(resultPhrase.contains(keyword)) return action;
+            }
         }
 
         return null;

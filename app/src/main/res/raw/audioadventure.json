@@ -9,6 +9,7 @@
 		{
 			"name": "kitchen",
 			"filename": "kitchen",
+			"keywords": [],
 			"conditions": [],
 			"directions":
 			[
@@ -25,6 +26,7 @@
 		{
 			"name": "attic",
 			"filename": "attic",
+			"keywords": [],
 			"conditions": [ { "type": "Boolean", "condition": "variable.player.lightSource.value == true", "operator": "", "failFilename": "tooDark" } ],
 			"directions":
 			[
@@ -41,6 +43,7 @@
 		{
 			"name": "livingRoom",
 			"filename": "livingRoom",
+			"keywords": [],
 			"conditions": [],
 			"directions":
 			[
@@ -57,6 +60,7 @@
 		{
 			"name": "cellarEntrance",
 			"filename": "cellarEntrance",
+			"keywords": [],
 			"conditions":
 			[
 				{ "type": "Boolean", "condition": "variable.world.trapdoor.value == true", "operator": "or", "failFilename": "goFail" },
@@ -77,6 +81,7 @@
 		{
 			"name": "trollRoom",
 			"filename": "trollRoom",
+			"keywords": [],
 			"conditions": [],
 			"directions":
 			[
@@ -92,6 +97,7 @@
 		{
 			"name": "finalRoom",
 			"filename": "finalRoom",
+			"keywords": [],
 			"conditions":
 			[
 				{ "type": "Boolean", "condition": "variable.world.doorOpen.value == true", "operator": "or", "failFilename": "doorIsLocked" }

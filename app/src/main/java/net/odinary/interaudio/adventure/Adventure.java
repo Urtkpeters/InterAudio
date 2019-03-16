@@ -259,11 +259,11 @@ class Adventure
     {
         for(Entity entity: entities)
         {
-            String entityName = entity.getName();
+            List<String> entityKeywords = entity.getKeywords();
 
-            if(!entityName.equals(primaryTarget) && resultPhrase.contains(entityName))
+            for(String keyword: entityKeywords)
             {
-                return entity;
+                if(!keyword.equals(primaryTarget) && resultPhrase.contains(keyword)) return entity;
             }
         }
 

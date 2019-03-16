@@ -358,19 +358,6 @@
 				[
 					{ "type": "Number", "trigger": "variable.inventory.lantern.uses -= 1" }
 				]
-			},
-			{
-				"name": "characterAct",
-				"filename": "",
-				"failFilename": "",
-				"keywords": [],
-				"alwaysAllowed": true,
-				"time": 1,
-				"targets": [],
-				"secondaryKeys": [],
-				"secondaryTargets": [],
-				"conditions": [],
-				"triggers": []
 			}
 		],
 		"player":

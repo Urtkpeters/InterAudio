@@ -10,6 +10,14 @@ import java.util.List;
 
 public abstract class AbstractEntity implements Component
 {
+    public static final String actionType = "action";
+    public static final String sectionType = "section";
+    public static final String variableType = "variable";
+    public static final String itemType = "item";
+    public static final String objectType = "object";
+    public static final String characterType = "character";
+    public static final String playerType = "player";
+
     protected String name;
     protected String type;
     protected String filename;

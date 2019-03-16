@@ -7,6 +7,8 @@ import android.net.Uri;
 import android.speech.RecognizerIntent;
 
 import net.odinary.interaudio.MainActivity;
+import net.odinary.interaudio.adventure.component.entity.EntityAction;
+import net.odinary.interaudio.adventure.component.entity.Section;
 import net.odinary.interaudio.adventure.component.entity.variable.AdventureVariable;
 import net.odinary.interaudio.adventure.odi.condition.ConditionHandler;
 import net.odinary.interaudio.adventure.component.entity.Action;
@@ -242,7 +244,19 @@ public class AdventureHandler
         {
             timeVariable.setValue(timeVariable.getNValue() + 1);
             checkTimeActions(timeVariable);
-            //Check character actions
+
+            Section currentSection = event.getSection();
+
+            for(Entity character: currentSection.getCharacters())
+            {
+                Event entityEvent = new Event(Event.characterEvent);
+                entityEvent.setSection(currentSection);
+                entityEvent.setActor(character);
+
+                character.decideAction(entityEvent);
+
+                performAction(entityEvent);
+            }
 
             if(playerRepository.isAlive()) playerRepository.incrementTime();
             else
@@ -267,6 +281,7 @@ public class AdventureHandler
 
             int eventType = event.getType();
 
+            // Right now it is hard coded for the player time but once the player has been converted into an entity this needs to be on the "actor's" time not the players.
             // I am allowing time to go into the negative in the case that there are needs for moves that take multiple turns to complete
             if(eventType == Event.playerEvent) playerRepository.decrementTime(action.getTime());
 

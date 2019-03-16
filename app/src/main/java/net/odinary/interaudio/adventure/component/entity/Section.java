@@ -17,7 +17,7 @@ public class Section extends AbstractEntity
     private List<Condition> conditions;
     private HashMap<String, String> directions = new HashMap<>();
     private List<Entity> entities = new ArrayList<>();
-    private List<String> setVars = new ArrayList<>();
+    private List<String> triggers = new ArrayList<>();
 
     public Section(JSONObject jsonSection, EntityRepository entityRepository, ConditionHandler conditionHandler) throws JSONException
     {
@@ -48,7 +48,7 @@ public class Section extends AbstractEntity
 
         for(int i = 0; i < varArray.length(); i++)
         {
-            setVars.add(varArray.getString(i));
+            triggers.add(varArray.getString(i));
         }
     }
 
@@ -78,6 +78,18 @@ public class Section extends AbstractEntity
     public String getFilename() { return filename; }
 
     public List<Entity> getEntities() { return entities; }
+
+    public List<Entity> getCharacters()
+    {
+        List<Entity> characters = new ArrayList<>();
+
+        for(Entity entity: entities)
+        {
+            if(entity.getType().equals(Entity.characterType)) characters.add(entity);
+        }
+
+        return characters;
+    }
 
     public HashMap<String, String> getDirections() { return directions; }
 }

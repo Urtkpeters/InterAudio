@@ -7,21 +7,21 @@ import org.json.JSONArray;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 public class Interactive extends AbstractStory
 {
-    Map<String, Section> sections;
-    Map<String, String> interactiveVariables;
+    private Map<String, String> interactiveVariables;
+    private Map<String, Section> sections;
+    private Section currentSection;
 
-    public Interactive(MainActivity mainActivity)
+    Interactive(MainActivity mainActivity)
     {
         super(mainActivity);
     }
 
-    public Interactive(String packageDir) throws Exception
+    Interactive(String packageDir) throws Exception
     {
         super(packageDir);
     }
@@ -40,7 +40,7 @@ public class Interactive extends AbstractStory
             for(int j = 0; j < keywordArray.length(); j++)
             {
                 JSONObject jsonKeyword = keywordArray.getJSONObject(j);
-                keywords.add(new Keyword(jsonKeyword, interactiveVariables));
+                keywords.add(new Keyword(jsonKeyword));
 
                 String variableName = jsonKeyword.getString("variable");
 
@@ -63,5 +63,15 @@ public class Interactive extends AbstractStory
             String sectionName = jsonSection.getString("name");
             sections.put(sectionName, new Section(jsonSection, keywords, redirects));
         }
+
+        currentSection = sections.get(start);
     }
+
+    public void setCurrentSection(Section section) { currentSection = section; }
+
+    public Map<String, Section> getSections() { return sections; }
+
+    public Section getCurrentSection() { return currentSection; }
+
+    public Map<String, String> getInteractiveVariables() { return interactiveVariables; }
 }

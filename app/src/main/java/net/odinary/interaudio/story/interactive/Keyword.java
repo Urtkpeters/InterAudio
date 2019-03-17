@@ -3,20 +3,22 @@ package net.odinary.interaudio.story.interactive;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.util.Map;
-
 public class Keyword
 {
-    private String word;
+    private String keyword;
     private String variable;
     private String value;
-    private Map<String, String> interactiveVariables;
 
-    public Keyword(JSONObject jsonKeyword, Map<String, String> interactiveVariables) throws JSONException
+    Keyword(JSONObject jsonKeyword) throws JSONException
     {
-        word = jsonKeyword.getString("keyword");
+        keyword = jsonKeyword.getString("keyword");
         variable = jsonKeyword.getString("variable");
         value = jsonKeyword.getString("value");
-        this.interactiveVariables = interactiveVariables;
     }
+
+    public String getKeyword() { return keyword; }
+
+    public String getVariable() { return variable; }
+
+    public String getValue() { return value; }
 }

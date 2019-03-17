@@ -23,4 +23,8 @@ public class Section
     public String getName() { return name; }
 
     public String getFilename() { return filename; }
+
+    public List<Keyword> getKeywords() { return keywords; }
+
+    public List<Redirect> getRedirects() { return redirects; }
 }

@@ -1,36 +1,14 @@
 package net.odinary.interaudio.story.interactive;
 
-import android.content.ActivityNotFoundException;
-import android.content.Intent;
-import android.media.MediaPlayer;
-import android.net.Uri;
-import android.speech.RecognizerIntent;
-
 import net.odinary.interaudio.MainActivity;
-import net.odinary.interaudio.R;
 import net.odinary.interaudio.story.AbstractStoryHandler;
 
-import org.json.JSONArray;
-import org.json.JSONException;
-import org.json.JSONObject;
-
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.StringWriter;
-import java.io.Writer;
 import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.Locale;
+import java.util.List;
 import java.util.Map;
 
 public class InteractiveHandler extends AbstractStoryHandler
 {
-    private JSONObject currentPath;
     private Interactive currentInteractive;
 
     public InteractiveHandler(MainActivity mainActivity) { super(mainActivity); }
@@ -42,11 +20,12 @@ public class InteractiveHandler extends AbstractStoryHandler
             if(MainActivity.testPackageMode) currentStory = new Interactive(mainActivity);
             else currentStory = new Interactive(mainActivity.getFolioHandler().getPackageDir() + jsonFilename);
 
+            end = false;
             currentInteractive = (Interactive) currentStory;
 
-            clipList.add(currentInteractive.getStart());
+            clipList.add(currentInteractive.getCurrentSection().getFilename());
 
-            playClips();
+            if(!calculatePath()) playClips();
         }
         catch(Exception e)
         {
@@ -54,126 +33,92 @@ public class InteractiveHandler extends AbstractStoryHandler
         }
     }
 
-    protected void _parseVoice(ArrayList<String> result)
+    private boolean calculatePath()
     {
-        // The below is missing logic from the original createMediaListener from this class that is now on AbstractStoryHandler
-//        String redirect = currentPath.getString("redirect");
-//
-//        if(redirect != null && !redirect.isEmpty()) createPlaybackAndListener(redirect);
-//        else System.out.println("End of story!");
+        Map<String, String> interactiveVariables = currentInteractive.getInteractiveVariables();
+        Section currentSection = currentInteractive.getCurrentSection();
+        List<Keyword> keywords = currentSection.getKeywords();
 
+        if(keywords.size() > 0 && interactiveVariables.get(keywords.get(0).getVariable()).equals("")) return true;
 
-        // The below is very dependent on how the JSON ends up being formed
-//        try
-//        {
-//            String nextSection = "";
-//            String resultPhrase = result.get(0);
-//
-//            if(resultPhrase.contains("repeat"))
-//            {
-//                nextSection = currentPath.getString("section");
-//            }
-//            else
-//            {
-//                JSONArray keywordsArray = currentPath.getJSONArray("keywords");
-//
-//                for(int i = 0; i < keywordsArray.length(); i++)
-//                {
-//                    JSONObject keywordObj = keywordsArray.getJSONObject(i);
-//
-//                    if(resultPhrase.contains(keywordObj.getString("keyword")))
-//                    {
-//                        nextSection = keywordObj.getString("section");
-//                        break;
-//                    }
-//                }
-//            }
-//
+        Map<String, Section> sections = currentInteractive.getSections();
+        List<Redirect> redirects = currentSection.getRedirects();
+        String nextSection = "";
 
+        if(redirects.size() > 1)
+        {
+            for(Redirect redirect: currentSection.getRedirects())
+            {
+                if(redirect.getValue().equals(interactiveVariables.get(redirect.getVariable())))
+                {
+                    nextSection = redirect.getSection();
+                    break;
+                }
+            }
+        }
+        else if(redirects.size() > 0)
+        {
+            nextSection = redirects.get(0).getSection();
+        }
+        else
+        {
+            // Need to relay some error here.
+            return false;
+        }
 
+        if(nextSection.equals(""))
+        {
+            // Need to relay some error here.
+            return false;
+        }
+        else if(nextSection.equals("end"))
+        {
+            end = true;
+            return true;
+        }
+        else
+        {
+            currentSection = sections.get(nextSection);
+            clipList.add(currentSection.getFilename());
+            currentInteractive.setCurrentSection(currentSection);
+            calculatePath();
 
-
-
-
-
-//        Boolean pathFound = false;
-//
-//        if(nextSection != null && !nextSection.isEmpty()) pathFound = loadNextSection(nextSection);
-//
-//        if(pathFound)
-//        {
-        // All of the below will need to be reworked once done with JSON all of this will be interacting with objects and not JSON
-
-
-        // Set interactive variables
-//                JSONArray setVariablesArray = currentPath.getJSONArray("setVariables");
-//
-//                for(int i = 0; i < setVariablesArray.length(); i++)
-//                {
-//                    JSONObject setVar = setVariablesArray.getJSONObject(i);
-//
-//                    storyVariables.get(setVar.getString("variable")).put("value", setVar.getString("value"));
-//                }
-
-
-        // Add clip to clip list
-//                clipList.add(currentPath.getString("filename"));
-//            }
-
-            playClips();
-
-
-
-
-
-//        }
-//        catch(Exception e)
-//        {
-//            e.printStackTrace();
-//        }
+            return true;
+        }
     }
 
-    private Boolean loadNextSection(String nextSection)
+    protected void _parseVoice(ArrayList<String> result)
     {
-//        try
-//        {
-//            JSONArray pathsArray = storyJson.getJSONObject("sections").getJSONArray(nextSection);
-//
-//            for(int i = 0; i < pathsArray.length(); i++)
-//            {
-//                JSONObject path = pathsArray.getJSONObject(i);
-//                JSONArray conditionsArray = path.getJSONArray("conditions");
-//
-//                if(conditionsArray.length() > 0)
-//                {
-//                    Boolean allConditionsMet = true;
-//
-//                    for(int j = 0; j < conditionsArray.length(); j++)
-//                    {
-//                        JSONObject condition = conditionsArray.getJSONObject(j);
-//
-//                        if(!storyVariables.get(condition.getString("variable")).getString("value").equals(condition.getString("value"))) allConditionsMet = false;
-//                    }
-//
-//                    if(allConditionsMet)
-//                    {
-//                        currentPath = path;
-//                        return true;
-//                    }
-//                }
-//                else
-//                {
-//                    currentPath = path;
-//                    return true;
-//                }
-//            }
-//        }
-//        catch(JSONException e)
-//        {
-//            e.printStackTrace();
-//        }
+        String resultPhrase = result.get(0);
 
-        return false;
+        if(resultPhrase.contains("repeat"))
+        {
+            // Repeat functionality logic
+        }
+        else
+        {
+            Section currentSection = currentInteractive.getCurrentSection();
+            Map<String, String> interactiveVariables = currentInteractive.getInteractiveVariables();
+            boolean foundKeyword = false;
+
+            for(Keyword keyword: currentSection.getKeywords())
+            {
+                if(resultPhrase.contains(keyword.getKeyword()))
+                {
+                    interactiveVariables.put(keyword.getVariable(), keyword.getValue());
+                    foundKeyword = true;
+                }
+            }
+
+            if(foundKeyword)
+            {
+                if(!calculatePath()) playClips();
+            }
+            else
+            {
+                // Send back to voice
+            }
+        }
     }
 
     protected boolean _checkSystemCommands(String resultPhrase) { return false; }

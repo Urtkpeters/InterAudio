@@ -9,10 +9,16 @@ public class Redirect
     private String value;
     private String section;
 
-    public Redirect(JSONObject jsonRedirect) throws JSONException
+    Redirect(JSONObject jsonRedirect) throws JSONException
     {
         variable = jsonRedirect.getString("variable");
         value = jsonRedirect.getString("value");
         section = jsonRedirect.getString("section");
     }
+
+    public String getVariable() { return variable; }
+
+    public String getValue() { return value; }
+
+    public String getSection() { return section; }
 }

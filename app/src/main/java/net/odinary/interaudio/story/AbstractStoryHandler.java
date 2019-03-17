@@ -25,7 +25,7 @@ public abstract class AbstractStoryHandler
     protected List<String> clipList = new ArrayList<>();
     protected List<String> lastClipList = new ArrayList<>();
     protected Boolean uiClip = false;
-
+    protected boolean end;
 
 
     protected AbstractStoryHandler(MainActivity mainActivity) { this.mainActivity = mainActivity; }
@@ -51,17 +51,17 @@ public abstract class AbstractStoryHandler
         mediaPlayer.start();
     }
 
-    protected MediaPlayer getPathClip()
+    private MediaPlayer getPathClip()
     {
         return MediaPlayer.create(mainActivity.getApplicationContext(), Uri.parse(mainActivity.getFolioHandler().getPackageDir() + clipList.get(0) + "." + currentStory.getAudioFileExt()));
     }
 
-    protected MediaPlayer getResClip()
+    private MediaPlayer getResClip()
     {
         return MediaPlayer.create(mainActivity.getApplicationContext(), mainActivity.getResources().getIdentifier(clipList.get(0), "raw", mainActivity.getPackageName()));
     }
 
-    protected void createMediaListener(MediaPlayer mediaPlayer)
+    private void createMediaListener(MediaPlayer mediaPlayer)
     {
         mediaPlayer.setOnCompletionListener((MediaPlayer mediaPlayerListen) ->
         {
@@ -69,7 +69,7 @@ public abstract class AbstractStoryHandler
             {
                 playClips();
             }
-            else
+            else if(!end)
             {
                 try
                 {

@@ -87,10 +87,8 @@ public class InteractiveHandler extends AbstractStoryHandler
         }
     }
 
-    protected void _parseVoice(ArrayList<String> result)
+    protected boolean _parseVoice(String resultPhrase)
     {
-        String resultPhrase = result.get(0);
-
         if(resultPhrase.contains("repeat"))
         {
             // Repeat functionality logic
@@ -99,26 +97,18 @@ public class InteractiveHandler extends AbstractStoryHandler
         {
             Section currentSection = currentInteractive.getCurrentSection();
             Map<String, String> interactiveVariables = currentInteractive.getInteractiveVariables();
-            boolean foundKeyword = false;
 
             for(Keyword keyword: currentSection.getKeywords())
             {
                 if(resultPhrase.contains(keyword.getKeyword()))
                 {
                     interactiveVariables.put(keyword.getVariable(), keyword.getValue());
-                    foundKeyword = true;
+                    return calculatePath();
                 }
             }
-
-            if(foundKeyword)
-            {
-                if(!calculatePath()) playClips();
-            }
-            else
-            {
-                // Send back to voice
-            }
         }
+
+        return false;
     }
 
     protected boolean _checkSystemCommands(String resultPhrase) { return false; }

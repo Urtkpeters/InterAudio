@@ -93,11 +93,21 @@ public abstract class AbstractStoryHandler
     {
         // Get the resulting VTT responses from Google
         ArrayList<String> result = data.getStringArrayListExtra(RecognizerIntent.EXTRA_RESULTS);
+        boolean foundKeyword = false;
 
-        _parseVoice(result);
+        for(String resultPhrase: result)
+        {
+            foundKeyword = _parseVoice(resultPhrase);
+        }
+
+        if(foundKeyword) playClips();
+        else
+        {
+            // Return to voice
+        }
     }
 
-    protected abstract void _parseVoice(ArrayList<String> result);
+    protected abstract boolean _parseVoice(String resultPhrase);
 
     protected boolean checkSystemCommands(String resultPhrase)
     {

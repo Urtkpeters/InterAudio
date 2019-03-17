@@ -59,12 +59,10 @@ public class AdventureHandler extends AbstractStoryHandler
         }
     }
 
-    protected void _parseVoice(ArrayList<String> result)
+    protected boolean _parseVoice(String resultPhrase)
     {
         Event event = new Event(Event.playerEvent);
         event.setSection(currentAdventure.getWorldRepository().getCurrentSection());
-
-        String resultPhrase = result.get(0);
 
         boolean systemCommand = checkSystemCommands(resultPhrase);
 
@@ -150,10 +148,14 @@ public class AdventureHandler extends AbstractStoryHandler
             {
                 performActions(event);
             }
-            else uiClip = true;
+            else
+            {
+                uiClip = true;
+                return false;
+            }
         }
 
-        playClips();
+        return true;
     }
 
     private void performActions(Event event)

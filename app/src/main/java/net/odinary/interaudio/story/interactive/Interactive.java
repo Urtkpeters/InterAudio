@@ -6,12 +6,15 @@ import net.odinary.interaudio.story.AbstractStory;
 import org.json.JSONArray;
 import org.json.JSONObject;
 
+import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 
 public class Interactive extends AbstractStory
 {
-    Map<String, JSONObject> interactiveVariables;
+    Map<String, Section> sections;
+    Map<String, String> interactiveVariables;
 
     public Interactive(MainActivity mainActivity)
     {
@@ -25,17 +28,40 @@ public class Interactive extends AbstractStory
 
     protected void parseTypeJSON(JSONObject folioJson) throws Exception
     {
-        // This whole section will need to be refactored with the task about making the AdventureVariables generic
-        JSONArray variableArray = folioJson.getJSONArray("variables");
-        interactiveVariables = new HashMap<>();
+        JSONArray sectionArray = folioJson.getJSONArray("sections");
 
-        for(int i = 0; i < variableArray.length(); i++)
+        for(int i = 0; i < sectionArray.length(); i++)
         {
-            JSONObject variable = variableArray.getJSONObject(i);
+            JSONObject jsonSection = sectionArray.getJSONObject(i);
 
-            variable.put("value",variable.getString("default"));
+            JSONArray keywordArray = jsonSection.getJSONArray("keywords");
+            List<Keyword> keywords = new ArrayList<>();
 
-            interactiveVariables.put(variable.getString("name"), variable);
+            for(int j = 0; j < keywordArray.length(); j++)
+            {
+                JSONObject jsonKeyword = keywordArray.getJSONObject(j);
+                keywords.add(new Keyword(jsonKeyword, interactiveVariables));
+
+                String variableName = jsonKeyword.getString("variable");
+
+                if(!interactiveVariables.containsKey(variableName)) interactiveVariables.put(variableName, "");
+            }
+
+            JSONArray redirectArray = jsonSection.getJSONArray("redirects");
+            List<Redirect> redirects = new ArrayList<>();
+
+            for(int j = 0; j < redirectArray.length(); j++)
+            {
+                JSONObject jsonRedirect = redirectArray.getJSONObject(j);
+                redirects.add(new Redirect(jsonRedirect));
+
+                String variableName = jsonRedirect.getString("variable");
+
+                if(!interactiveVariables.containsKey(variableName)) interactiveVariables.put(variableName, "");
+            }
+
+            String sectionName = jsonSection.getString("name");
+            sections.put(sectionName, new Section(jsonSection, keywords, redirects));
         }
     }
 }

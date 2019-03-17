@@ -1,0 +1,143 @@
+{
+	"packageName": "simple",
+	"packageType": "IA",
+	"author": "Odonen",
+	"audioFileExt": "m4a",
+	"start": "split",
+	"sections":
+	[
+		{
+			"name": "split",
+			"filename": "split",
+			"keywords":
+			[
+				{ "keyword": "left", "variable": "direction", "value": "left" },
+				{ "keyword": "right", "variable": "direction", "value": "right" }
+			],
+			"redirects":
+			[
+				{ "variable": "direction", "value": "left", "section": "left" },
+				{ "variable": "direction", "value": "right", "section": "right" }
+			]
+		},
+		{
+			"name": "left",
+			"filename": "left",
+			"keywords":
+			[
+				{ "keyword": "dollar", "variable": "dollar", "value": "dollar" },
+				{ "keyword": "leave", "variable": "dollar", "value": "leave" }
+			],
+			"redirects":
+			[
+				{ "variable": "dollar", "value": "dollar", "section": "dollar" },
+				{ "variable": "dollar", "value": "leave", "section": "leave" }
+			]
+		},
+		{
+			"name": "right",
+			"filename": "right",
+			"keywords":
+			[
+				{ "keyword": "pet", "variable": "dog", "value": "pet" },
+				{ "keyword": "back", "variable": "dog", "value": "back" }
+			],
+			"redirects":
+			[
+				{ "variable": "", "value": "", "section": "follow" }
+			]
+		},
+		{
+			"name": "dollar",
+			"filename": "dollar",
+			"keywords": [],
+			"redirects":
+			{
+				{ "variable": "", "value": "", "section": "fights" }
+			}
+		},
+		{
+			"name": "leave",
+			"filename": "leave",
+			"keywords":
+			[
+				{ "keyword": "blonde", "variable": "hair", "value": "blonde" },
+				{ "keyword": "red", "variable": "hair", "value": "red" },
+				{ "keyword": "redhead", "variable": "hair", "value": "red" }
+			],
+			"redirects":
+			[
+				{ "variable": "", "value": "", "section": "friends" }
+			]
+		},
+		{
+			"name": "fights",
+			"filename": "fights",
+			"keywords": [],
+			"redirects":
+			[
+				{ "variable": "", "value": "", "section": "end" }
+			]
+		},
+		{
+			"name": "runsAway",
+			"filename": "runsAway",
+			"keywords": [],
+			"redirects":
+			[
+				{ "variable": "", "value": "", "section": "end" }
+			]
+		},
+		{
+			"name": "friends",
+			"filename": "friends",
+			"keywords":
+			[
+				{ "keyword": "home", "variable": "location", "value": "home" },
+				{ "keyword": "out", "variable": "location", "value": "out" }
+			],
+			"redirects":
+			[
+				{ "variable": "location", "value": "home", "section": "home" },
+				{ "variable": "location", "value": "out", "section": "out" }
+			]
+		},
+		{
+			"name": "home",
+			"filename": "home",
+			"keywords": [],
+			"redirects":
+			[
+				{ "variable": "", "value": "", "section": "end" }
+			]
+		},
+		{
+			"name": "out",
+			"filename": "out",
+			"keywords": [],
+			"redirects":
+			[
+				{ "variable": "hair", "value": "blonde", "section": "blonde" },
+				{ "variable": "hair", "value": "red", "section": "red" }
+			]
+		},
+		{
+			"name": "blonde",
+			"filename": "blonde",
+			"keywords": [],
+			"redirects":
+			[
+				{ "variable": "", "value": "", "section": "end" }
+			]
+		},
+		{
+			"name": "red",
+			"filename": "red",
+			"keywords": [],
+			"redirects":
+			[
+				{ "variable": "", "value": "", "section": "end" }
+			]
+		}
+	]
+}

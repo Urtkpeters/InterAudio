@@ -89,7 +89,10 @@ public class InteractiveHandler extends AbstractStoryHandler
 
     protected boolean _parseVoice(String resultPhrase)
     {
-        if(resultPhrase.contains("repeat"))
+        // Remove all spaces and special characters. Makes it easier for comparison.
+        String cleanResultPhrase = resultPhrase.replaceAll("\\s+", "").replaceAll("[^\\w\\s]","").toLowerCase();
+
+        if(cleanResultPhrase.contains("repeat"))
         {
             // Repeat functionality logic
         }
@@ -100,7 +103,7 @@ public class InteractiveHandler extends AbstractStoryHandler
 
             for(Keyword keyword: currentSection.getKeywords())
             {
-                if(resultPhrase.contains(keyword.getKeyword()))
+                if(cleanResultPhrase.contains(keyword.getKeyword()))
                 {
                     interactiveVariables.put(keyword.getVariable(), keyword.getValue());
                     return calculatePath();

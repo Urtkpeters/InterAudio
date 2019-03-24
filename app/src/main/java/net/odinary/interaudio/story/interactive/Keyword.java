@@ -11,7 +11,8 @@ public class Keyword
 
     Keyword(JSONObject jsonKeyword) throws JSONException
     {
-        keyword = jsonKeyword.getString("keyword");
+        // Remove all spaces and special characters. Makes it easier for comparison.
+        keyword = jsonKeyword.getString("keyword").replaceAll("\\s+", "").replaceAll("[^\\w\\s]","").toLowerCase();
         variable = jsonKeyword.getString("variable");
         value = jsonKeyword.getString("value");
     }

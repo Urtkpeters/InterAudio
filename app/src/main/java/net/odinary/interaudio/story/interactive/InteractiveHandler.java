@@ -3,7 +3,6 @@ package net.odinary.interaudio.story.interactive;
 import net.odinary.interaudio.MainActivity;
 import net.odinary.interaudio.story.AbstractStoryHandler;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -115,4 +114,9 @@ public class InteractiveHandler extends AbstractStoryHandler
     }
 
     protected boolean _checkSystemCommands(String resultPhrase) { return false; }
+
+    protected void _endGame()
+    {
+        currentInteractive = null;
+    }
 }

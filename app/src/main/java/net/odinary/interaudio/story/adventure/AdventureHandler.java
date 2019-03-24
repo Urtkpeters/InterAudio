@@ -190,7 +190,7 @@ public class AdventureHandler extends AbstractStoryHandler
             if(playerRepository.isAlive()) playerRepository.incrementTime();
             else
             {
-                gameover();
+                end = true;
                 break;
             }
         }
@@ -310,5 +310,12 @@ public class AdventureHandler extends AbstractStoryHandler
 //        createVoiceListener(mediaPlayer);
 //
 //        mediaPlayer.start();
+    }
+
+    protected void _endGame()
+    {
+        currentAdventure = null;
+        conditionHandler = null;
+        triggerHandler = null;
     }
 }

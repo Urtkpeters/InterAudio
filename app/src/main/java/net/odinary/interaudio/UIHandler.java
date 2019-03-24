@@ -3,7 +3,7 @@ package net.odinary.interaudio;
 import android.view.View;
 import android.widget.Button;
 
-class UIHandler
+public class UIHandler
 {
     private MainActivity mainActivity;
     private Button downloadButton;
@@ -65,5 +65,10 @@ class UIHandler
                 deleteButton.setVisibility(View.INVISIBLE);
             });
         }
+    }
+
+    public void displayFolioPage()
+    {
+        // Display folio page
     }
 }

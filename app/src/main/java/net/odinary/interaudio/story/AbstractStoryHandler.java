@@ -25,7 +25,7 @@ public abstract class AbstractStoryHandler
     protected List<String> clipList = new ArrayList<>();
     protected List<String> lastClipList = new ArrayList<>();
     protected Boolean uiClip = false;
-    protected boolean end;
+    protected boolean end = false;
 
 
     protected AbstractStoryHandler(MainActivity mainActivity) { this.mainActivity = mainActivity; }
@@ -86,6 +86,10 @@ public abstract class AbstractStoryHandler
                     e.printStackTrace();
                 }
             }
+            else
+            {
+                endGame();
+            }
         });
     }
 
@@ -136,8 +140,19 @@ public abstract class AbstractStoryHandler
 
     protected abstract boolean _checkSystemCommands(String resultPhrase);
 
-    protected void gameover()
+    private void endGame()
     {
+        _endGame();
 
+        currentStory = null;
+        clipList = new ArrayList<>();
+        lastClipList = new ArrayList<>();
+        uiClip = false;
+        end = false;
+
+        // I am putting this in as a placeholder until the functionality around displaying pages is complete.
+        mainActivity.getUIHandler().displayFolioPage();
     }
+
+    protected abstract void _endGame();
 }

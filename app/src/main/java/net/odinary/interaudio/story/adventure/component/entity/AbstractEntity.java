@@ -32,7 +32,8 @@ public abstract class AbstractEntity implements Component
 
         for(int i = 0; i < keywords.length(); i++)
         {
-            this.keywords.add(keywords.getString(i));
+            // Remove all spaces and special characters. Makes it easier for comparison.
+            this.keywords.add(keywords.getString(i).replaceAll("\\s+", "").replaceAll("[^\\w\\s]","").toLowerCase());
         }
     }
 

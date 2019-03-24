@@ -61,16 +61,19 @@ public class AdventureHandler extends AbstractStoryHandler
 
     protected boolean _parseVoice(String resultPhrase)
     {
+        // Remove all spaces and special characters. Makes it easier for comparison.
+        String cleanResultPhrase = resultPhrase.replaceAll("\\s+", "").replaceAll("[^\\w\\s]","").toLowerCase();
+
         Event event = new Event(Event.playerEvent);
         event.setSection(currentAdventure.getWorldRepository().getCurrentSection());
 
-        boolean systemCommand = checkSystemCommands(resultPhrase);
+        boolean systemCommand = checkSystemCommands(cleanResultPhrase);
 
         if(!systemCommand)
         {
             Boolean validAction = true;
 
-            Action action = currentAdventure.getPlayerRepository().getActionFromResult(resultPhrase);
+            Action action = currentAdventure.getPlayerRepository().getActionFromResult(cleanResultPhrase);
 
             if(action != null)
             {
@@ -78,7 +81,7 @@ public class AdventureHandler extends AbstractStoryHandler
 
                 if(!targetTypes.isEmpty())
                 {
-                    Entity target = currentAdventure.checkTarget(resultPhrase);
+                    Entity target = currentAdventure.checkTarget(cleanResultPhrase);
 
                     if(target != null)
                     {
@@ -96,12 +99,12 @@ public class AdventureHandler extends AbstractStoryHandler
 
                             if(!secondaryActions.isEmpty())
                             {
-                                event.setSecondaryAction(currentAdventure.checkSecondaryActions(resultPhrase, secondaryActions));
+                                event.setSecondaryAction(currentAdventure.checkSecondaryActions(cleanResultPhrase, secondaryActions));
 
                                 if(event.getSecondaryAction() != null)
                                 {
                                     List<String> secondaryTargets = action.getSecondaryTargets();
-                                    Entity secondaryTarget = currentAdventure.checkTarget(resultPhrase, event.getTarget().getName());
+                                    Entity secondaryTarget = currentAdventure.checkTarget(cleanResultPhrase, event.getTarget().getName());
 
                                     if(event.getSecondaryTarget() == null)
                                     {

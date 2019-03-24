@@ -65,32 +65,28 @@ public abstract class AbstractStoryHandler
     {
         mediaPlayer.setOnCompletionListener((MediaPlayer mediaPlayerListen) ->
         {
-            if(clipList.size() > 0)
-            {
-                playClips();
-            }
-            else if(!end)
-            {
-                try
-                {
-                    // When audio is done playing, trigger VTT
-                    Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
-                    intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
-                    intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
-
-                    // This action will ultimately trigger MainActivity.onActivityResult
-                    mainActivity.startActivityForResult(intent, MainActivity.SPEECH_INPUT);
-                }
-                catch(ActivityNotFoundException e)
-                {
-                    e.printStackTrace();
-                }
-            }
-            else
-            {
-                endGame();
-            }
+            if(clipList.size() > 0) playClips();
+            else if(!end) createVTT();
+            else endGame();
         });
+    }
+
+    private void createVTT()
+    {
+        try
+        {
+            // When audio is done playing, trigger VTT
+            Intent intent = new Intent(RecognizerIntent.ACTION_RECOGNIZE_SPEECH);
+            intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE_MODEL, RecognizerIntent.LANGUAGE_MODEL_FREE_FORM);
+            intent.putExtra(RecognizerIntent.EXTRA_LANGUAGE, Locale.getDefault());
+
+            // This action will ultimately trigger MainActivity.onActivityResult
+            mainActivity.startActivityForResult(intent, MainActivity.SPEECH_INPUT);
+        }
+        catch(ActivityNotFoundException e)
+        {
+            e.printStackTrace();
+        }
     }
 
     public void parseVoice(Intent data)
@@ -104,11 +100,13 @@ public abstract class AbstractStoryHandler
             foundKeyword = _parseVoice(resultPhrase);
         }
 
-        if(foundKeyword) playClips();
-        else
+        if(!foundKeyword)
         {
-            // Return to voice
+            if(clipList.size() < 1) clipList.add(currentStory.getErrorSound());
+            uiClip = true;
         }
+
+        playClips();
     }
 
     protected abstract boolean _parseVoice(String resultPhrase);

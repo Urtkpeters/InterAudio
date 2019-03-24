@@ -23,6 +23,7 @@ public abstract class AbstractStory
     protected String author;
     protected String audioFileExt;
     protected String start;
+    protected String errorSound;
 
     public AbstractStory(MainActivity mainActivity)
     {
@@ -83,6 +84,7 @@ public abstract class AbstractStory
             author = packageJson.getString("author");
             audioFileExt = packageJson.getString("audioFileExt");
             start = packageJson.getString("start");
+            errorSound = packageJson.getString("errorSound");
 
             parseTypeJSON(packageJson);
         }
@@ -105,4 +107,6 @@ public abstract class AbstractStory
     public String getAudioFileExt() { return audioFileExt; }
 
     public String getStart() { return start; }
+
+    public String getErrorSound() { return errorSound; }
 }

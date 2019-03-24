@@ -4,6 +4,7 @@
 	"author": "Odonen",
 	"audioFileExt": "m4a",
 	"start": "split",
+	"errorSound": "errorSound",
 	"sections":
 	[
 		{

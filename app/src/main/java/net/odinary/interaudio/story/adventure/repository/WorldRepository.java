@@ -1,6 +1,6 @@
 package net.odinary.interaudio.story.adventure.repository;
 
-import net.odinary.interaudio.story.adventure.component.entity.Section;
+import net.odinary.interaudio.story.adventure.component.Section;
 
 import java.util.HashMap;
 import java.util.Map;

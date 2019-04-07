@@ -1,6 +1,6 @@
 package net.odinary.interaudio.story.adventure.odi.condition;
 
-import net.odinary.interaudio.story.adventure.odi.AbstractOdi;
+import net.odinary.interaudio.story.odi.AbstractOdi;
 
 public class Condition extends AbstractOdi
 {

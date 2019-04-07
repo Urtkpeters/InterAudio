@@ -1,11 +1,11 @@
-package net.odinary.interaudio.story.adventure.component.entity.variable;
+package net.odinary.interaudio.story.adventure.component.variable;
 
-import net.odinary.interaudio.story.adventure.component.entity.AbstractEntity;
+import net.odinary.interaudio.story.component.AbstractComponent;
 
 import org.json.JSONException;
 import org.json.JSONObject;
 
-public class AdventureVariable extends AbstractEntity implements VariableInterface
+public class AdventureVariable extends AbstractComponent implements VariableInterface
 {
     public static final String equals = "==";
     public static final String notEquals = "!=";

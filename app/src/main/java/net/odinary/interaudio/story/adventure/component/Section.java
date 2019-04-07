@@ -1,5 +1,6 @@
-package net.odinary.interaudio.story.adventure.component.entity;
+package net.odinary.interaudio.story.adventure.component;
 
+import net.odinary.interaudio.story.component.AbstractComponent;
 import net.odinary.interaudio.story.adventure.odi.condition.Condition;
 import net.odinary.interaudio.story.adventure.odi.condition.ConditionHandler;
 import net.odinary.interaudio.story.adventure.repository.EntityRepository;
@@ -12,7 +13,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
 
-public class Section extends AbstractEntity
+public class Section extends AbstractComponent
 {
     private List<Condition> conditions;
     private HashMap<String, String> directions = new HashMap<>();
@@ -71,7 +72,7 @@ public class Section extends AbstractEntity
     {
         for(Entity entity: entities)
         {
-            if(entity.name.equals(entityName)) entities.remove(entity);
+            if(entity.getName().equals(entityName)) entities.remove(entity);
         }
     }
 

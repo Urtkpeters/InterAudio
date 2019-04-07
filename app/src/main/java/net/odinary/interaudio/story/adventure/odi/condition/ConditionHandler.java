@@ -1,12 +1,12 @@
 package net.odinary.interaudio.story.adventure.odi.condition;
 
-import net.odinary.interaudio.story.adventure.component.entity.Action;
-import net.odinary.interaudio.story.adventure.odi.AbstractOdiHandler;
-import net.odinary.interaudio.story.adventure.odi.OdiSegment;
+import net.odinary.interaudio.story.adventure.component.AdventureAction;
+import net.odinary.interaudio.story.adventure.odi.AbstractAdventureOdiHandler;
+import net.odinary.interaudio.story.odi.OdiSegment;
 import net.odinary.interaudio.story.adventure.repository.PlayerRepository;
 import net.odinary.interaudio.story.adventure.repository.WorldRepository;
-import net.odinary.interaudio.story.adventure.component.entity.variable.AdventureVariable;
-import net.odinary.interaudio.story.adventure.component.entity.Entity;
+import net.odinary.interaudio.story.adventure.component.variable.AdventureVariable;
+import net.odinary.interaudio.story.adventure.component.Entity;
 import net.odinary.interaudio.story.adventure.Event;
 
 import org.json.JSONArray;
@@ -16,7 +16,7 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class ConditionHandler extends AbstractOdiHandler
+public class ConditionHandler extends AbstractAdventureOdiHandler
 {
     public static final String equals = "==";
     public static final String notEquals = "!=";
@@ -46,28 +46,28 @@ public class ConditionHandler extends AbstractOdiHandler
 
     public String checkConditions(Event event)
     {
-        Action action = event.getAction();
-        List<Condition> conditions = action.getConditions();
+        AdventureAction adventureAction = event.getAdventureAction();
+        List<Condition> conditions = adventureAction.getConditions();
 
         String returnFilename = checkConditions(event, conditions);
 
         if(returnFilename == null || returnFilename.isEmpty())
         {
             Entity target = event.getTarget();
-            String actionName = action.getName();
+            String actionName = adventureAction.getName();
 
             if(target.checkActionOverride(actionName))
             {
-                Action overrideAction = target.getActionOverride(actionName);
-                List<Condition> overrideConditions = overrideAction.getConditions();
+                AdventureAction overrideAdventureAction = target.getActionOverride(actionName);
+                List<Condition> overrideConditions = overrideAdventureAction.getConditions();
 
-                if(overrideConditions.size() > 0) returnFilename = checkConditions(event, event.getAction().getConditions());
+                if(overrideConditions.size() > 0) returnFilename = checkConditions(event, event.getAdventureAction().getConditions());
 
-                if(returnFilename == null || returnFilename.isEmpty()) returnFilename = overrideAction.getFilename();
+                if(returnFilename == null || returnFilename.isEmpty()) returnFilename = overrideAdventureAction.getFilename();
             }
             else
             {
-                returnFilename = action.getFilename();
+                returnFilename = adventureAction.getFilename();
             }
         }
 

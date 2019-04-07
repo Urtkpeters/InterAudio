@@ -2,16 +2,17 @@ package net.odinary.interaudio.story.adventure.odi.trigger;
 
 import net.odinary.interaudio.story.adventure.AdventureHandler;
 import net.odinary.interaudio.story.adventure.Event;
-import net.odinary.interaudio.story.adventure.component.Component;
-import net.odinary.interaudio.story.adventure.component.entity.Action;
-import net.odinary.interaudio.story.adventure.component.entity.Entity;
-import net.odinary.interaudio.story.adventure.component.entity.Section;
-import net.odinary.interaudio.story.adventure.component.entity.variable.AdventureVariable;
-import net.odinary.interaudio.story.adventure.odi.AbstractOdiHandler;
-import net.odinary.interaudio.story.adventure.odi.OdiSegment;
+import net.odinary.interaudio.story.adventure.component.AdventureAction;
+import net.odinary.interaudio.story.adventure.component.Entity;
+import net.odinary.interaudio.story.adventure.component.Section;
+import net.odinary.interaudio.story.adventure.component.variable.AdventureVariable;
+import net.odinary.interaudio.story.adventure.odi.AbstractAdventureOdiHandler;
 import net.odinary.interaudio.story.adventure.repository.EntityRepository;
 import net.odinary.interaudio.story.adventure.repository.PlayerRepository;
 import net.odinary.interaudio.story.adventure.repository.WorldRepository;
+import net.odinary.interaudio.story.odi.OdiSegment;
+import net.odinary.interaudio.story.odi.trigger.Trigger;
+import net.odinary.interaudio.story.odi.trigger.TriggerHandler;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -19,17 +20,18 @@ import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Map;
 
-public class TriggerHandler extends AbstractOdiHandler
+public class AdventureTriggerHandler extends AbstractAdventureOdiHandler implements TriggerHandler
 {
     private EntityRepository entityRepository;
+    private AdventureHandler adventureHandler;
 
-    public TriggerHandler(WorldRepository worldRepository, PlayerRepository playerRepository, EntityRepository entityRepository)
+    public AdventureTriggerHandler(WorldRepository worldRepository, PlayerRepository playerRepository, EntityRepository entityRepository, AdventureHandler adventureHandler)
     {
         super(worldRepository, playerRepository);
 
         this.entityRepository = entityRepository;
+        this.adventureHandler = adventureHandler;
     }
 
     public List<Trigger> parse(JSONArray jsonArray) throws JSONException
@@ -46,10 +48,10 @@ public class TriggerHandler extends AbstractOdiHandler
         return triggers;
     }
 
-    public void runTriggers(AdventureHandler adventureHandler, Event event)
+    public void runTriggers(Event event)
     {
-        Action action = event.getAction();
-        List<Trigger> triggers = action.getTriggers();
+        AdventureAction adventureAction = event.getAdventureAction();
+        List<Trigger> triggers = adventureAction.getTriggers();
 
         if(triggers.size() != 0)
         {
@@ -168,7 +170,7 @@ public class TriggerHandler extends AbstractOdiHandler
     {
         Event secondaryEvent = new Event(event);
 
-        secondaryEvent.setAction(playerRepository.getAction(leftSegments.get(0).getScopes().get(2)));
+        secondaryEvent.setAdventureAction(playerRepository.getAction(leftSegments.get(0).getScopes().get(2)));
 
         adventureHandler.performAction(event);
     }

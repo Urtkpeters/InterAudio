@@ -2,6 +2,9 @@ package net.odinary.interaudio.story.interactive;
 
 import net.odinary.interaudio.MainActivity;
 import net.odinary.interaudio.story.AbstractStory;
+import net.odinary.interaudio.story.component.Action;
+import net.odinary.interaudio.story.interactive.odi.trigger.InteractiveTriggerHandler;
+import net.odinary.interaudio.story.odi.trigger.Trigger;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -14,26 +17,43 @@ public class Interactive extends AbstractStory
 {
     private Map<String, String> interactiveVariables;
     private Map<String, Section> sections;
+    private List<Action> actions;
     private Section currentSection;
+    private InteractiveTriggerHandler triggerHandler;
 
-    Interactive(MainActivity mainActivity)
+    Interactive(MainActivity mainActivity, InteractiveTriggerHandler triggerHandler)
     {
         super(mainActivity);
+
+        this.triggerHandler = triggerHandler;
     }
 
-    Interactive(String packageDir) throws Exception
+    Interactive(String packageDir, InteractiveTriggerHandler triggerHandler) throws Exception
     {
         super(packageDir);
+
+        this.triggerHandler = triggerHandler;
     }
 
     protected void parseTypeJSON(JSONObject folioJson) throws Exception
     {
+        // Parse Actions
+        JSONArray actionArray = folioJson.getJSONArray("actions");
+
+        for(int i = 0; i < actionArray.length(); i++)
+        {
+            JSONObject jsonAction = actionArray.getJSONObject(i);
+            actions.add(new Action(jsonAction, triggerHandler));
+        }
+
+        // Parse Sections
         JSONArray sectionArray = folioJson.getJSONArray("sections");
 
         for(int i = 0; i < sectionArray.length(); i++)
         {
             JSONObject jsonSection = sectionArray.getJSONObject(i);
 
+            // Parse Keywords
             JSONArray keywordArray = jsonSection.getJSONArray("keywords");
             List<Keyword> keywords = new ArrayList<>();
 
@@ -47,6 +67,7 @@ public class Interactive extends AbstractStory
                 if(!interactiveVariables.containsKey(variableName)) interactiveVariables.put(variableName, "");
             }
 
+            // Parse Redirects
             JSONArray redirectArray = jsonSection.getJSONArray("redirects");
             List<Redirect> redirects = new ArrayList<>();
 
@@ -74,4 +95,6 @@ public class Interactive extends AbstractStory
     public Section getCurrentSection() { return currentSection; }
 
     public Map<String, String> getInteractiveVariables() { return interactiveVariables; }
+
+    public List<Action> getActions() { return actions; }
 }

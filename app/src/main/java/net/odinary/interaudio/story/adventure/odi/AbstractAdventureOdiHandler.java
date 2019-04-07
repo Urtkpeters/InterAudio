@@ -1,17 +1,17 @@
 package net.odinary.interaudio.story.adventure.odi;
 
 import net.odinary.interaudio.story.adventure.Event;
-import net.odinary.interaudio.story.adventure.component.entity.Action;
-import net.odinary.interaudio.story.adventure.component.entity.Entity;
-import net.odinary.interaudio.story.adventure.component.entity.Section;
-import net.odinary.interaudio.story.adventure.component.entity.variable.AdventureVariable;
-import net.odinary.interaudio.story.adventure.odi.trigger.Trigger;
+import net.odinary.interaudio.story.adventure.component.Entity;
+import net.odinary.interaudio.story.adventure.component.Section;
+import net.odinary.interaudio.story.adventure.component.variable.AdventureVariable;
 import net.odinary.interaudio.story.adventure.repository.PlayerRepository;
 import net.odinary.interaudio.story.adventure.repository.WorldRepository;
+import net.odinary.interaudio.story.odi.AbstractOdiHandler;
+import net.odinary.interaudio.story.odi.OdiSegment;
 
 import java.util.List;
 
-public abstract class AbstractOdiHandler implements OdiHandler
+public abstract class AbstractAdventureOdiHandler extends AbstractOdiHandler
 {
     public static final String add = "+";
     public static final String subtract = "-";
@@ -21,7 +21,7 @@ public abstract class AbstractOdiHandler implements OdiHandler
     protected WorldRepository worldRepository;
     protected PlayerRepository playerRepository;
 
-    public AbstractOdiHandler(WorldRepository worldRepository, PlayerRepository playerRepository)
+    public AbstractAdventureOdiHandler(WorldRepository worldRepository, PlayerRepository playerRepository)
     {
         this.worldRepository = worldRepository;
         this.playerRepository = playerRepository;

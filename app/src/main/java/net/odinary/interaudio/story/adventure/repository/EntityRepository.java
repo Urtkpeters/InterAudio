@@ -1,7 +1,7 @@
 package net.odinary.interaudio.story.adventure.repository;
 
 import net.odinary.interaudio.folio.FolioLoadException;
-import net.odinary.interaudio.story.adventure.component.entity.Entity;
+import net.odinary.interaudio.story.adventure.component.Entity;
 
 import java.util.HashMap;
 import java.util.Map;

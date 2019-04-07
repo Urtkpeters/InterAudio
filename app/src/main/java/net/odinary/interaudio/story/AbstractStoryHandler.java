@@ -113,27 +113,35 @@ public abstract class AbstractStoryHandler
 
     protected boolean checkSystemCommands(String resultPhrase)
     {
+        boolean systemCommand = false;
+
         if(resultPhrase.contains(saveCommand))
         {
             // Do save action
+            systemCommand = true;
         }
 
         if(resultPhrase.contains(loadCommand))
         {
             // Do load action
+            systemCommand = true;
         }
 
         if(resultPhrase.contains(quitCommand))
         {
             // Do quit action
+            systemCommand = true;
         }
 
         if(resultPhrase.contains(repeatCommand))
         {
             clipList = lastClipList;
+            systemCommand = true;
         }
 
-        return _checkSystemCommands(resultPhrase);
+        if(!systemCommand) systemCommand = _checkSystemCommands(resultPhrase);
+
+        return systemCommand;
     }
 
     protected abstract boolean _checkSystemCommands(String resultPhrase);

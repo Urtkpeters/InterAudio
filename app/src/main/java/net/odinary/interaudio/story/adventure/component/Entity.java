@@ -1,12 +1,13 @@
-package net.odinary.interaudio.story.adventure.component.entity;
+package net.odinary.interaudio.story.adventure.component;
 
 import net.odinary.interaudio.folio.FolioLoadException;
 import net.odinary.interaudio.story.adventure.Event;
+import net.odinary.interaudio.story.adventure.odi.trigger.AdventureTriggerHandler;
+import net.odinary.interaudio.story.component.AbstractComponent;
 import net.odinary.interaudio.story.adventure.odi.condition.ConditionHandler;
-import net.odinary.interaudio.story.adventure.odi.trigger.TriggerHandler;
 import net.odinary.interaudio.story.adventure.repository.EntityRepository;
 import net.odinary.interaudio.story.adventure.repository.PlayerRepository;
-import net.odinary.interaudio.story.adventure.component.entity.variable.AdventureVariable;
+import net.odinary.interaudio.story.adventure.component.variable.AdventureVariable;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -16,13 +17,13 @@ import java.util.Iterator;
 import java.util.List;
 import java.util.Random;
 
-public class Entity extends AbstractEntity
+public class Entity extends AbstractComponent
 {
     private HashMap<String, AdventureVariable> entityVars = new HashMap<>();
-    private HashMap<String, Action> actions = new HashMap<>();
-    private HashMap<String, EntityAction> moveset = new HashMap<>();
+    private HashMap<String, AdventureAction> actions = new HashMap<>();
+    private HashMap<String, EntityAdventureAction> moveset = new HashMap<>();
 
-    public Entity(JSONObject entityJson, String entityType, EntityRepository entityRepository, PlayerRepository playerRepository, ConditionHandler conditionHandler, TriggerHandler triggerHandler) throws JSONException, FolioLoadException
+    public Entity(JSONObject entityJson, String entityType, EntityRepository entityRepository, PlayerRepository playerRepository, ConditionHandler conditionHandler, AdventureTriggerHandler triggerHandler) throws JSONException, FolioLoadException
     {
         super(entityJson, entityType);
 
@@ -45,10 +46,10 @@ public class Entity extends AbstractEntity
             String key = keys.next();
             JSONObject jsonAction = jsonActions.getJSONObject(key);
 
-            Action action = playerRepository.getAction(key);
+            AdventureAction adventureAction = playerRepository.getAction(key);
 
-            if(action != null) actions.put(key, new Action(action, jsonAction, conditionHandler, triggerHandler));
-            else throw new FolioLoadException("Could not load actions into entity. Entity: " + name + " Action: " + key);
+            if(adventureAction != null) actions.put(key, new AdventureAction(adventureAction, jsonAction, conditionHandler, triggerHandler));
+            else throw new FolioLoadException("Could not load actions into entity. Entity: " + name + " AdventureAction: " + key);
         }
 
         JSONObject jsonMoveset = entityJson.getJSONObject("moveset");
@@ -59,8 +60,8 @@ public class Entity extends AbstractEntity
             String key = keys.next();
             JSONObject value = jsonMoveset.getJSONObject(key);
 
-            if(entityRepository.getActions().containsKey(key)) moveset.put(key, new EntityAction(entityRepository.getAction(key), value, conditionHandler, triggerHandler));
-            else throw new FolioLoadException("Could not load actions into entity. Entity: " + name + " - Action: " + key);
+            if(entityRepository.getActions().containsKey(key)) moveset.put(key, new EntityAdventureAction(entityRepository.getAction(key), value, conditionHandler, triggerHandler));
+            else throw new FolioLoadException("Could not load actions into entity. Entity: " + name + " - AdventureAction: " + key);
         }
     }
 
@@ -73,7 +74,7 @@ public class Entity extends AbstractEntity
         this.moveset = cloner.moveset;
     }
 
-    public Action getActionOverride(String name) { return actions.get(name); }
+    public AdventureAction getActionOverride(String name) { return actions.get(name); }
 
     public Boolean checkActionOverride(String name) { return actions.containsKey(name); }
 
@@ -107,13 +108,13 @@ public class Entity extends AbstractEntity
         Random rng = new Random();
         int number = rng.nextInt(99) + 1;
 
-        for(EntityAction entityAction: moveset.values())
+        for(EntityAdventureAction entityAction: moveset.values())
         {
             int useChance = entityAction.getUseChance();
 
             if(useChance > number)
             {
-                event.setAction(entityAction);
+                event.setAdventureAction(entityAction);
 
                 List<String> targetTypes = entityAction.getTargetTypes();
 

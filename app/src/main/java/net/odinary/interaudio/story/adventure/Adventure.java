@@ -2,32 +2,22 @@ package net.odinary.interaudio.story.adventure;
 
 import net.odinary.interaudio.MainActivity;
 import net.odinary.interaudio.folio.FolioLoadException;
-import net.odinary.interaudio.R;
 import net.odinary.interaudio.story.AbstractStory;
-import net.odinary.interaudio.story.adventure.component.entity.Action;
-import net.odinary.interaudio.story.adventure.component.entity.Entity;
-import net.odinary.interaudio.story.adventure.component.entity.Section;
+import net.odinary.interaudio.story.adventure.component.AdventureAction;
+import net.odinary.interaudio.story.adventure.component.Entity;
+import net.odinary.interaudio.story.adventure.component.Section;
+import net.odinary.interaudio.story.adventure.odi.trigger.AdventureTriggerHandler;
 import net.odinary.interaudio.story.adventure.odi.condition.ConditionHandler;
-import net.odinary.interaudio.story.adventure.odi.trigger.TriggerHandler;
 import net.odinary.interaudio.story.adventure.repository.EntityRepository;
 import net.odinary.interaudio.story.adventure.repository.PlayerRepository;
 import net.odinary.interaudio.story.adventure.repository.WorldRepository;
-import net.odinary.interaudio.story.adventure.component.entity.variable.AdventureVariable;
-import net.odinary.interaudio.story.adventure.component.entity.variable.PlayerVariable;
+import net.odinary.interaudio.story.adventure.component.variable.AdventureVariable;
+import net.odinary.interaudio.story.adventure.component.variable.PlayerVariable;
 
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.IOException;
-import java.io.InputStream;
-import java.io.InputStreamReader;
-import java.io.Reader;
-import java.io.StringWriter;
-import java.io.Writer;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -40,13 +30,13 @@ class Adventure extends AbstractStory
     private static final String entityComponent = "entity";
 
     private ConditionHandler conditionHandler;
-    private TriggerHandler triggerHandler;
+    private AdventureTriggerHandler triggerHandler;
 
     private WorldRepository worldRepository = new WorldRepository();
     private PlayerRepository playerRepository = new PlayerRepository();
     private EntityRepository entityRepository = new EntityRepository();
 
-    Adventure(MainActivity mainActivity, ConditionHandler conditionHandler, TriggerHandler triggerHandler)
+    Adventure(MainActivity mainActivity, ConditionHandler conditionHandler, AdventureTriggerHandler triggerHandler)
     {
         super(mainActivity);
 
@@ -54,7 +44,7 @@ class Adventure extends AbstractStory
         this.triggerHandler = triggerHandler;
     }
 
-    Adventure(String packageDir, ConditionHandler conditionHandler, TriggerHandler triggerHandler) throws Exception
+    Adventure(String packageDir, ConditionHandler conditionHandler, AdventureTriggerHandler triggerHandler) throws Exception
     {
         super(packageDir);
 
@@ -148,9 +138,9 @@ class Adventure extends AbstractStory
 
             switch(actionType)
             {
-                case worldComponent: worldRepository.addAction(new Action(typeAction, conditionHandler, triggerHandler));
-                case playerComponent: playerRepository.addAction(new Action(typeAction, conditionHandler, triggerHandler));
-                case entityComponent: entityRepository.addAction(new Action(typeAction, conditionHandler, triggerHandler));
+                case worldComponent: worldRepository.addAction(new AdventureAction(typeAction, conditionHandler, triggerHandler));
+                case playerComponent: playerRepository.addAction(new AdventureAction(typeAction, conditionHandler, triggerHandler));
+                case entityComponent: entityRepository.addAction(new AdventureAction(typeAction, conditionHandler, triggerHandler));
             }
         }
     }

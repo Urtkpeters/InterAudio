@@ -1,8 +1,8 @@
 package net.odinary.interaudio.story.adventure.repository;
 
-import net.odinary.interaudio.story.adventure.component.entity.Action;
-import net.odinary.interaudio.story.adventure.component.entity.Entity;
-import net.odinary.interaudio.story.adventure.component.entity.variable.AdventureVariable;
+import net.odinary.interaudio.story.adventure.component.AdventureAction;
+import net.odinary.interaudio.story.adventure.component.Entity;
+import net.odinary.interaudio.story.adventure.component.variable.AdventureVariable;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -13,17 +13,17 @@ public class PlayerRepository extends AbstractRepository
     private int time = 0;
     private int timeRegen = 1;
 
-    public Action getActionFromResult(String resultPhrase)
+    public AdventureAction getActionFromResult(String resultPhrase)
     {
         for(String key: actions.keySet())
         {
-            Action action = actions.get(key);
+            AdventureAction adventureAction = actions.get(key);
 
-            if(resultPhrase.contains(actions.get(key).getName())) return action;
+            if(resultPhrase.contains(actions.get(key).getName())) return adventureAction;
 
-            for(String keyword: action.getKeywords())
+            for(String keyword: adventureAction.getKeywords())
             {
-                if(resultPhrase.contains(keyword)) return action;
+                if(resultPhrase.contains(keyword)) return adventureAction;
             }
         }
 

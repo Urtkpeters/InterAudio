@@ -1,25 +1,18 @@
 package net.odinary.interaudio.story.adventure;
 
-import android.content.ActivityNotFoundException;
-import android.content.Intent;
-import android.media.MediaPlayer;
-import android.net.Uri;
-import android.speech.RecognizerIntent;
-
 import net.odinary.interaudio.MainActivity;
 import net.odinary.interaudio.story.AbstractStoryHandler;
-import net.odinary.interaudio.story.adventure.component.entity.Section;
-import net.odinary.interaudio.story.adventure.component.entity.variable.AdventureVariable;
+import net.odinary.interaudio.story.adventure.component.AdventureAction;
+import net.odinary.interaudio.story.adventure.component.Section;
+import net.odinary.interaudio.story.adventure.component.variable.AdventureVariable;
+import net.odinary.interaudio.story.adventure.odi.trigger.AdventureTriggerHandler;
 import net.odinary.interaudio.story.adventure.odi.condition.ConditionHandler;
-import net.odinary.interaudio.story.adventure.component.entity.Action;
-import net.odinary.interaudio.story.adventure.component.entity.Entity;
-import net.odinary.interaudio.story.adventure.odi.trigger.TriggerHandler;
+import net.odinary.interaudio.story.adventure.component.Entity;
 import net.odinary.interaudio.story.adventure.repository.PlayerRepository;
 import net.odinary.interaudio.story.adventure.repository.WorldRepository;
 
 import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 public class AdventureHandler extends AbstractStoryHandler
 {
@@ -29,7 +22,7 @@ public class AdventureHandler extends AbstractStoryHandler
 
     private Adventure currentAdventure;
     private ConditionHandler conditionHandler;
-    private TriggerHandler triggerHandler;
+    private AdventureTriggerHandler triggerHandler;
 
     public AdventureHandler(MainActivity mainActivity) { super(mainActivity); }
 
@@ -43,7 +36,7 @@ public class AdventureHandler extends AbstractStoryHandler
             PlayerRepository playerRepository = currentAdventure.getPlayerRepository();
 
             conditionHandler = new ConditionHandler(worldRepository, playerRepository);
-            triggerHandler = new TriggerHandler(worldRepository, playerRepository, currentAdventure.getEntityRepository());
+            triggerHandler = new AdventureTriggerHandler(worldRepository, playerRepository, currentAdventure.getEntityRepository(), this);
 
             if(MainActivity.testPackageMode) currentStory = new Adventure(mainActivity, conditionHandler, triggerHandler);
             else currentStory = new Adventure(mainActivity.getFolioHandler().getPackageDir() + jsonFilename, conditionHandler, triggerHandler);
@@ -67,95 +60,91 @@ public class AdventureHandler extends AbstractStoryHandler
         Event event = new Event(Event.playerEvent);
         event.setSection(currentAdventure.getWorldRepository().getCurrentSection());
 
-        boolean systemCommand = checkSystemCommands(cleanResultPhrase);
+        Boolean validAction = true;
 
-        if(!systemCommand)
+        AdventureAction adventureAction = currentAdventure.getPlayerRepository().getActionFromResult(cleanResultPhrase);
+
+        if(adventureAction != null)
         {
-            Boolean validAction = true;
+            // This is where there needs to be a differenciation on System commands I think
+            List<String> targetTypes = adventureAction.getTargetTypes();
 
-            Action action = currentAdventure.getPlayerRepository().getActionFromResult(cleanResultPhrase);
-
-            if(action != null)
+            if(!targetTypes.isEmpty())
             {
-                List<String> targetTypes = action.getTargetTypes();
+                Entity target = currentAdventure.checkTarget(cleanResultPhrase);
 
-                if(!targetTypes.isEmpty())
+                if(target != null)
                 {
-                    Entity target = currentAdventure.checkTarget(cleanResultPhrase);
-
-                    if(target != null)
+                    if(targetTypes.contains(target.getType()))
                     {
-                        if(targetTypes.contains(target.getType()))
+                        event.setTarget(target);
+
+                        AdventureAction adventureActionOverride = target.getActionOverride(adventureAction.getName());
+
+                        if(adventureActionOverride != null) adventureAction = adventureActionOverride;
+
+                        event.setAdventureAction(adventureAction);
+
+                        List<String> secondaryActions = adventureAction.getSecondaryKeys();
+
+                        if(!secondaryActions.isEmpty())
                         {
-                            event.setTarget(target);
+                            event.setSecondaryAction(currentAdventure.checkSecondaryActions(cleanResultPhrase, secondaryActions));
 
-                            Action actionOverride = target.getActionOverride(action.getName());
-
-                            if(actionOverride != null) action = actionOverride;
-
-                            event.setAction(action);
-
-                            List<String> secondaryActions = action.getSecondaryKeys();
-
-                            if(!secondaryActions.isEmpty())
+                            if(event.getSecondaryAction() != null)
                             {
-                                event.setSecondaryAction(currentAdventure.checkSecondaryActions(cleanResultPhrase, secondaryActions));
+                                List<String> secondaryTargets = adventureAction.getSecondaryTargets();
+                                Entity secondaryTarget = currentAdventure.checkTarget(cleanResultPhrase, event.getTarget().getName());
 
-                                if(event.getSecondaryAction() != null)
+                                if(event.getSecondaryTarget() == null)
                                 {
-                                    List<String> secondaryTargets = action.getSecondaryTargets();
-                                    Entity secondaryTarget = currentAdventure.checkTarget(cleanResultPhrase, event.getTarget().getName());
-
-                                    if(event.getSecondaryTarget() == null)
-                                    {
-                                        clipList.add("noTarget");
-                                        validAction = false;
-                                    }
-                                    else if(!secondaryTargets.contains(secondaryTarget.getType()))
-                                    {
-                                        clipList.add(action.getFailFilename());
-                                        validAction = false;
-                                    }
-                                    else
-                                    {
-                                        event.setSecondaryTarget(secondaryTarget);
-                                    }
+                                    clipList.add("noTarget");
+                                    validAction = false;
+                                }
+                                else if(!secondaryTargets.contains(secondaryTarget.getType()))
+                                {
+                                    clipList.add(adventureAction.getFailFilename());
+                                    validAction = false;
                                 }
                                 else
                                 {
-                                    clipList.add("noAction");
-                                    validAction = false;
+                                    event.setSecondaryTarget(secondaryTarget);
                                 }
                             }
-                        }
-                        else
-                        {
-                            clipList.add(action.getFailFilename());
-                            validAction = false;
+                            else
+                            {
+                                clipList.add("noAction");
+                                validAction = false;
+                            }
                         }
                     }
                     else
                     {
-                        clipList.add("noTarget");
+                        clipList.add(adventureAction.getFailFilename());
                         validAction = false;
                     }
                 }
+                else
+                {
+                    clipList.add("noTarget");
+                    validAction = false;
+                }
             }
-            else
-            {
-                clipList.add("noAction");
-                validAction = false;
-            }
+        }
+        else
+        {
+            clipList.add("noAction");
+            validAction = false;
+        }
 
-            if(validAction)
-            {
-                performActions(event);
-            }
-            else
-            {
-                uiClip = true;
-                return false;
-            }
+        if(validAction)
+        {
+            performActions(event);
+        }
+        else
+        {
+            uiClip = true;
+            return false;
         }
 
         return true;
@@ -203,8 +192,8 @@ public class AdventureHandler extends AbstractStoryHandler
         if(conditionResponse.isEmpty())
         {
             PlayerRepository playerRepository = currentAdventure.getPlayerRepository();
-            Action action = event.getAction();
-            String actionFilename = action.getFilename();
+            AdventureAction adventureAction = event.getAdventureAction();
+            String actionFilename = adventureAction.getFilename();
 
             if(!actionFilename.isEmpty()) clipList.add(actionFilename);
 
@@ -212,9 +201,9 @@ public class AdventureHandler extends AbstractStoryHandler
 
             // Right now it is hard coded for the player time but once the player has been converted into an entity this needs to be on the "actor's" time not the players.
             // I am allowing time to go into the negative in the case that there are needs for moves that take multiple turns to complete
-            if(eventType == Event.playerEvent) playerRepository.decrementTime(action.getTime());
+            if(eventType == Event.playerEvent) playerRepository.decrementTime(adventureAction.getTime());
 
-            triggerHandler.runTriggers(this, event);
+            triggerHandler.runTriggers(event);
         }
         else
         {
@@ -244,14 +233,14 @@ public class AdventureHandler extends AbstractStoryHandler
 
     private void checkTimeActions(AdventureVariable timeVariable)
     {
-        List<Action> timeActions = new ArrayList<>(currentAdventure.getWorldRepository().getActions().values());
+        List<AdventureAction> timeAdventureActions = new ArrayList<>(currentAdventure.getWorldRepository().getActions().values());
 
-        for(Action timeAction: timeActions)
+        for(AdventureAction timeAdventureAction : timeAdventureActions)
         {
-            if(timeVariable.getNValue() % timeAction.getTime() == 0)
+            if(timeVariable.getNValue() % timeAdventureAction.getTime() == 0)
             {
                 Event event = new Event(Event.timeEvent);
-                event.setAction(timeAction);
+                event.setAdventureAction(timeAdventureAction);
 
                 performAction(event);
             }

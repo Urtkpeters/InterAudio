@@ -1,6 +1,4 @@
-package net.odinary.interaudio.story.adventure.component.entity;
-
-import net.odinary.interaudio.story.adventure.component.Component;
+package net.odinary.interaudio.story.component;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -8,7 +6,7 @@ import org.json.JSONObject;
 
 import java.util.List;
 
-public abstract class AbstractEntity implements Component
+public abstract class AbstractComponent implements Component
 {
     public static final String actionType = "action";
     public static final String sectionType = "section";
@@ -23,7 +21,7 @@ public abstract class AbstractEntity implements Component
     protected String filename;
     protected List<String> keywords;
 
-    protected AbstractEntity(JSONObject entityJson, String type) throws JSONException
+    protected AbstractComponent(JSONObject entityJson, String type) throws JSONException
     {
         this.name = entityJson.getString("name");
         this.filename = entityJson.getString("filename");
@@ -37,14 +35,14 @@ public abstract class AbstractEntity implements Component
         }
     }
 
-    protected AbstractEntity(String name, String filename, String type)
+    protected AbstractComponent(String name, String filename, String type)
     {
         this.name = name;
         this.filename = filename;
         this.type = type;
     }
 
-    protected AbstractEntity(AbstractEntity cloner)
+    protected AbstractComponent(AbstractComponent cloner)
     {
         this.name = cloner.name;
         this.filename = cloner.filename;

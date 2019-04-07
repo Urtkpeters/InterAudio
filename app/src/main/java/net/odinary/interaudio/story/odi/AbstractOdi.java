@@ -1,4 +1,4 @@
-package net.odinary.interaudio.story.adventure.odi;
+package net.odinary.interaudio.story.odi;
 
 import java.util.ArrayList;
 import java.util.List;

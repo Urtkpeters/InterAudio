@@ -1,4 +1,4 @@
-package net.odinary.interaudio.story.adventure.component;
+package net.odinary.interaudio.story.component;
 
 public interface Component
 {

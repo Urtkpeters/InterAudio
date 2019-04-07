@@ -1,4 +1,4 @@
-package net.odinary.interaudio.story.adventure.odi;
+package net.odinary.interaudio.story.odi;
 
 import org.json.JSONArray;
 import org.json.JSONException;

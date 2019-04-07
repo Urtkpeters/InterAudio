@@ -2,6 +2,9 @@ package net.odinary.interaudio.story.interactive;
 
 import net.odinary.interaudio.MainActivity;
 import net.odinary.interaudio.story.AbstractStoryHandler;
+import net.odinary.interaudio.story.adventure.Event;
+import net.odinary.interaudio.story.component.Action;
+import net.odinary.interaudio.story.interactive.odi.trigger.InteractiveTriggerHandler;
 
 import java.util.List;
 import java.util.Map;
@@ -9,6 +12,7 @@ import java.util.Map;
 public class InteractiveHandler extends AbstractStoryHandler
 {
     private Interactive currentInteractive;
+    private InteractiveTriggerHandler triggerHandler;
 
     public InteractiveHandler(MainActivity mainActivity) { super(mainActivity); }
 
@@ -16,8 +20,10 @@ public class InteractiveHandler extends AbstractStoryHandler
     {
         try
         {
-            if(MainActivity.testPackageMode) currentStory = new Interactive(mainActivity);
-            else currentStory = new Interactive(mainActivity.getFolioHandler().getPackageDir() + jsonFilename);
+            triggerHandler = new InteractiveTriggerHandler(this);
+
+            if(MainActivity.testPackageMode) currentStory = new Interactive(mainActivity, triggerHandler);
+            else currentStory = new Interactive(mainActivity.getFolioHandler().getPackageDir() + jsonFilename, triggerHandler);
 
             end = false;
             currentInteractive = (Interactive) currentStory;
@@ -91,9 +97,26 @@ public class InteractiveHandler extends AbstractStoryHandler
         // Remove all spaces and special characters. Makes it easier for comparison.
         String cleanResultPhrase = resultPhrase.replaceAll("\\s+", "").replaceAll("[^\\w\\s]","").toLowerCase();
 
-        if(cleanResultPhrase.contains("repeat"))
+        Action systemAction = null;
+
+        for(Action action: currentInteractive.getActions())
         {
-            // Repeat functionality logic
+            for(String keyword: action.getKeywords())
+            {
+                if(resultPhrase.contains(keyword))
+                {
+                    systemAction = action;
+                    break;
+                }
+            }
+
+            if(systemAction != null) break;
+        }
+
+        if(systemAction != null)
+        {
+            triggerHandler.runTriggers(systemAction);
+            return true;
         }
         else
         {
@@ -111,6 +134,48 @@ public class InteractiveHandler extends AbstractStoryHandler
         }
 
         return false;
+    }
+
+    public void executeSystemCommand(String commandName)
+    {
+        switch(commandName)
+        {
+            case saveCommand:
+                // The below is for adding a success sound
+                //clipList.add();
+                save();
+                break;
+            case loadCommand:
+                // The below is for adding a success sound
+                //clipList.add();
+                load();
+                break;
+            case quitCommand:
+                // The below is for adding a success sound
+                //clipList.add();
+                quit();
+                break;
+            case repeatCommand:
+                // The below is for adding a success sound
+                //clipList.add();
+                clipList.addAll(lastClipList);
+                break;
+        }
+    }
+
+    public void save()
+    {
+
+    }
+
+    public void load()
+    {
+
+    }
+
+    public void quit()
+    {
+
     }
 
     protected boolean _checkSystemCommands(String resultPhrase) { return false; }

@@ -1,13 +1,14 @@
 package net.odinary.interaudio;
 
-import net.odinary.interaudio.story.adventure.component.entity.Action;
-import net.odinary.interaudio.story.adventure.component.entity.variable.AdventureVariable;
-import net.odinary.interaudio.story.adventure.component.entity.Entity;
+import net.odinary.interaudio.story.adventure.component.AdventureAction;
+import net.odinary.interaudio.story.adventure.component.variable.AdventureVariable;
+import net.odinary.interaudio.story.adventure.component.Entity;
 import net.odinary.interaudio.story.adventure.Event;
-import net.odinary.interaudio.story.adventure.component.entity.Section;
+import net.odinary.interaudio.story.adventure.component.Section;
 import net.odinary.interaudio.story.adventure.odi.condition.ConditionHandler;
-import net.odinary.interaudio.story.adventure.odi.trigger.TriggerHandler;
+import net.odinary.interaudio.story.adventure.odi.trigger.AdventureTriggerHandler;
 import net.odinary.interaudio.folio.FolioLoadException;
+import net.odinary.interaudio.story.odi.trigger.TriggerHandler;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -27,7 +28,7 @@ import java.util.List;
 public class SimpleTest
 {
     private static HashMap<String, HashMap<String, AdventureVariable>> adventureVars = new HashMap<>();
-    private static HashMap<String, HashMap<String, Action>> actions = new HashMap<>();
+    private static HashMap<String, HashMap<String, AdventureAction>> actions = new HashMap<>();
     private static HashMap<String, HashMap<String, Entity>> entities = new HashMap<>();
     private static HashMap<String, Section> sections = new HashMap<>();
     private static List<String> playerActionList = new ArrayList<>();
@@ -75,7 +76,7 @@ public class SimpleTest
                 keys = jsonActions.keys();
 
 //                ConditionHandler conditionHandler = new ConditionHandler();
-//                TriggerHandler triggerHandler = new TriggerHandler();
+//                InteractiveTriggerHandler triggerHandler = new InteractiveTriggerHandler();
 
                 while(keys.hasNext())
                 {
@@ -131,7 +132,7 @@ public class SimpleTest
             Event event = new Event(Event.playerEvent);
             event.setSection(currentSection);
 
-            event.setAction(actions.get("player").get("eat"));
+            event.setAdventureAction(actions.get("player").get("eat"));
 
             event.setTarget(currentSection.getEntity("sack"));
 
@@ -178,7 +179,7 @@ public class SimpleTest
             JSONObject typeAction = typeActions.getJSONObject(i);
             String name = typeAction.getString("name");
 
-            actions.get(actionType).put(name, new Action(typeAction, conditionHandler, triggerHandler));
+            actions.get(actionType).put(name, new AdventureAction(typeAction, conditionHandler, (AdventureTriggerHandler) triggerHandler));
             if(actionType.equals("player")) playerActionList.add(name);
         }
     }

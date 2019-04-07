@@ -5,6 +5,18 @@
 	"audioFileExt": "m4a",
 	"start": "split",
 	"errorSound": "errorSound",
+	"actions":
+	[
+		{
+			"name": "save",
+			"keywords": [ "save" ],
+			"alwaysAllowed": true,
+			"triggers":
+			[
+				{ "type": "System", "trigger": "variable.save" }
+			]
+		}
+	],
 	"sections":
 	[
 		{

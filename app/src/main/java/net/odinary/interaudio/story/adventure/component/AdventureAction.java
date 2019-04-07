@@ -1,9 +1,10 @@
-package net.odinary.interaudio.story.adventure.component.entity;
+package net.odinary.interaudio.story.adventure.component;
 
+import net.odinary.interaudio.story.adventure.odi.trigger.AdventureTriggerHandler;
 import net.odinary.interaudio.story.adventure.odi.condition.Condition;
 import net.odinary.interaudio.story.adventure.odi.condition.ConditionHandler;
-import net.odinary.interaudio.story.adventure.odi.trigger.Trigger;
-import net.odinary.interaudio.story.adventure.odi.trigger.TriggerHandler;
+import net.odinary.interaudio.story.odi.trigger.Trigger;
+import net.odinary.interaudio.story.component.Action;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -12,23 +13,20 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.List;
 
-public class Action extends AbstractEntity
+public class AdventureAction extends Action
 {
     private String failFilename;
-    private Boolean alwaysAllowed;
     private int time;
     private List<String> targetTypes = new ArrayList<>();
     private List<String> secondaryKeys = new ArrayList<>();
     private List<String> secondaryTargets = new ArrayList<>();
     private List<Condition> conditions = new ArrayList<>();
-    private List<Trigger> triggers = new ArrayList<>();
 
-    public Action(JSONObject jsonAction, ConditionHandler conditionHandler, TriggerHandler triggerHandler) throws JSONException
+    public AdventureAction(JSONObject jsonAction, ConditionHandler conditionHandler, AdventureTriggerHandler triggerHandler) throws JSONException
     {
-        super(jsonAction, "action");
+        super(jsonAction, triggerHandler);
 
         failFilename = jsonAction.getString("failFilename");
-        alwaysAllowed = jsonAction.getBoolean("alwaysAllowed");
         time = jsonAction.getInt("time");
 
         JSONArray targetTypesArray = jsonAction.getJSONArray("targets");
@@ -53,21 +51,17 @@ public class Action extends AbstractEntity
         }
 
         conditions = conditionHandler.parse(jsonAction.getJSONArray("conditions"));
-
-        triggers = triggerHandler.parse(jsonAction.getJSONArray("triggers"));
     }
 
-    public Action(Action cloner, JSONObject actionOverrides, ConditionHandler conditionHandler, TriggerHandler triggerHandler) throws JSONException
+    public AdventureAction(AdventureAction cloner, JSONObject actionOverrides, ConditionHandler conditionHandler, AdventureTriggerHandler triggerHandler) throws JSONException
     {
-        super(cloner);
+        super(cloner, actionOverrides, triggerHandler);
 
         if(actionOverrides.has("filename")) filename = actionOverrides.getString("filename");
 
         if(actionOverrides.has("failFilename")) failFilename = actionOverrides.getString("failFilename");
 
         if(actionOverrides.has("conditions")) conditions.addAll(conditionHandler.parse(actionOverrides.getJSONArray("conditions")));
-
-        if(actionOverrides.has("triggers")) triggers.addAll(triggerHandler.parse(actionOverrides.getJSONArray("triggers")));
     }
 
     public String getName() { return name; }
@@ -81,8 +75,6 @@ public class Action extends AbstractEntity
     public List<String> getSecondaryTargets() { return secondaryTargets; }
 
     public List<Condition> getConditions() { return conditions; }
-
-    public List<Trigger> getTriggers() { return triggers; }
 
     public int getTime() { return time; }
 }

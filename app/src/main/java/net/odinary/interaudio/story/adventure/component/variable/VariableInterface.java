@@ -1,6 +1,6 @@
-package net.odinary.interaudio.story.adventure.component.entity.variable;
+package net.odinary.interaudio.story.adventure.component.variable;
 
-import net.odinary.interaudio.story.adventure.component.Component;
+import net.odinary.interaudio.story.component.Component;
 
 public interface VariableInterface extends Component
 {

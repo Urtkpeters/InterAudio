@@ -1,8 +1,8 @@
 package net.odinary.interaudio.story.adventure;
 
-import net.odinary.interaudio.story.adventure.component.entity.Action;
-import net.odinary.interaudio.story.adventure.component.entity.Entity;
-import net.odinary.interaudio.story.adventure.component.entity.Section;
+import net.odinary.interaudio.story.adventure.component.AdventureAction;
+import net.odinary.interaudio.story.adventure.component.Entity;
+import net.odinary.interaudio.story.adventure.component.Section;
 
 public class Event
 {
@@ -12,7 +12,7 @@ public class Event
 
     private int type;
     private Entity actor;
-    private Action action;
+    private AdventureAction adventureAction;
     private String secondaryAction;
     private Entity target;
     private Entity secondaryTarget;
@@ -23,7 +23,7 @@ public class Event
     public Event(Event cloner)
     {
         this.actor = cloner.actor;
-        this.action = cloner.action;
+        this.adventureAction = cloner.adventureAction;
         this.secondaryAction = cloner.secondaryAction;
         this.target = cloner.target;
         this.secondaryTarget = cloner.secondaryTarget;
@@ -32,7 +32,7 @@ public class Event
 
     public void setActor(Entity actor) { this.actor = actor; }
 
-    public void setAction(Action action) { this.action = action; }
+    public void setAdventureAction(AdventureAction adventureAction) { this.adventureAction = adventureAction; }
 
     public void setSecondaryAction(String secondaryAction) { this.secondaryAction = secondaryAction; }
 
@@ -46,7 +46,7 @@ public class Event
 
     public Entity getActor() { return actor; }
 
-    public Action getAction() { return action; }
+    public AdventureAction getAdventureAction() { return adventureAction; }
 
     public String getSecondaryAction() { return secondaryAction; }
 

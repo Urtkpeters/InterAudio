@@ -1,4 +1,4 @@
-package net.odinary.interaudio.story.adventure.component.entity.variable;
+package net.odinary.interaudio.story.adventure.component.variable;
 
 import org.json.JSONException;
 import org.json.JSONObject;

@@ -53,7 +53,7 @@ public class UIHandler
 
             playButton.setOnClickListener((View v) ->
             {
-                //mainActivity.getInteractiveHandler().startPlay();
+//                mainActivity.getInteractiveHandler().startPlay();
                 mainActivity.getAdventureHandler().start();
             });
 

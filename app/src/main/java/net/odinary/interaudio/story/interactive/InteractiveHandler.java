@@ -138,6 +138,8 @@ public class InteractiveHandler extends AbstractStoryHandler
 
     public void executeSystemCommand(String commandName)
     {
+        uiClip = true;
+
         switch(commandName)
         {
             case saveCommand:

@@ -16,7 +16,7 @@ import java.util.List;
 
 public class InteractiveTriggerHandler extends AbstractOdiHandler implements TriggerHandler
 {
-    InteractiveHandler interactiveHandler;
+    private InteractiveHandler interactiveHandler;
 
     public InteractiveTriggerHandler(InteractiveHandler interactiveHandler) { this.interactiveHandler = interactiveHandler; }
 
@@ -42,10 +42,7 @@ public class InteractiveTriggerHandler extends AbstractOdiHandler implements Tri
         {
             for(Trigger trigger: triggers)
             {
-                String odiType = trigger.getType();
                 List<OdiSegment> leftSegments = trigger.getLeftSegments();
-                List<OdiSegment> rightSegments = trigger.getRightSegments();
-                OdiSegment operatorSegment = trigger.getOperatorSegment();
 
                 if(leftSegments.size() > 0)
                 {
